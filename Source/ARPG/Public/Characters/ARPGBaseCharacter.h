@@ -22,11 +22,11 @@ class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInte
 	TObjectPtr<UARPGAttributeSet> AttributeSet;
 
 public:
+	AARPGBaseCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	UARPGAbilitySystemComponent* GetARPGAbilitySystemComponent() const;
 	UARPGAttributeSet* GetAttributeSet() const;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	// Sets default values for this character's properties
-	AARPGBaseCharacter();
 	virtual void PossessedBy(AController* NewController) override;
 };

@@ -17,7 +17,7 @@
 #include "Components/Input/ARPGInputComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 
-AARPGHeroCharacter::AARPGHeroCharacter(const FObjectInitializer& ObjectInitializer)
+AARPGHeroCharacter::AARPGHeroCharacter(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
 	GetCapsuleComponent()->SetCapsuleSize(42.f,96.f);
 
