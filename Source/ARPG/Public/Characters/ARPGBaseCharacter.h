@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "ARPGBaseCharacter.generated.h"
 
+class UPawnCombatComponent;
 class UDataAsset_StartUpDataBase;
 class UARPGAttributeSet;
 class UARPGAbilitySystemComponent;
@@ -22,6 +23,10 @@ class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInte
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AbilitySystem", meta=(AllowPrivateAccess))
 	TObjectPtr<UARPGAttributeSet> AttributeSet = {};
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	TObjectPtr<UPawnCombatComponent> CombatComponent = {};
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="AbilitySystem", meta=(AllowPrivateAccess))
 	TSoftObjectPtr<UDataAsset_StartUpDataBase> CharacterStartupData = {};
@@ -34,4 +39,8 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	// Sets default values for this character's properties
 	virtual void PossessedBy(AController* NewController) override;
+
+	FORCEINLINE UPawnCombatComponent* GetCombatComponent() const { return CombatComponent; }
+
+	static FName CombatComponentName;
 };

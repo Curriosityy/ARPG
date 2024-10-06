@@ -5,12 +5,15 @@
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "AbilitySystem/ARPGAttributeSet.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/Combat/PawnCombatComponent.h"
 
+
+FName AARPGBaseCharacter::CombatComponentName(TEXT("CombatComponent"));
 
 // Sets default values
-AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
+AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
@@ -18,19 +21,23 @@ AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializ
 
 	AbilitySystemComponent = CreateDefaultSubobject<UARPGAbilitySystemComponent>("AbilitySystemComponent");
 	AttributeSet = CreateDefaultSubobject<UARPGAttributeSet>("AttributeSet");
+
+	CombatComponent = CreateDefaultSubobject<UPawnCombatComponent>(CombatComponentName);
 }
 
 void AARPGBaseCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	if(!AbilitySystemComponent)
+	if (!AbilitySystemComponent)
+	{
 		return;
-	
-	AbilitySystemComponent->InitAbilityActorInfo(this,this);
+	}
+
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 
-	ensureMsgf(!CharacterStartupData.IsNull(),TEXT("Character Startup Data is not assigned in %s"),*GetName());
+	ensureMsgf(!CharacterStartupData.IsNull(), TEXT("Character Startup Data is not assigned in %s"), *GetName());
 }
 
 UARPGAbilitySystemComponent* AARPGBaseCharacter::GetARPGAbilitySystemComponent() const

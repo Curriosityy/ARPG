@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Characters/ARPGBaseCharacter.h"
+#include "Components/Combat/HeroCombatComponent.h"
 #include "ARPGHeroCharacter.generated.h"
 
+class UHeroCombatComponent;
 struct FInputActionValue;
 class UDataAsset_InputConfig;
 class UCameraComponent;
@@ -37,6 +39,11 @@ public:
 	void Input_Move(const FInputActionValue& Value);
 
 	virtual void PossessedBy(AController* NewController) override;
+
+	FORCEINLINE UHeroCombatComponent* GetHeroCombatComponent() const
+	{
+		return Cast<UHeroCombatComponent>(GetCombatComponent());
+	}
 
 protected:
 	virtual void BeginPlay() override;
