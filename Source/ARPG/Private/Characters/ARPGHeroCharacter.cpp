@@ -13,6 +13,7 @@
 
 #include "DebugHelper.h"
 #include "EnhancedInputSubsystems.h"
+#include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "Components/Input/ARPGInputComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 
@@ -71,11 +72,22 @@ void AARPGHeroCharacter::Input_Move(const FInputActionValue& Value)
 	}
 }
 
+void AARPGHeroCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if(GetARPGAbilitySystemComponent() && GetAttributeSet())
+	{
+		const FString output = FString::Printf(TEXT("OwnerActor: %ls, Avatar actor: %ls"),
+			*GetARPGAbilitySystemComponent()->GetOwnerActor()->GetActorLabel(),
+			*GetARPGAbilitySystemComponent()->GetAvatarActor()->GetActorLabel());
+		Debug::Print(TEXT("Ability system component and attribute set are valid. ") + output);
+	}
+}
+
 void AARPGHeroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Debug::Print("ARPGHeroCharacter::BeginPlay");
 }
 
 void AARPGHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

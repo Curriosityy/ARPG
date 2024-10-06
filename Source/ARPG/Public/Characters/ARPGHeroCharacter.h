@@ -36,7 +36,8 @@ public:
 	
 	UFUNCTION()
 	void Input_Move(const FInputActionValue& Value);
-	
+
+	virtual void PossessedBy(AController* NewController) override;
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;

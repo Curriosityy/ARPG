@@ -3,15 +3,30 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "ARPGBaseCharacter.generated.h"
 
+class UARPGAttributeSet;
+class UARPGAbilitySystemComponent;
+
 UCLASS()
-class ARPG_API AARPGBaseCharacter : public ACharacter
+class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AbilitySystem",meta=(AllowPrivateAccess))
+	TObjectPtr<UARPGAbilitySystemComponent> AbilitySystemComponent;
+	
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AbilitySystem",meta=(AllowPrivateAccess))
+	TObjectPtr<UARPGAttributeSet> AttributeSet;
+
 public:
+	
+	UARPGAbilitySystemComponent* GetARPGAbilitySystemComponent() const;
+	UARPGAttributeSet* GetAttributeSet() const;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	// Sets default values for this character's properties
 	AARPGBaseCharacter();
+	virtual void PossessedBy(AController* NewController) override;
 };

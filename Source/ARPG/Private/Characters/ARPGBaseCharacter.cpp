@@ -2,8 +2,10 @@
 
 
 #include "Characters/ARPGBaseCharacter.h"
-
+#include "AbilitySystem/ARPGAbilitySystemComponent.h"
+#include "AbilitySystem/ARPGAttributeSet.h"
 #include "Components/SkeletalMeshComponent.h"
+
 
 // Sets default values
 AARPGBaseCharacter::AARPGBaseCharacter()
@@ -14,5 +16,31 @@ AARPGBaseCharacter::AARPGBaseCharacter()
 
 	GetMesh()->bReceivesDecals = false;
 
+	AbilitySystemComponent = CreateDefaultSubobject<UARPGAbilitySystemComponent>("AbilitySystemComponent");
+	AttributeSet = CreateDefaultSubobject<UARPGAttributeSet>("AttributeSet");
 }
 
+void AARPGBaseCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if(!AbilitySystemComponent)
+		return;
+	
+	AbilitySystemComponent->InitAbilityActorInfo(this,this);
+}
+
+UARPGAbilitySystemComponent* AARPGBaseCharacter::GetARPGAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+UARPGAttributeSet* AARPGBaseCharacter::GetAttributeSet() const
+{
+	return AttributeSet;
+}
+
+UAbilitySystemComponent* AARPGBaseCharacter::GetAbilitySystemComponent() const
+{
+	return GetARPGAbilitySystemComponent();
+}
