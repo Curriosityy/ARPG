@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "ARPGBaseCharacter.generated.h"
 
+class UDataAsset_StartUpDataBase;
 class UARPGAttributeSet;
 class UARPGAbilitySystemComponent;
 
@@ -15,15 +16,19 @@ class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInte
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AbilitySystem",meta=(AllowPrivateAccess))
-	TObjectPtr<UARPGAbilitySystemComponent> AbilitySystemComponent;
-	
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="AbilitySystem",meta=(AllowPrivateAccess))
-	TObjectPtr<UARPGAttributeSet> AttributeSet;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AbilitySystem", meta=(AllowPrivateAccess))
+	TObjectPtr<UARPGAbilitySystemComponent> AbilitySystemComponent = {};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AbilitySystem", meta=(AllowPrivateAccess))
+	TObjectPtr<UARPGAttributeSet> AttributeSet = {};
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="AbilitySystem", meta=(AllowPrivateAccess))
+	TSoftObjectPtr<UDataAsset_StartUpDataBase> CharacterStartupData = {};
 
 public:
 	AARPGBaseCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-	
+
 	UARPGAbilitySystemComponent* GetARPGAbilitySystemComponent() const;
 	UARPGAttributeSet* GetAttributeSet() const;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;

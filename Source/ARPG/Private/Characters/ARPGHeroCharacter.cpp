@@ -16,6 +16,7 @@
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "Components/Input/ARPGInputComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
+#include "DataAssets/DataAsset_StartUpDataBase.h"
 
 AARPGHeroCharacter::AARPGHeroCharacter(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
 {
@@ -76,13 +77,14 @@ void AARPGHeroCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	if(GetARPGAbilitySystemComponent() && GetAttributeSet())
-	{
-		const FString output = FString::Printf(TEXT("OwnerActor: %ls, Avatar actor: %ls"),
-			*GetARPGAbilitySystemComponent()->GetOwnerActor()->GetActorLabel(),
-			*GetARPGAbilitySystemComponent()->GetAvatarActor()->GetActorLabel());
-		Debug::Print(TEXT("Ability system component and attribute set are valid. ") + output);
-	}
+	
+	if(CharacterStartupData.IsNull())
+		return;
+	
+	UDataAsset_StartUpDataBase* loadedData = CharacterStartupData.LoadSynchronous();
+
+	checkf(loadedData,TEXT("AARPGHeroCharacter::PossessedBy: Failed to load CharacterStartupData"));
+	loadedData->GiveToAbilitySystemComponent(GetARPGAbilitySystemComponent(),1);
 }
 
 void AARPGHeroCharacter::BeginPlay()

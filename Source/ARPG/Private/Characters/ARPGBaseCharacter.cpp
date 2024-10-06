@@ -28,6 +28,9 @@ void AARPGBaseCharacter::PossessedBy(AController* NewController)
 		return;
 	
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
+
+
+	ensureMsgf(!CharacterStartupData.IsNull(),TEXT("Character Startup Data is not assigned in %s"),*GetName());
 }
 
 UARPGAbilitySystemComponent* AARPGBaseCharacter::GetARPGAbilitySystemComponent() const

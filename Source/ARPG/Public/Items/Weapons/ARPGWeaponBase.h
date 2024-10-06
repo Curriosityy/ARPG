@@ -14,10 +14,10 @@ class ARPG_API AARPGWeaponBase : public AActor
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons", meta=(AllowPrivateAccess))
-	TObjectPtr<UStaticMeshComponent> WeaponMesh;
+	TObjectPtr<UStaticMeshComponent> WeaponMesh = {};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons", meta=(AllowPrivateAccess))
-	TObjectPtr<UBoxComponent> WeaponCollider;
+	TObjectPtr<UBoxComponent> WeaponCollider = {};
 
 public:
 	AARPGWeaponBase();

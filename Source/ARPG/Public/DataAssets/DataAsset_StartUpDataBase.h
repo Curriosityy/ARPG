@@ -17,10 +17,10 @@ class ARPG_API UDataAsset_StartUpDataBase : public UDataAsset
 	GENERATED_BODY()
 	
 	UPROPERTY(EditDefaultsOnly,Category="StartupData")
-	TArray<TSubclassOf<UARPGGameplayAbility>> ReactiveAbilities;
+	TArray<TSubclassOf<UARPGGameplayAbility>> ReactiveAbilities = {};
 
 	UPROPERTY(EditDefaultsOnly,Category="StartupData")
-	TArray<TSubclassOf<UARPGGameplayAbility>> StartupAbilitiesActivatedOnGiven;
+	TArray<TSubclassOf<UARPGGameplayAbility>> StartupAbilitiesActivatedOnGiven = {};
 	
 protected:
 	static void GrantAbility(TSubclassOf<UARPGGameplayAbility> Ability,UARPGAbilitySystemComponent* InASC, int32 Level = 1);

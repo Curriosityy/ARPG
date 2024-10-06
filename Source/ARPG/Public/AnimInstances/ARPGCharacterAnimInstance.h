@@ -23,14 +23,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UCharacterMovementComponent> MovementComponent = {};
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly,Category="AnimData|LocomotionData")
-	FVector Velocity;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="AnimData|LocomotionData")
+	FVector Velocity = {};
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="AnimData|LocomotionData")
-	float GroundSpeed;
-	
+	float GroundSpeed = {};
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category="AnimData|LocomotionData")
-	bool bHasAcceleration;
+	bool bHasAcceleration = {};
 
 public:
 	virtual void NativeInitializeAnimation() override;
