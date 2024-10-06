@@ -6,6 +6,8 @@
 #include "Characters/ARPGBaseCharacter.h"
 #include "ARPGHeroCharacter.generated.h"
 
+struct FInputActionValue;
+class UDataAsset_InputConfig;
 class UCameraComponent;
 class USpringArmComponent;
 /**
@@ -15,16 +17,27 @@ UCLASS()
 class ARPG_API AARPGHeroCharacter : public AARPGBaseCharacter
 {
 	GENERATED_BODY()
-#pragma region Components
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess))
 	TObjectPtr<USpringArmComponent> CameraBoom = {};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess))
 	TObjectPtr<UCameraComponent> FollowCamera = {};
-#pragma endregion	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,Category="Input", meta = (AllowPrivateAccess))
+	TObjectPtr<UDataAsset_InputConfig> InputConfigDataAsset;
+
+
 public:
 	AARPGHeroCharacter(const FObjectInitializer& ObjectInitializer);
+
+	UFUNCTION()
+	void Input_Look(const FInputActionValue& Value);
+	
+	UFUNCTION()
+	void Input_Move(const FInputActionValue& Value);
 	
 protected:
 	virtual void BeginPlay() override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 };

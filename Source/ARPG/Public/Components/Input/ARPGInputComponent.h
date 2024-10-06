@@ -22,7 +22,7 @@ public:
 };
 
 template <class UserObject, typename CallbackFunc>
-void UARPGInputComponent::BindNativeInputAction(const UDataAsset_InputConfig* InputConfig,
+inline void UARPGInputComponent::BindNativeInputAction(const UDataAsset_InputConfig* InputConfig,
 	const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent, UserObject* ContextObject, CallbackFunc Func)
 {
 	checkf(InputConfig,TEXT("Input config data asset is null"));
