@@ -3,9 +3,9 @@
 
 #include "DataAssets/DataAsset_InputConfig.h"
 
-UInputAction* UDataAsset_InputConfig::FindNativeInputActionByTag(const FGameplayTag& InInputTag)
+UInputAction* UDataAsset_InputConfig::FindNativeInputActionByTag(const FGameplayTag& InInputTag) const
 {
-	for (FARPGInputConfig& action : NativeInputActions)
+	for (const FARPGInputConfig& action : NativeInputActions)
 	{
 		if(action.InputTag == InInputTag)
 		{
