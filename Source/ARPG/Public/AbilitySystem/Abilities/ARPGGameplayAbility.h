@@ -6,6 +6,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "ARPGGameplayAbility.generated.h"
 
+class UARPGAbilitySystemComponent;
 class UPawnCombatComponent;
 
 UENUM()
@@ -24,7 +25,7 @@ class ARPG_API UARPGGameplayAbility : public UGameplayAbility
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category="ARPG Ability")
+	UPROPERTY(EditDefaultsOnly, Category="ARPG|Ability")
 	EARPGAbilityActivationPolicy Policy = EARPGAbilityActivationPolicy::OnTrigger;
 
 public:
@@ -36,6 +37,9 @@ public:
 	                        bool bReplicateEndAbility,
 	                        bool bWasCancelled) override;
 
-	UFUNCTION(BlueprintPure, Category="Warrior|Ability")
+	UFUNCTION(BlueprintPure, Category="ARPG|Ability")
 	UPawnCombatComponent* GetCombatComponentFromActorInfo() const;
+
+	UFUNCTION(BlueprintPure, Category="ARPG|Ability")
+	UARPGAbilitySystemComponent* GetARPGAbilitySystemComponentFromActorInfo() const;
 };
