@@ -20,7 +20,13 @@ struct FARPGInputConfig
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UInputAction> InputAction = {};
+
+	bool IsValid() const
+	{
+		return InputTag.IsValid() && InputAction;
+	}
 };
+
 /**
  * 
  */
@@ -29,12 +35,15 @@ class ARPG_API UDataAsset_InputConfig : public UDataAsset
 {
 	GENERATED_BODY()
 
-	public:
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UInputMappingContext> DefaultMappingContext = {};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(TitleProperty = "InputTag"))
 	TArray<FARPGInputConfig> NativeInputActions = {};
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(TitleProperty = "InputTag"))
+	TArray<FARPGInputConfig> AbilityInputActions = {};
 
 	UInputAction* FindNativeInputActionByTag(const FGameplayTag& InInputTag) const;
 };

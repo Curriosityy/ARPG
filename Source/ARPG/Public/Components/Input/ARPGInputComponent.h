@@ -17,21 +17,49 @@ class ARPG_API UARPGInputComponent : public UEnhancedInputComponent
 	GENERATED_BODY()
 
 public:
-	template<class UserObject,typename CallbackFunc>
-	void BindNativeInputAction(const UDataAsset_InputConfig* InputConfig,const FGameplayTag& InInputTag,ETriggerEvent TriggerEvent,UserObject* ContextObject,CallbackFunc Func);
+	template <class UserObject, typename CallbackFunc>
+	void BindNativeInputAction(const UDataAsset_InputConfig* InputConfig, const FGameplayTag& InInputTag,
+	                           ETriggerEvent TriggerEvent, UserObject* ContextObject, CallbackFunc Func);
+
+	template <class UserObject, typename CallbackFunc>
+	void BindAbilityInputAction(const UDataAsset_InputConfig* InputConfig, UserObject* ContextObject,
+	                            CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc);
 };
 
 template <class UserObject, typename CallbackFunc>
-inline void UARPGInputComponent::BindNativeInputAction(const UDataAsset_InputConfig* InputConfig,
-	const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent, UserObject* ContextObject, CallbackFunc Func)
+void UARPGInputComponent::BindNativeInputAction(const UDataAsset_InputConfig* InputConfig,
+                                                const FGameplayTag& InInputTag, ETriggerEvent TriggerEvent,
+                                                UserObject* ContextObject, CallbackFunc Func)
 {
-	checkf(InputConfig,TEXT("Input config data asset is null"));
+	checkf(InputConfig, TEXT("Input config data asset is null"));
 
 	UInputAction* InputAction = InputConfig->FindNativeInputActionByTag(InInputTag);
 
-	if(!InputAction)
+	if (!InputAction)
+	{
 		return;
+	}
 
 	BindAction(InputAction, TriggerEvent, ContextObject, Func);
-	
+}
+
+template <class UserObject, typename CallbackFunc>
+void UARPGInputComponent::BindAbilityInputAction(const UDataAsset_InputConfig* InputConfig, UserObject* ContextObject,
+                                                 CallbackFunc InputPressedFunc, CallbackFunc InputReleasedFunc)
+{
+	checkf(InputConfig, TEXT("Input config data asset is null"));
+
+	for (const FARPGInputConfig& AbilityInputAction : InputConfig->AbilityInputActions)
+	{
+		if (!AbilityInputAction.IsValid())
+		{
+			continue;
+		}
+
+		BindAction(AbilityInputAction.InputAction, ETriggerEvent::Started, ContextObject, InputPressedFunc,
+		           AbilityInputAction.InputTag);
+
+		BindAction(AbilityInputAction.InputAction, ETriggerEvent::Completed, ContextObject, InputReleasedFunc,
+		           AbilityInputAction.InputTag);
+	}
 }
