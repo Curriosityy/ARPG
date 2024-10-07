@@ -6,6 +6,7 @@
 #include "Components/Combat/PawnCombatComponent.h"
 #include "HeroCombatComponent.generated.h"
 
+class AARPGHeroWeapon;
 /**
  * 
  */
@@ -13,5 +14,8 @@ UCLASS()
 class ARPG_API UHeroCombatComponent : public UPawnCombatComponent
 {
 	GENERATED_BODY()
-	
+
+public:
+	UFUNCTION(BlueprintCallable, Category="Warrior|Combat")
+	AARPGHeroWeapon* GetHeroCarriedWeapon(FGameplayTag Tag) const;
 };

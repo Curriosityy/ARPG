@@ -5,12 +5,8 @@
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
 
-bool FARPGGeroAbilitySet::IsValid() const
-{
-	return AbilityToGrant && InputTag.IsValid();
-}
 
-void UDataAsset_HeroStartUpData::GrantHeroAbility(const FARPGGeroAbilitySet& ToGrant,
+void UDataAsset_HeroStartUpData::GrantHeroAbility(const FARPGHeroAbilitySet& ToGrant,
                                                   UARPGAbilitySystemComponent* InAsc, int32 Level)
 {
 	FGameplayAbilitySpec AbilitySpec{ToGrant.AbilityToGrant};
@@ -21,10 +17,10 @@ void UDataAsset_HeroStartUpData::GrantHeroAbility(const FARPGGeroAbilitySet& ToG
 	InAsc->GiveAbility(AbilitySpec);
 }
 
-void UDataAsset_HeroStartUpData::GrantHeroAbilities(TArray<FARPGGeroAbilitySet>& AbilitiesToGrant,
+void UDataAsset_HeroStartUpData::GrantHeroAbilities(TArray<FARPGHeroAbilitySet>& AbilitiesToGrant,
                                                     UARPGAbilitySystemComponent* InAsc, const int32 Level)
 {
-	for (FARPGGeroAbilitySet& ToGrant : AbilitiesToGrant)
+	for (FARPGHeroAbilitySet& ToGrant : AbilitiesToGrant)
 	{
 		if (!ToGrant.IsValid())
 		{

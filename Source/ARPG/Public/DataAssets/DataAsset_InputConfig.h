@@ -5,28 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Engine/DataAsset.h"
+#include "Types/ARPGStructTypes.h"
 #include "DataAsset_InputConfig.generated.h"
 
 class UInputMappingContext;
 class UInputAction;
-
-USTRUCT(BlueprintType)
-struct FARPGInputConfig
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta= (Categories="InputTag"))
-	FGameplayTag InputTag = {};
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UInputAction> InputAction = {};
-
-	bool IsValid() const
-	{
-		return InputTag.IsValid() && InputAction;
-	}
-};
-
 /**
  * 
  */

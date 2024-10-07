@@ -23,7 +23,7 @@ void UPawnCombatComponent::AddCarriedWeapon(FGameplayTag WeaponTag, AARPGWeaponB
 		TEXT("Registered weapon %s name %s, auto equip %i"), *WeaponTag.ToString(), *Weapon->GetName(), bAsEquipped));
 }
 
-AARPGWeaponBase* UPawnCombatComponent::GetCarriedWeapon(FGameplayTag WeaponTag)
+AARPGWeaponBase* UPawnCombatComponent::GetCarriedWeapon(FGameplayTag WeaponTag) const
 {
 	if (!CarriedWeapons.Contains(WeaponTag))
 	{
@@ -34,7 +34,7 @@ AARPGWeaponBase* UPawnCombatComponent::GetCarriedWeapon(FGameplayTag WeaponTag)
 	return CarriedWeapons[WeaponTag];
 }
 
-AARPGWeaponBase* UPawnCombatComponent::GetCurrentEquippedWeapon()
+AARPGWeaponBase* UPawnCombatComponent::GetCurrentEquippedWeapon() const
 {
 	if (!CurrentEquippedWeapon.IsValid())
 	{

@@ -6,6 +6,7 @@
 #include "AnimInstances/ARPGBaseAnimInstance.h"
 #include "ARPGHeroLinkedAnimLayer.generated.h"
 
+
 class UARPGHeroAnimInstance;
 /**
  * 

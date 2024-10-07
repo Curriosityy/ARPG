@@ -26,9 +26,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
 	void AddCarriedWeapon(FGameplayTag WeaponTag, AARPGWeaponBase* Weapon, bool bAsEquipped = false);
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
-	AARPGWeaponBase* GetCarriedWeapon(FGameplayTag weaponTag);
+	AARPGWeaponBase* GetCarriedWeapon(FGameplayTag weaponTag) const;
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
-	AARPGWeaponBase* GetCurrentEquippedWeapon();
+	AARPGWeaponBase* GetCurrentEquippedWeapon() const;
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
 	void SetCurrentEquippedWeapon(FGameplayTag WeaponToEquip);
 };
