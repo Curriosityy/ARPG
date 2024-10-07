@@ -13,5 +13,9 @@ UCLASS()
 class ARPG_API UARPGAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
-	
+
+public:
+	const FGameplayAbilitySpec& GetAbilitySpecBasedOnDynamicTag(const FGameplayTag& InInputTag);
+	void OnAbilityInputPressed(const FGameplayTag& InInputTag);
+	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
 };

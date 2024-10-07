@@ -75,6 +75,16 @@ void AARPGHeroCharacter::Input_Move(const FInputActionValue& Value)
 	}
 }
 
+void AARPGHeroCharacter::Input_AbilityInputPressed(FGameplayTag InInputTag)
+{
+	GetARPGAbilitySystemComponent()->OnAbilityInputPressed(InInputTag);
+}
+
+void AARPGHeroCharacter::Input_AbilityInputReleased(FGameplayTag InInputTag)
+{
+	GetARPGAbilitySystemComponent()->OnAbilityInputReleased(InInputTag);
+}
+
 void AARPGHeroCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
@@ -121,4 +131,8 @@ void AARPGHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	                                          ETriggerEvent::Triggered,
 	                                          this,
 	                                          &ThisClass::Input_Move);
+
+	ARPGInputComponent->BindAbilityInputAction(InputConfigDataAsset, this,
+	                                           &ThisClass::Input_AbilityInputPressed,
+	                                           &ThisClass::Input_AbilityInputReleased);
 }

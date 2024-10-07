@@ -38,6 +38,11 @@ public:
 	UFUNCTION()
 	void Input_Move(const FInputActionValue& Value);
 
+	UFUNCTION()
+	void Input_AbilityInputPressed(FGameplayTag InInputTag);
+	UFUNCTION()
+	void Input_AbilityInputReleased(FGameplayTag InInputTag);
+
 	virtual void PossessedBy(AController* NewController) override;
 
 	FORCEINLINE UHeroCombatComponent* GetHeroCombatComponent() const
