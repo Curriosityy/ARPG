@@ -5,21 +5,17 @@
 
 #include <Windows.ApplicationModel.Activation.h>
 
-const FGameplayAbilitySpec& UARPGAbilitySystemComponent::GetAbilitySpecBasedOnDynamicTag(const FGameplayTag& InInputTag)
+#include "DebugHelper.h"
+#include "Helpers/GrantAbilityHelper.h"
+
+int32 UARPGAbilitySystemComponent::GetActivatableAbilityIndexBasedOnDynamicTag(
+	const FGameplayTag& InInputTag)
 {
-	FGameplayAbilitySpec AbilitySpec;
-
-	for (const FGameplayAbilitySpec& ActivatableAbility : GetActivatableAbilities())
-	{
-		if (!ActivatableAbility.DynamicAbilityTags.HasTagExact(InInputTag))
+	return GetActivatableAbilities().IndexOfByPredicate([&]
+	(const FGameplayAbilitySpec& Ability)
 		{
-			continue;
-		}
-
-		return ActivatableAbility;
-	}
-
-	return AbilitySpec;
+			return Ability.DynamicAbilityTags.HasTagExact(InInputTag);
+		});
 }
 
 void UARPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
@@ -29,14 +25,14 @@ void UARPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InIn
 		return;
 	}
 
-	const FGameplayAbilitySpec& Ability = GetAbilitySpecBasedOnDynamicTag(InInputTag);
+	int idx = GetActivatableAbilityIndexBasedOnDynamicTag(InInputTag);
 
-	if (!Ability.Handle.IsValid())
+	if (INDEX_NONE == idx)
 	{
 		return;
 	}
 
-	TryActivateAbility(Ability.Handle);
+	TryActivateAbility(GetActivatableAbilities()[idx].Handle);
 }
 
 void UARPGAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
@@ -46,11 +42,18 @@ void UARPGAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InI
 		return;
 	}
 
-	const FGameplayAbilitySpec& Ability = GetAbilitySpecBasedOnDynamicTag(InInputTag);
+	int idx = GetActivatableAbilityIndexBasedOnDynamicTag(InInputTag);
 
-	if (!Ability.Handle.IsValid())
+	if (INDEX_NONE == idx)
 	{
 	}
 
 	//(Ability.Handle);
+}
+
+void UARPGAbilitySystemComponent::GrandHeroWeaponAbilities(const TArray<FARPGHeroAbilitySet> HeroAbilitiesesToGrant,
+                                                           int32 ApplyLevel)
+{
+	Debug::Print("GrandHeroWeaponAbilities");
+	GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbilities(HeroAbilitiesesToGrant, this, ApplyLevel);
 }

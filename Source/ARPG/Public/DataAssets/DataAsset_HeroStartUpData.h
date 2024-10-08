@@ -22,7 +22,5 @@ class ARPG_API UDataAsset_HeroStartUpData : public UDataAsset_StartUpDataBase
 	TArray<FARPGHeroAbilitySet> HeroStartupAbilitySets = {};
 
 public:
-	static void GrantHeroAbility(const FARPGHeroAbilitySet& ToGrant, UARPGAbilitySystemComponent* InAsc, int32 INT32);
-	static void GrantHeroAbilities(TArray<FARPGHeroAbilitySet>& Array, UARPGAbilitySystemComponent* InAsc, int32 INT32);
 	virtual void GiveToAbilitySystemComponent(UARPGAbilitySystemComponent* InASC, int32 Level) override;
 };

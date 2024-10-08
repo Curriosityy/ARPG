@@ -5,33 +5,13 @@
 
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
+#include "Helpers/GrantAbilityHelper.h"
 
-void UDataAsset_StartUpDataBase::GrantAbility(const TSubclassOf<UARPGGameplayAbility>& Ability,
-                                              UARPGAbilitySystemComponent* InASC, const int32 Level)
-{
-	checkf(Ability, TEXT("UDataAsset_StartUpDataBase::GrantAbility : ability is NULL"));
-	checkf(InASC, TEXT("UDataAsset_StartUpDataBase::GrantAbility: InASC is NULL"));
-
-	FGameplayAbilitySpec Spec{Ability};
-	Spec.SourceObject = InASC->GetAvatarActor();
-	Spec.Level = Level;
-
-	InASC->GiveAbility(Spec);
-}
-
-void UDataAsset_StartUpDataBase::GrantAbilities(TArray<TSubclassOf<UARPGGameplayAbility>>& AbilitiesToGrant,
-                                                UARPGAbilitySystemComponent* InASC, const int32 Level)
-{
-	for (const TSubclassOf<UARPGGameplayAbility>& ToGrant : AbilitiesToGrant)
-	{
-		GrantAbility(ToGrant, InASC, Level);
-	}
-}
 
 void UDataAsset_StartUpDataBase::GiveToAbilitySystemComponent(UARPGAbilitySystemComponent* InASC, const int32 Level)
 {
 	checkf(InASC, TEXT("UDataAsset_StartUpDataBase::GiveToAbilitySystemComponent: InASC is NULL"));
 
-	GrantAbilities(ReactiveAbilities, InASC, Level);
-	GrantAbilities(StartupAbilitiesActivatedOnGiven, InASC, Level);
+	GrantAbilityHelper::GrantAbilityHelper::GrantAbilities(ReactiveAbilities, InASC, Level);
+	GrantAbilityHelper::GrantAbilityHelper::GrantAbilities(StartupAbilitiesActivatedOnGiven, InASC, Level);
 }
