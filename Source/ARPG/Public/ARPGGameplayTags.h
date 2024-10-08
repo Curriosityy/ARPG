@@ -31,4 +31,6 @@ namespace ARPGGameplayTags
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Unequip_Axe);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Light_Axe);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Heavy_Axe);
+
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_Finisher);
 }
