@@ -77,6 +77,7 @@ void AARPGHeroCharacter::Input_Move(const FInputActionValue& Value)
 
 void AARPGHeroCharacter::Input_AbilityInputPressed(FGameplayTag InInputTag)
 {
+	Debug::Print(FString::Printf(TEXT("AARPGHeroCharacter::Input_AbilityInputPressed %s"), *InInputTag.ToString()));
 	GetARPGAbilitySystemComponent()->OnAbilityInputPressed(InInputTag);
 }
 
