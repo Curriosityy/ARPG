@@ -20,6 +20,10 @@ public:
 	void OnAbilityInputPressed(const FGameplayTag& InInputTag);
 	void OnAbilityInputReleased(const FGameplayTag& InInputTag);
 
-	UFUNCTION(BlueprintCallable, Category = "Warriot|Ability", meta = (ApplyLevel = "1"))
-	void GrandHeroWeaponAbilities(const TArray<FARPGHeroAbilitySet> HeroAbilitiesesToGrant, int32 ApplyLevel);
+	UFUNCTION(BlueprintCallable, Category = "ARPG|Ability", meta = (ApplyLevel = "1"))
+	void GrandHeroWeaponAbilities(const TArray<FARPGHeroAbilitySet> HeroAbilitiesesToGrant, int32 ApplyLevel,
+	                              TArray<FGameplayAbilitySpecHandle>& AbilitySpecHandles);
+
+	UFUNCTION(BlueprintCallable, Category = "ARPG|Ability")
+	void RemoveGrantedHeroWeaponAbilities(UPARAM(ref) TArray<FGameplayAbilitySpecHandle>& AbilitiesToRemove);
 };

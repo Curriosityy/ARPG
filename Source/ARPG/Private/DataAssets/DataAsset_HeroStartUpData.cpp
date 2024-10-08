@@ -10,6 +10,6 @@
 void UDataAsset_HeroStartUpData::GiveToAbilitySystemComponent(UARPGAbilitySystemComponent* InASC, const int32 Level)
 {
 	Super::GiveToAbilitySystemComponent(InASC, Level);
-
-	GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbilities(HeroStartupAbilitySets, InASC, Level);
+	TArray<FGameplayAbilitySpecHandle> _;
+	GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbilities(HeroStartupAbilitySets, InASC, Level, _);
 }

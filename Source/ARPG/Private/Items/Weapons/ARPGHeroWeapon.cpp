@@ -3,3 +3,12 @@
 
 #include "Items/Weapons/ARPGHeroWeapon.h"
 
+void AARPGHeroWeapon::SetGrantedAbilities(const TArray<FGameplayAbilitySpecHandle>& InGrantedAbilities)
+{
+	GrantedAbilities = InGrantedAbilities;
+}
+
+TArray<FGameplayAbilitySpecHandle> AARPGHeroWeapon::GetGrantedAbilities() const
+{
+	return GrantedAbilities;
+}

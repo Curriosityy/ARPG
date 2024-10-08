@@ -52,8 +52,24 @@ void UARPGAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InI
 }
 
 void UARPGAbilitySystemComponent::GrandHeroWeaponAbilities(const TArray<FARPGHeroAbilitySet> HeroAbilitiesesToGrant,
-                                                           int32 ApplyLevel)
+                                                           int32 ApplyLevel,
+                                                           TArray<FGameplayAbilitySpecHandle>& AbilitySpecHandles)
 {
-	Debug::Print("GrandHeroWeaponAbilities");
-	GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbilities(HeroAbilitiesesToGrant, this, ApplyLevel);
+	GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbilities(HeroAbilitiesesToGrant, this, ApplyLevel,
+	                                                           AbilitySpecHandles);
+}
+
+void UARPGAbilitySystemComponent::RemoveGrantedHeroWeaponAbilities(
+	TArray<FGameplayAbilitySpecHandle>& AbilitiesToRemove)
+{
+	for (const FGameplayAbilitySpecHandle& ToRemove : AbilitiesToRemove)
+	{
+		if (!ToRemove.IsValid())
+		{
+		}
+
+		ClearAbility(ToRemove);
+	}
+
+	AbilitiesToRemove.Empty();
 }

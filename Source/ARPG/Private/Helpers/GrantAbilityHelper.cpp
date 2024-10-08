@@ -9,7 +9,8 @@
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
 
 void GrantAbilityHelper::GrantAbilityHelper::GrantAbility(const TSubclassOf<UARPGGameplayAbility>& Ability,
-                                                          UARPGAbilitySystemComponent* InASC, const int32 Level)
+                                                          UARPGAbilitySystemComponent* InASC, const int32 Level,
+                                                          FGameplayAbilitySpecHandle& AbilitySpecHandle)
 {
 	checkf(Ability, TEXT("UDataAsset_StartUpDataBase::GrantAbility : ability is NULL"));
 	checkf(InASC, TEXT("UDataAsset_StartUpDataBase::GrantAbility: InASC is NULL"));
@@ -18,40 +19,44 @@ void GrantAbilityHelper::GrantAbilityHelper::GrantAbility(const TSubclassOf<UARP
 	Spec.SourceObject = InASC->GetAvatarActor();
 	Spec.Level = Level;
 
-	InASC->GiveAbility(Spec);
+	AbilitySpecHandle = InASC->GiveAbility(Spec);
 }
 
 void GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbility(const FARPGHeroAbilitySet& ToGrant,
-                                                              UARPGAbilitySystemComponent* InAsc, int32 Level)
+                                                              UARPGAbilitySystemComponent* InAsc, int32 Level,
+                                                              FGameplayAbilitySpecHandle& AbilitySpecHandle)
 {
 	FGameplayAbilitySpec AbilitySpec{ToGrant.AbilityToGrant};
 	AbilitySpec.SourceObject = InAsc->GetAvatarActor();
 	AbilitySpec.Level = Level;
 	AbilitySpec.DynamicAbilityTags.AddTag(ToGrant.InputTag);
-	Debug::Print(
-		FString::Printf(TEXT("GrantAbilityHelper::GrantHeroAbility %s"), *AbilitySpec.DynamicAbilityTags.ToString()));
-	InAsc->GiveAbility(AbilitySpec);
+	AbilitySpecHandle = InAsc->GiveAbility(AbilitySpec);
 }
 
 void GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbilities(const TArray<FARPGHeroAbilitySet>& AbilitiesToGrant,
-                                                                UARPGAbilitySystemComponent* InAsc, const int32 Level)
+                                                                UARPGAbilitySystemComponent* InAsc, const int32 Level,
+                                                                TArray<FGameplayAbilitySpecHandle>& AbilitiesSpecHandle)
 {
+	FGameplayAbilitySpecHandle SpecHandle;
 	for (const FARPGHeroAbilitySet& ToGrant : AbilitiesToGrant)
 	{
 		if (!ToGrant.IsValid())
 		{
 			continue;
 		}
-		GrantHeroAbility(ToGrant, InAsc, Level);
+		GrantHeroAbility(ToGrant, InAsc, Level, SpecHandle);
+		AbilitiesSpecHandle.Add(SpecHandle);
 	}
 }
 
 void GrantAbilityHelper::GrantAbilityHelper::GrantAbilities(
 	const TArray<TSubclassOf<UARPGGameplayAbility>>& AbilitiesToGrant, UARPGAbilitySystemComponent* InASC,
-	const int32 Level)
+	const int32 Level, TArray<FGameplayAbilitySpecHandle>& AbilitiesSpecHandle)
 {
+	FGameplayAbilitySpecHandle SpecHandle;
 	for (const TSubclassOf<UARPGGameplayAbility>& ToGrant : AbilitiesToGrant)
 	{
-		GrantAbility(ToGrant, InASC, Level);
+		GrantAbility(ToGrant, InASC, Level, SpecHandle);
+		AbilitiesSpecHandle.Add(SpecHandle);
 	}
 }
