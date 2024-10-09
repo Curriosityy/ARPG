@@ -7,6 +7,7 @@
 #include "GameplayAbilitySpecHandle.h"
 #include "Types/ARPGStructTypes.h"
 
+class UARPGEnemyGameplayAbility;
 class UARPGAbilitySystemComponent;
 class UARPGGameplayAbility;
 /**
@@ -34,5 +35,9 @@ namespace GrantAbilityHelper
 		static void GrantAbilities(const TArray<TSubclassOf<UARPGGameplayAbility>>& AbilitiesToGrant,
 		                           UARPGAbilitySystemComponent* InASC, const int32 Level,
 		                           TArray<FGameplayAbilitySpecHandle>& AbilitiesSpecHandle);
+
+		static void GrantEnemyAbilities(
+			const TArray<TSubclassOf<UARPGEnemyGameplayAbility>>& AbilitiesToGrant, UARPGAbilitySystemComponent* InASC,
+			const int32 Level, TArray<FGameplayAbilitySpecHandle>& AbilitiesSpecHandle);
 	};
 }

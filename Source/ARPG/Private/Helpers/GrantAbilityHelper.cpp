@@ -6,7 +6,9 @@
 #include "DebugHelper.h"
 #include "GameplayAbilitySpec.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
+#include "AbilitySystem/Abilities/ARPGEnemyGameplayAbility.h"
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
+#include "AbilitySystem/Abilities/ARPGHeroGameplayAbility.h"
 
 void GrantAbilityHelper::GrantAbilityHelper::GrantAbility(const TSubclassOf<UARPGGameplayAbility>& Ability,
                                                           UARPGAbilitySystemComponent* InASC, const int32 Level,
@@ -55,6 +57,18 @@ void GrantAbilityHelper::GrantAbilityHelper::GrantAbilities(
 {
 	FGameplayAbilitySpecHandle SpecHandle;
 	for (const TSubclassOf<UARPGGameplayAbility>& ToGrant : AbilitiesToGrant)
+	{
+		GrantAbility(ToGrant, InASC, Level, SpecHandle);
+		AbilitiesSpecHandle.Add(SpecHandle);
+	}
+}
+
+void GrantAbilityHelper::GrantAbilityHelper::GrantEnemyAbilities(
+	const TArray<TSubclassOf<UARPGEnemyGameplayAbility>>& AbilitiesToGrant, UARPGAbilitySystemComponent* InASC,
+	const int32 Level, TArray<FGameplayAbilitySpecHandle>& AbilitiesSpecHandle)
+{
+	FGameplayAbilitySpecHandle SpecHandle;
+	for (const TSubclassOf<UARPGEnemyGameplayAbility>& ToGrant : AbilitiesToGrant)
 	{
 		GrantAbility(ToGrant, InASC, Level, SpecHandle);
 		AbilitiesSpecHandle.Add(SpecHandle);

@@ -21,5 +21,10 @@ public:
 	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const
 	{
 		return Cast<UEnemyCombatComponent>(GetCombatComponent());
-	};
+	}
+
+	virtual void PossessedBy(AController* NewController) override;
+
+private:
+	void InitEnemyStatupData();
 };
