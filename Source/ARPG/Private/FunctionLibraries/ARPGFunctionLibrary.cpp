@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "DebugHelper.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
+#include "Interfaces/Combatable.h"
 
 UARPGAbilitySystemComponent* UARPGFunctionLibrary::NativeGetARPGASCFromActor(AActor* InActor)
 {
@@ -47,4 +48,25 @@ bool UARPGFunctionLibrary::NativeDoesActorHaveTag(AActor* Actor, FGameplayTag Ta
 void UARPGFunctionLibrary::BP_DoesActorHaveTag(AActor* Actor, FGameplayTag Tag, EARPGConfirmType& OutConfirmType)
 {
 	OutConfirmType = NativeDoesActorHaveTag(Actor, Tag) == true ? EARPGConfirmType::Yes : EARPGConfirmType::No;
+}
+
+UPawnCombatComponent* UARPGFunctionLibrary::GetCombatComponentFromActor(AActor* Actor, EARPGValidType& OutValidType)
+{
+	UPawnCombatComponent* CombatComponent = Native_GetCombatComponentFromActor(Actor);
+
+	OutValidType = CombatComponent ? EARPGValidType::Valid : EARPGValidType::Invalid;
+
+	return CombatComponent;
+}
+
+UPawnCombatComponent* UARPGFunctionLibrary::Native_GetCombatComponentFromActor(AActor* Actor)
+{
+	checkf(Actor, TEXT("UARPGFunctionLibrary::Native_GetCombatComponentFromActor Actor is NULL"));
+
+	if (const ICombatable* Combatable = Cast<ICombatable>(Actor))
+	{
+		return Combatable->GetCombatComponent();
+	}
+
+	return nullptr;
 }

@@ -5,16 +5,13 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Types/ARPGEnumTypes.h"
 #include "ARPGFunctionLibrary.generated.h"
 
+class ICombatable;
+class UPawnCombatComponent;
 class UARPGAbilitySystemComponent;
 
-UENUM()
-enum class EARPGConfirmType: uint8
-{
-	Yes,
-	No
-};
 
 /**
  * 
@@ -38,4 +35,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ARPG|FunctionLibrary",
 		meta = (DisplayName = "Does Actor Have Tag", ExpandEnumAsExecs="OutConfirmType"))
 	static void BP_DoesActorHaveTag(AActor* Actor, FGameplayTag Tag, EARPGConfirmType& OutConfirmType);
+
+	UFUNCTION(BlueprintCallable, Category = "ARPG|FunctionLibrary",
+		meta = (DisplayName = "Get Combat Component From Actor", ExpandEnumAsExecs="OutValidType"))
+	static UPawnCombatComponent* GetCombatComponentFromActor(AActor* Actor, EARPGValidType& OutValidType);
+
+	static UPawnCombatComponent* Native_GetCombatComponentFromActor(AActor* Actor);
 };
+ 
