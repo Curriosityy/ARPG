@@ -18,7 +18,7 @@ class ARPG_API AARPGEnemyCharacter : public AARPGBaseCharacter
 public:
 	AARPGEnemyCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	FORCEINLINE UEnemyCombatComponent* GetEnemyCombatComponent() const
+	FORCEINLINE virtual UEnemyCombatComponent* GetEnemyCombatComponent() const
 	{
 		return Cast<UEnemyCombatComponent>(GetCombatComponent());
 	}

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/Combatable.h"
 #include "ARPGBaseCharacter.generated.h"
 
 class UPawnCombatComponent;
@@ -13,7 +14,7 @@ class UARPGAttributeSet;
 class UARPGAbilitySystemComponent;
 
 UCLASS()
-class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface
+class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatable
 {
 	GENERATED_BODY()
 
@@ -40,7 +41,8 @@ public:
 	// Sets default values for this character's properties
 	virtual void PossessedBy(AController* NewController) override;
 
-	FORCEINLINE UPawnCombatComponent* GetCombatComponent() const { return CombatComponent; }
+	virtual
+	FORCEINLINE UPawnCombatComponent* GetCombatComponent() const override { return CombatComponent; }
 
 	static FName CombatComponentName;
 	static FName AttributeSetName;
