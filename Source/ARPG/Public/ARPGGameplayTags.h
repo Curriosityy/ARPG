@@ -33,4 +33,7 @@ namespace ARPGGameplayTags
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Heavy_Axe);
 
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_Finisher);
+
+	/*Enemy Tags*/
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Enemy_Weapon);
 }
