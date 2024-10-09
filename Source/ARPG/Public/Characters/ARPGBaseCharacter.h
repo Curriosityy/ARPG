@@ -24,7 +24,7 @@ class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInte
 	TObjectPtr<UARPGAttributeSet> AttributeSet = {};
 
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat")
 	TObjectPtr<UPawnCombatComponent> CombatComponent = {};
 
 protected:

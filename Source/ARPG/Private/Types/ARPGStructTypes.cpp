@@ -2,8 +2,8 @@
 
 
 #include "Types/ARPGStructTypes.h"
-
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
+#include "AbilitySystem/Abilities/ARPGHeroGameplayAbility.h"
 
 bool FARPGInputConfig::IsValid() const
 {

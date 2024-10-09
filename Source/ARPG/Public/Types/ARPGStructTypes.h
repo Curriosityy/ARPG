@@ -34,7 +34,7 @@ struct FARPGHeroAbilitySet
 	FGameplayTag InputTag = {};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="InputTag")
-	TSubclassOf<UARPGGameplayAbility> AbilityToGrant = {};
+	TSubclassOf<UARPGHeroGameplayAbility> AbilityToGrant = {};
 
 	bool IsValid() const;
 };
@@ -46,11 +46,11 @@ struct ARPG_API FARPGHeroWeaponData
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UARPGHeroLinkedAnimLayer> WeaponAnimLayerToLink;
+	TSubclassOf<UARPGHeroLinkedAnimLayer> WeaponAnimLayerToLink = {};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (TitleProperty = "InputTag", Categories="InputTag"))
-	TArray<FARPGHeroAbilitySet> AbilitiesToGrant;
+	TArray<FARPGHeroAbilitySet> AbilitiesToGrant = {};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UInputMappingContext> WeaponMappingContext;
+	TObjectPtr<UInputMappingContext> WeaponMappingContext = {};
 };
