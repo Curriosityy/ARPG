@@ -9,15 +9,18 @@
 // Sets default values
 AARPGWeaponBase::AARPGWeaponBase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>("WeaponMesh");
 	SetRootComponent(WeaponMesh);
 
 	WeaponCollider = CreateDefaultSubobject<UBoxComponent>("WeaponCollider");
 	WeaponCollider->SetupAttachment(GetRootComponent());
-	WeaponCollider->SetBoxExtent({20.f,20.f,20.f});
+	WeaponCollider->SetBoxExtent({20.f, 20.f, 20.f});
 	WeaponCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	
 }
 
+void AARPGWeaponBase::ToggleCollider(bool Toggle, int32 Type = -1)
+{
+	WeaponCollider->SetCollisionEnabled(Toggle ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+}

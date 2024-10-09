@@ -49,3 +49,11 @@ void UPawnCombatComponent::SetCurrentEquippedWeapon(FGameplayTag WeaponToEquip)
 {
 	CurrentEquippedWeapon = WeaponToEquip;
 }
+
+void UPawnCombatComponent::ToggleCurrentWeaponCollider(bool Toggle, int ToggleType)
+{
+	checkf(CurrentEquippedWeapon.IsValid(), TEXT("Current Equipped weapon tag is invalid"));
+	AARPGWeaponBase* CurrentWeapon = GetCurrentEquippedWeapon();
+	checkf(CurrentWeapon, TEXT("Current Equipped weapon is nullptr"))
+	CurrentWeapon->ToggleCollider(Toggle, ToggleType);
+}

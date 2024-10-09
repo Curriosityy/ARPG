@@ -31,4 +31,6 @@ public:
 	AARPGWeaponBase* GetCurrentEquippedWeapon() const;
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
 	void SetCurrentEquippedWeapon(FGameplayTag WeaponToEquip);
+	UFUNCTION(BlueprintCallable, Category="ARPG|Combat", meta=(ToggleType=-1))
+	void ToggleCurrentWeaponCollider(bool Toggle, int ToggleType);
 };

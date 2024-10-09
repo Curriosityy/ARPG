@@ -63,9 +63,9 @@ UPawnCombatComponent* UARPGFunctionLibrary::Native_GetCombatComponentFromActor(A
 {
 	checkf(Actor, TEXT("UARPGFunctionLibrary::Native_GetCombatComponentFromActor Actor is NULL"));
 
-	if (const ICombatable* Combatable = Cast<ICombatable>(Actor))
+	if (Actor->Implements<UCombatable>())
 	{
-		return Combatable->GetCombatComponent();
+		return Cast<ICombatable>(Actor)->GetCombatComponent();
 	}
 
 	return nullptr;

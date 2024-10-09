@@ -21,9 +21,13 @@ class ARPG_API AARPGWeaponBase : public AActor
 
 public:
 	AARPGWeaponBase();
-	
+
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetWeaponMesh() const { return WeaponMesh; }
 	FORCEINLINE TObjectPtr<UBoxComponent> GetWeaponCollider() const { return WeaponCollider; }
+
+	/*int32 Type is used when other colliders are toggled in different animations, like fisting fight when,
+	 *we want once left fist collision,once right weapon collision*/
+	virtual void ToggleCollider(bool Toggle, int32 Type);
 
 	// Sets default values for this actor's properties
 };
