@@ -3,8 +3,31 @@
 
 #include "Items/Weapons/ARPGWeaponBase.h"
 
+#include "DebugHelper.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "GameFramework/Pawn.h"
+
+void AARPGWeaponBase::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                      UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,
+                                      const FHitResult& SweepResult)
+{
+	APawn* WeaponOwningPawn = GetInstigator<APawn>();
+	checkf(WeaponOwningPawn, TEXT("Weapon have not setted Instigator as owning pawn of the weapon %s"), *GetName())
+
+	if (OtherActor == WeaponOwningPawn)
+	{
+		//Hit ourself
+		return;
+	}
+
+	Debug::Print(FString::Printf(TEXT("%s weapon hitted %s"), *GetName(), *OtherActor->GetName()));
+}
+
+void AARPGWeaponBase::OnWeaponEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+                                         UPrimitiveComponent* OtherComp, int OtherBodyIndex)
+{
+}
 
 // Sets default values
 AARPGWeaponBase::AARPGWeaponBase()
@@ -18,6 +41,9 @@ AARPGWeaponBase::AARPGWeaponBase()
 	WeaponCollider->SetupAttachment(GetRootComponent());
 	WeaponCollider->SetBoxExtent({20.f, 20.f, 20.f});
 	WeaponCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponCollider->SetCollisionResponseToAllChannels(ECR_Overlap);
+	WeaponCollider->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnWeaponOverlap);
+	WeaponCollider->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::OnWeaponEndOverlap);
 }
 
 void AARPGWeaponBase::ToggleCollider(bool Toggle, int32 Type = -1)
