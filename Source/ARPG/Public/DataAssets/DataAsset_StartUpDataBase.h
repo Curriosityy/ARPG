@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "DataAsset_StartUpDataBase.generated.h"
 
+class UGameplayEffect;
 class UARPGAbilitySystemComponent;
 class UARPGGameplayAbility;
 /**
@@ -21,6 +22,9 @@ class ARPG_API UDataAsset_StartUpDataBase : public UDataAsset
 
 	UPROPERTY(EditDefaultsOnly, Category="StartupData")
 	TArray<TSubclassOf<UARPGGameplayAbility>> StartupAbilitiesActivatedOnGiven = {};
+
+	UPROPERTY(EditDefaultsOnly, Category="StartupEffects")
+	TArray<TSubclassOf<UGameplayEffect>> StartupGameplayEffects = {};
 
 public:
 	virtual void GiveToAbilitySystemComponent(UARPGAbilitySystemComponent* InASC, int32 Level = 1);

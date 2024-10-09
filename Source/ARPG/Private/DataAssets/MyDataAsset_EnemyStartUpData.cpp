@@ -4,11 +4,11 @@
 #include "DataAssets/MyDataAsset_EnemyStartUpData.h"
 
 #include "AbilitySystem/Abilities/ARPGEnemyGameplayAbility.h"
-#include "Helpers/GrantAbilityHelper.h"
+#include "Helpers/GrantASCHelper.h"
 
 void UMyDataAsset_EnemyStartUpData::GiveToAbilitySystemComponent(UARPGAbilitySystemComponent* InASC, int32 Level)
 {
 	Super::GiveToAbilitySystemComponent(InASC, Level);
 	TArray<FGameplayAbilitySpecHandle> _;
-	GrantAbilityHelper::GrantAbilityHelper::GrantEnemyAbilities(StartupEnemyAbilities, InASC, 1, _);
+	GrantASCHelper::GrantASCHelper::GrantEnemyAbilities(StartupEnemyAbilities, InASC, 1, _);
 }

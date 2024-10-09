@@ -6,7 +6,7 @@
 #include <Windows.ApplicationModel.Activation.h>
 
 #include "DebugHelper.h"
-#include "Helpers/GrantAbilityHelper.h"
+#include "Helpers/GrantASCHelper.h"
 
 int32 UARPGAbilitySystemComponent::GetActivatableAbilityIndexBasedOnDynamicTag(
 	const FGameplayTag& InInputTag)
@@ -55,8 +55,8 @@ void UARPGAbilitySystemComponent::GrandHeroWeaponAbilities(const TArray<FARPGHer
                                                            int32 ApplyLevel,
                                                            TArray<FGameplayAbilitySpecHandle>& AbilitySpecHandles)
 {
-	GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbilities(HeroAbilitiesesToGrant, this, ApplyLevel,
-	                                                           AbilitySpecHandles);
+	GrantASCHelper::GrantASCHelper::GrantHeroAbilities(HeroAbilitiesesToGrant, this, ApplyLevel,
+	                                                   AbilitySpecHandles);
 }
 
 void UARPGAbilitySystemComponent::RemoveGrantedHeroWeaponAbilities(

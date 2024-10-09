@@ -4,12 +4,12 @@
 #include "DataAssets/DataAsset_HeroStartUpData.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
-#include "Helpers/GrantAbilityHelper.h"
+#include "Helpers/GrantASCHelper.h"
 
 
 void UDataAsset_HeroStartUpData::GiveToAbilitySystemComponent(UARPGAbilitySystemComponent* InASC, const int32 Level)
 {
 	Super::GiveToAbilitySystemComponent(InASC, Level);
 	TArray<FGameplayAbilitySpecHandle> _;
-	GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbilities(HeroStartupAbilitySets, InASC, Level, _);
+	GrantASCHelper::GrantASCHelper::GrantHeroAbilities(HeroStartupAbilitySets, InASC, Level, _);
 }

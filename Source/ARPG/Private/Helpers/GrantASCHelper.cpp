@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Helpers/GrantAbilityHelper.h"
+#include "Helpers/GrantASCHelper.h"
 
 #include "DebugHelper.h"
 #include "GameplayAbilitySpec.h"
@@ -10,9 +10,9 @@
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
 #include "AbilitySystem/Abilities/ARPGHeroGameplayAbility.h"
 
-void GrantAbilityHelper::GrantAbilityHelper::GrantAbility(const TSubclassOf<UARPGGameplayAbility>& Ability,
-                                                          UARPGAbilitySystemComponent* InASC, const int32 Level,
-                                                          FGameplayAbilitySpecHandle& AbilitySpecHandle)
+void GrantASCHelper::GrantASCHelper::GrantAbility(const TSubclassOf<UARPGGameplayAbility>& Ability,
+                                                  UARPGAbilitySystemComponent* InASC, const int32 Level,
+                                                  FGameplayAbilitySpecHandle& AbilitySpecHandle)
 {
 	checkf(Ability, TEXT("UDataAsset_StartUpDataBase::GrantAbility : ability is NULL"));
 	checkf(InASC, TEXT("UDataAsset_StartUpDataBase::GrantAbility: InASC is NULL"));
@@ -24,9 +24,9 @@ void GrantAbilityHelper::GrantAbilityHelper::GrantAbility(const TSubclassOf<UARP
 	AbilitySpecHandle = InASC->GiveAbility(Spec);
 }
 
-void GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbility(const FARPGHeroAbilitySet& ToGrant,
-                                                              UARPGAbilitySystemComponent* InAsc, int32 Level,
-                                                              FGameplayAbilitySpecHandle& AbilitySpecHandle)
+void GrantASCHelper::GrantASCHelper::GrantHeroAbility(const FARPGHeroAbilitySet& ToGrant,
+                                                      UARPGAbilitySystemComponent* InAsc, int32 Level,
+                                                      FGameplayAbilitySpecHandle& AbilitySpecHandle)
 {
 	FGameplayAbilitySpec AbilitySpec{ToGrant.AbilityToGrant};
 	AbilitySpec.SourceObject = InAsc->GetAvatarActor();
@@ -35,9 +35,9 @@ void GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbility(const FARPGHeroAbi
 	AbilitySpecHandle = InAsc->GiveAbility(AbilitySpec);
 }
 
-void GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbilities(const TArray<FARPGHeroAbilitySet>& AbilitiesToGrant,
-                                                                UARPGAbilitySystemComponent* InAsc, const int32 Level,
-                                                                TArray<FGameplayAbilitySpecHandle>& AbilitiesSpecHandle)
+void GrantASCHelper::GrantASCHelper::GrantHeroAbilities(const TArray<FARPGHeroAbilitySet>& AbilitiesToGrant,
+                                                        UARPGAbilitySystemComponent* InAsc, const int32 Level,
+                                                        TArray<FGameplayAbilitySpecHandle>& AbilitiesSpecHandle)
 {
 	FGameplayAbilitySpecHandle SpecHandle;
 	for (const FARPGHeroAbilitySet& ToGrant : AbilitiesToGrant)
@@ -51,7 +51,7 @@ void GrantAbilityHelper::GrantAbilityHelper::GrantHeroAbilities(const TArray<FAR
 	}
 }
 
-void GrantAbilityHelper::GrantAbilityHelper::GrantAbilities(
+void GrantASCHelper::GrantASCHelper::GrantAbilities(
 	const TArray<TSubclassOf<UARPGGameplayAbility>>& AbilitiesToGrant, UARPGAbilitySystemComponent* InASC,
 	const int32 Level, TArray<FGameplayAbilitySpecHandle>& AbilitiesSpecHandle)
 {
@@ -63,7 +63,7 @@ void GrantAbilityHelper::GrantAbilityHelper::GrantAbilities(
 	}
 }
 
-void GrantAbilityHelper::GrantAbilityHelper::GrantEnemyAbilities(
+void GrantASCHelper::GrantASCHelper::GrantEnemyAbilities(
 	const TArray<TSubclassOf<UARPGEnemyGameplayAbility>>& AbilitiesToGrant, UARPGAbilitySystemComponent* InASC,
 	const int32 Level, TArray<FGameplayAbilitySpecHandle>& AbilitiesSpecHandle)
 {
@@ -73,4 +73,26 @@ void GrantAbilityHelper::GrantAbilityHelper::GrantEnemyAbilities(
 		GrantAbility(ToGrant, InASC, Level, SpecHandle);
 		AbilitiesSpecHandle.Add(SpecHandle);
 	}
+}
+
+void GrantASCHelper::GrantASCHelper::GrantGameplayEffectsToSelf(
+	const TArray<TSubclassOf<UGameplayEffect>>& EffectsToGrant, UARPGAbilitySystemComponent* InASC, const int32 Level)
+{
+	for (const TSubclassOf<UGameplayEffect>& ToGrant : EffectsToGrant)
+	{
+		if (!ToGrant)
+		{
+			continue;
+		}
+
+		GrantGameplayEffectToSelf(ToGrant, InASC, Level);
+	}
+}
+
+void GrantASCHelper::GrantASCHelper::GrantGameplayEffectToSelf(
+	const TSubclassOf<UGameplayEffect>& EffectsToGrant, UARPGAbilitySystemComponent* InASC, const int32 Level)
+{
+	InASC->ApplyGameplayEffectToSelf(EffectsToGrant->GetDefaultObject<UGameplayEffect>(),
+	                                 1,
+	                                 InASC->MakeEffectContext());
 }
