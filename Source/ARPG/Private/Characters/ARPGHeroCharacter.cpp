@@ -14,13 +14,16 @@
 #include "DebugHelper.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
+#include "AbilitySystem/ARPGHeroAttributeSet.h"
 #include "Components/Combat/HeroCombatComponent.h"
 #include "Components/Input/ARPGInputComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
 
 AARPGHeroCharacter::AARPGHeroCharacter(const FObjectInitializer& ObjectInitializer):
-	Super(ObjectInitializer.SetDefaultSubobjectClass<UHeroCombatComponent>(CombatComponentName))
+	Super(ObjectInitializer
+	      .SetDefaultSubobjectClass<UHeroCombatComponent>(CombatComponentName)
+	      .SetDefaultSubobjectClass<UARPGHeroAttributeSet>(AttributeSetName))
 {
 	GetCapsuleComponent()->SetCapsuleSize(42.f, 96.f);
 

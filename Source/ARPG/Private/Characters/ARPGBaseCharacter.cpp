@@ -9,7 +9,7 @@
 
 
 FName AARPGBaseCharacter::CombatComponentName(TEXT("CombatComponent"));
-
+FName AARPGBaseCharacter::AttributeSetName(TEXT("AttributeSet"));
 // Sets default values
 AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
 {
@@ -20,8 +20,8 @@ AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializ
 	GetMesh()->bReceivesDecals = false;
 
 	AbilitySystemComponent = CreateDefaultSubobject<UARPGAbilitySystemComponent>("AbilitySystemComponent");
-	AttributeSet = CreateDefaultSubobject<UARPGAttributeSet>("AttributeSet");
 
+	AttributeSet = CreateDefaultSubobject<UARPGAttributeSet>(AttributeSetName);
 	CombatComponent = CreateDefaultSubobject<UPawnCombatComponent>(CombatComponentName);
 }
 

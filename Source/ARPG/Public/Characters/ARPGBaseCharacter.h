@@ -43,4 +43,5 @@ public:
 	FORCEINLINE UPawnCombatComponent* GetCombatComponent() const { return CombatComponent; }
 
 	static FName CombatComponentName;
+	static FName AttributeSetName;
 };

@@ -22,27 +22,19 @@ class ARPG_API UARPGAttributeSet : public UAttributeSet
 public:
 	UPROPERTY(BlueprintReadOnly, Category="Health", ReplicatedUsing = OnRep_CurrentHealth)
 	FGameplayAttributeData CurrentHealth = {};
-	ATTRIBUTE_ACCESSORS(UARPGAttributeSet, CurrentHealth);
+	ATTRIBUTE_ACCESSORS(ThisClass, CurrentHealth);
 
 	UPROPERTY(BlueprintReadOnly, Category="Health", ReplicatedUsing = OnRep_MaxHealth)
 	FGameplayAttributeData MaxHealth = {};
-	ATTRIBUTE_ACCESSORS(UARPGAttributeSet, MaxHealth);
-
-	UPROPERTY(BlueprintReadOnly, Category="Rage", ReplicatedUsing = OnRep_CurrentRage)
-	FGameplayAttributeData CurrentRage = {};
-	ATTRIBUTE_ACCESSORS(UARPGAttributeSet, CurrentRage);
-
-	UPROPERTY(BlueprintReadOnly, Category="Rage", ReplicatedUsing = OnRep_MaxRage)
-	FGameplayAttributeData MaxRage = {};
-	ATTRIBUTE_ACCESSORS(UARPGAttributeSet, MaxRage);
+	ATTRIBUTE_ACCESSORS(ThisClass, MaxHealth);
 
 	UPROPERTY(BlueprintReadOnly, Category="Damage", ReplicatedUsing = OnRep_AttackPower)
 	FGameplayAttributeData AttackPower = {};
-	ATTRIBUTE_ACCESSORS(UARPGAttributeSet, AttackPower);
+	ATTRIBUTE_ACCESSORS(ThisClass, AttackPower);
 
 	UPROPERTY(BlueprintReadOnly, Category="Damage", ReplicatedUsing = OnRep_DefencePower)
 	FGameplayAttributeData DefencePower = {};
-	ATTRIBUTE_ACCESSORS(UARPGAttributeSet, DefencePower);
+	ATTRIBUTE_ACCESSORS(ThisClass, DefencePower);
 
 	UARPGAttributeSet();
 
@@ -50,10 +42,6 @@ public:
 	void OnRep_CurrentHealth(const FGameplayAttributeData& OldHealth);
 	UFUNCTION()
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldHealth);
-	UFUNCTION()
-	void OnRep_CurrentRage(const FGameplayAttributeData& OldRage);
-	UFUNCTION()
-	void OnRep_MaxRage(const FGameplayAttributeData& OldRage);
 	UFUNCTION()
 	void OnRep_AttackPower(const FGameplayAttributeData& OldAttackPower);
 	UFUNCTION()
