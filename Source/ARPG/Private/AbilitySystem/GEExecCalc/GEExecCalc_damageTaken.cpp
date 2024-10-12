@@ -5,6 +5,7 @@
 
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
+#include "GameplayAbilityBlueprint.h"
 #include "AbilitySystem/ARPGAttributeSet.h"
 
 struct FARPGDamageCapture
