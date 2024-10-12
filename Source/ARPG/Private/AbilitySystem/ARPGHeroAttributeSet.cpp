@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/ARPGHeroAttributeSet.h"
 
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 
 UARPGHeroAttributeSet::UARPGHeroAttributeSet()
@@ -27,4 +28,14 @@ void UARPGHeroAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePro
 
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, CurrentRage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxRage, COND_None, REPNOTIFY_Always);
+}
+
+void UARPGHeroAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	if (Data.EvaluatedData.Attribute == GetCurrentRageAttribute())
+	{
+		SetCurrentRage(FMath::Clamp(GetCurrentRage(), 0, GetMaxRage()));
+	}
 }

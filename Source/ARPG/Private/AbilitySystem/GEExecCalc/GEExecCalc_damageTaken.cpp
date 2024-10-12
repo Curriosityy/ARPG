@@ -30,6 +30,7 @@ static const FARPGDamageCapture& GetDamageCapture()
 
 UGEExecCalc_damageTaken::UGEExecCalc_damageTaken()
 {
+	//Longer version
 	// FGameplayEffectAttributeCaptureDefinition AttackPowerDef =
 	// {
 	// 	FindFieldChecked<FProperty>(UARPGAttributeSet::StaticClass(),
@@ -68,17 +69,8 @@ void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustom
 	float BaseDamage = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Shared_SetByCaller_BaseDamage);
 	float ComboCount = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Shared_SetByCaller_ComboCount);
 
-	// if (owningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Player_SetByCaller_AttackType_Light)
-	// 	{
-	// 		owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Player_SetByCaller_AttackType_Light);
-	// 	}
-	// 	else
-	// 	{
-	// 	}
-	//
-	// float ComboCount = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Player_SetByCaller_AttackType_Heavy);
 	float damageMultiplier = 1.0f;
-
+	//TODO Multiplier should be injected by tag, not calculated like that (calculated in ability not here)
 	if (owningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Player_SetByCaller_AttackType_Light))
 	{
 		damageMultiplier = (ComboCount - 1) * 0.05f + 1;
@@ -90,10 +82,6 @@ void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustom
 	}
 
 	float FinalDamage = BaseDamage * damageMultiplier * AttPower / DefPower;
-
-	Debug::Print(FString::Printf(
-		TEXT("AttPower %f, DefPower %f, BaseDamage %f, ComboCount %f, damageMultiplier %f, FinalDamage %f "), AttPower,
-		DefPower, BaseDamage, ComboCount, damageMultiplier, FinalDamage));
 
 	OutExecutionOutput.AddOutputModifier(
 		{GetDamageCapture().DamageTakenProperty, EGameplayModOp::Additive, FinalDamage});

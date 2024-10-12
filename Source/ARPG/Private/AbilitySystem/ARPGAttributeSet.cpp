@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/ARPGAttributeSet.h"
 
+#include "GameplayEffectExtension.h"
+#include "Chaos/Deformable/Utilities.h"
 #include "Net/UnrealNetwork.h"
 
 UARPGAttributeSet::UARPGAttributeSet()
@@ -48,4 +50,23 @@ void UARPGAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, AttackPower, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, DefencePower, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, DamageTaken, COND_None, REPNOTIFY_Always);
+}
+
+void UARPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute())
+	{
+		SetCurrentHealth(FMath::Clamp(GetCurrentHealth(), 0, GetMaxHealth()));
+	}
+
+	if (Data.EvaluatedData.Attribute == GetDamageTakenAttribute())
+	{
+		SetCurrentHealth(FMath::Clamp(GetCurrentHealth() - GetDamageTaken(), 0, GetMaxHealth()));
+		SetDamageTaken(0.f);
+
+		//TODO:Notify UI
+		//TODO:Kill if HP <=0
+	}
 }

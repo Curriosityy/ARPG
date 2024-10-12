@@ -55,4 +55,5 @@ public:
 	void OnRep_DamageTaken(const FGameplayAttributeData& OldDamageTaken);
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 };
