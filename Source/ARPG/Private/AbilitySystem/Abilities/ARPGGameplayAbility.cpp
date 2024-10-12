@@ -92,7 +92,8 @@ TMap<FGameplayTag, float> UARPGGameplayAbility::MakeDamageSpecMap(float BaseDama
 
 	TMap<FGameplayTag, float> HeroDamageSpecMap;
 	HeroDamageSpecMap.Add(ARPGGameplayTags::Shared_SetByCaller_BaseDamage, BaseDamage);
-	HeroDamageSpecMap.Add(CurrentAttackTypeTag, CurrentComboCount);
+	HeroDamageSpecMap.Add(CurrentAttackTypeTag, 0);
+	HeroDamageSpecMap.Add(ARPGGameplayTags::Shared_SetByCaller_ComboCount, CurrentComboCount);
 
 	return HeroDamageSpecMap;
 }

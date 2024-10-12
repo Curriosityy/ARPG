@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/GEExecCalc/GEExecCalc_damageTaken.h"
 
+#include "ARPGGameplayTags.h"
 #include "AbilitySystem/ARPGAttributeSet.h"
 
 struct FARPGDamageCapture
@@ -35,7 +36,41 @@ UGEExecCalc_damageTaken::UGEExecCalc_damageTaken()
 	// };
 	//
 	// RelevantAttributesToCapture.Add(AttackPowerDef);
-	FARPGDamageCapture capture = GetDamageCapture();
+
 	RelevantAttributesToCapture.Add(GetDamageCapture().AttackPowerDef);
-	RelevantAttributesToCapture.Add(capture.AttackPowerDef);
+	RelevantAttributesToCapture.Add(GetDamageCapture().AttackPowerDef);
+}
+
+void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+                                                     FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
+{
+	Super::Execute_Implementation(ExecutionParams, OutExecutionOutput);
+
+	const FGameplayEffectSpec& owningSpec = ExecutionParams.GetOwningSpec();
+	const FGameplayEffectContextHandle& handle = owningSpec.GetContext();
+
+	FAggregatorEvaluateParameters EvaluateParams;
+	EvaluateParams.SourceTags = owningSpec.CapturedSourceTags.GetAggregatedTags();
+	EvaluateParams.TargetTags = owningSpec.CapturedTargetTags.GetAggregatedTags();
+
+	float SourceAttPower = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageCapture().AttackPowerDef, EvaluateParams,
+	                                                           SourceAttPower);
+
+	float SourceDefPower = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageCapture().DefencePowerDef, EvaluateParams,
+	                                                           SourceDefPower);
+
+	float BaseDamage = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Shared_SetByCaller_BaseDamage);
+	float ComboCount = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Shared_SetByCaller_ComboCount);
+
+	// if (owningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Player_SetByCaller_AttackType_Light)
+	// 	{
+	// 		owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Player_SetByCaller_AttackType_Light);
+	// 	}
+	// 	else
+	// 	{
+	// 	}
+	//
+	// float ComboCount = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Player_SetByCaller_AttackType_Heavy);
 }

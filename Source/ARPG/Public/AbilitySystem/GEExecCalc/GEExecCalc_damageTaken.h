@@ -13,9 +13,9 @@ UCLASS()
 class ARPG_API UGEExecCalc_damageTaken : public UGameplayEffectExecutionCalculation
 {
 	GENERATED_BODY()
-	UPROPERTY()
-	FProperty* AttackPower;
 
 public:
 	UGEExecCalc_damageTaken();
+	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+	                                    FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
 };
