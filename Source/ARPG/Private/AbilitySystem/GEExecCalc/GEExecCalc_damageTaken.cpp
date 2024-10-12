@@ -4,18 +4,21 @@
 #include "AbilitySystem/GEExecCalc/GEExecCalc_damageTaken.h"
 
 #include "ARPGGameplayTags.h"
+#include "DebugHelper.h"
 #include "AbilitySystem/ARPGAttributeSet.h"
 
 struct FARPGDamageCapture
 {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(AttackPower)
 	DECLARE_ATTRIBUTE_CAPTUREDEF(DefencePower)
+	DECLARE_ATTRIBUTE_CAPTUREDEF(DamageTaken)
 
 	FARPGDamageCapture()
 	{
 		//DEFINE_ATTRIBUTE_CAPTUREDEF(Attribute set class, Property, Source/Targer,Snapshot (true/false)
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UARPGAttributeSet, AttackPower, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UARPGAttributeSet, DefencePower, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UARPGAttributeSet, DamageTaken, Target, false);
 	}
 };
 
@@ -38,7 +41,8 @@ UGEExecCalc_damageTaken::UGEExecCalc_damageTaken()
 	// RelevantAttributesToCapture.Add(AttackPowerDef);
 
 	RelevantAttributesToCapture.Add(GetDamageCapture().AttackPowerDef);
-	RelevantAttributesToCapture.Add(GetDamageCapture().AttackPowerDef);
+	RelevantAttributesToCapture.Add(GetDamageCapture().DefencePowerDef);
+	RelevantAttributesToCapture.Add(GetDamageCapture().DamageTakenDef);
 }
 
 void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
@@ -53,13 +57,13 @@ void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustom
 	EvaluateParams.SourceTags = owningSpec.CapturedSourceTags.GetAggregatedTags();
 	EvaluateParams.TargetTags = owningSpec.CapturedTargetTags.GetAggregatedTags();
 
-	float SourceAttPower = 0.f;
+	float AttPower = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageCapture().AttackPowerDef, EvaluateParams,
-	                                                           SourceAttPower);
+	                                                           AttPower);
 
-	float SourceDefPower = 0.f;
+	float DefPower = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageCapture().DefencePowerDef, EvaluateParams,
-	                                                           SourceDefPower);
+	                                                           DefPower);
 
 	float BaseDamage = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Shared_SetByCaller_BaseDamage);
 	float ComboCount = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Shared_SetByCaller_ComboCount);
@@ -73,4 +77,24 @@ void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustom
 	// 	}
 	//
 	// float ComboCount = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Player_SetByCaller_AttackType_Heavy);
+	float damageMultiplier = 1.0f;
+
+	if (owningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Player_SetByCaller_AttackType_Light))
+	{
+		damageMultiplier = (ComboCount - 1) * 0.05f + 1;
+	}
+
+	if (owningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Player_SetByCaller_AttackType_Heavy))
+	{
+		damageMultiplier = ComboCount * 0.15f + 1;
+	}
+
+	float FinalDamage = BaseDamage * damageMultiplier * AttPower / DefPower;
+
+	Debug::Print(FString::Printf(
+		TEXT("AttPower %f, DefPower %f, BaseDamage %f, ComboCount %f, damageMultiplier %f, FinalDamage %f "), AttPower,
+		DefPower, BaseDamage, ComboCount, damageMultiplier, FinalDamage));
+
+	OutExecutionOutput.AddOutputModifier(
+		{GetDamageCapture().DamageTakenProperty, EGameplayModOp::Additive, FinalDamage});
 }

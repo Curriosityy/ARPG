@@ -20,6 +20,10 @@ class ARPG_API UARPGAttributeSet : public UAttributeSet
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(BlueprintReadOnly, Category="Health", ReplicatedUsing = OnRep_DamageTaken)
+	FGameplayAttributeData DamageTaken = {};
+	ATTRIBUTE_ACCESSORS(ThisClass, DamageTaken);
+
 	UPROPERTY(BlueprintReadOnly, Category="Health", ReplicatedUsing = OnRep_CurrentHealth)
 	FGameplayAttributeData CurrentHealth = {};
 	ATTRIBUTE_ACCESSORS(ThisClass, CurrentHealth);
@@ -46,6 +50,9 @@ public:
 	void OnRep_AttackPower(const FGameplayAttributeData& OldAttackPower);
 	UFUNCTION()
 	void OnRep_DefencePower(const FGameplayAttributeData& OldDefencePower);
+
+	UFUNCTION()
+	void OnRep_DamageTaken(const FGameplayAttributeData& OldDamageTaken);
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 };
