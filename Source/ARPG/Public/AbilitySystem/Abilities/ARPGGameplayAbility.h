@@ -6,6 +6,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "ARPGGameplayAbility.generated.h"
 
+enum class EARPGValidType : uint8;
 class UARPGAbilitySystemComponent;
 class UPawnCombatComponent;
 
@@ -50,4 +51,13 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ARPG|Ability")
 	static TMap<FGameplayTag, float> MakeDamageSpecMap(float BaseDamage, FGameplayTag CurrentAttackTypeTag,
 	                                                   int CurrentComboCount);
+
+	FActiveGameplayEffectHandle Native_ApplyEffectSpecHandle(AActor* TargetActor,
+	                                                         const FGameplayEffectSpecHandle& InSpecHandle);
+
+	UFUNCTION(BlueprintCallable, Category = "ARPG|Ability",
+		meta = (DisplayName = "Apply Effect Spec Handle to target", ExpandEnumAsExecs="Success"))
+	FActiveGameplayEffectHandle BP_ApplyEffectSpecHandle(AActor* TargetActor,
+	                                                     const FGameplayEffectSpecHandle& InSpecHandle,
+	                                                     EARPGSuccessType& Success);
 };

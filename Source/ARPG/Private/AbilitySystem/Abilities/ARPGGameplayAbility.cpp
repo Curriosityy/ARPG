@@ -3,10 +3,12 @@
 
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "ARPGGameplayTags.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
+#include "Types/ARPGEnumTypes.h"
 
 void UARPGGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -85,7 +87,7 @@ FGameplayEffectSpecHandle UARPGGameplayAbility::MakeEffectSpecHandle(TSubclassOf
 TMap<FGameplayTag, float> UARPGGameplayAbility::MakeDamageSpecMap(float BaseDamage, FGameplayTag CurrentAttackTypeTag,
                                                                   int CurrentComboCount)
 {
-	checkf(!CurrentAttackTypeTag.IsValid(),
+	checkf(CurrentAttackTypeTag.IsValid(),
 	       TEXT("UARPGGameplayAbility::MakeDamageSpecMap CurrentAttackTypeTag Need to be valid"))
 
 	TMap<FGameplayTag, float> HeroDamageSpecMap;
@@ -93,4 +95,24 @@ TMap<FGameplayTag, float> UARPGGameplayAbility::MakeDamageSpecMap(float BaseDama
 	HeroDamageSpecMap.Add(CurrentAttackTypeTag, CurrentComboCount);
 
 	return HeroDamageSpecMap;
+}
+
+FActiveGameplayEffectHandle UARPGGameplayAbility::Native_ApplyEffectSpecHandle(AActor* TargetActor,
+                                                                               const FGameplayEffectSpecHandle&
+                                                                               InSpecHandle)
+{
+	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	checkf(ASC, TEXT("UARPGGameplayAbility::Native_ApplyEffectSpecHandle Target Actor has no ASC"));
+	checkf(InSpecHandle.IsValid(), TEXT("UARPGGameplayAbility::Native_ApplyEffectSpecHandle InSpecHandle is invalid"));
+	return GetAbilitySystemComponentFromActorInfo()
+		->ApplyGameplayEffectSpecToTarget(*InSpecHandle.Data, ASC);
+}
+
+FActiveGameplayEffectHandle UARPGGameplayAbility::BP_ApplyEffectSpecHandle(AActor* TargetActor,
+                                                                           const FGameplayEffectSpecHandle&
+                                                                           InSpecHandle, EARPGSuccessType& IsSpecValid)
+{
+	FActiveGameplayEffectHandle handle = Native_ApplyEffectSpecHandle(TargetActor, InSpecHandle);
+	IsSpecValid = handle.WasSuccessfullyApplied() ? EARPGSuccessType::Successful : EARPGSuccessType::Unsuccessful;
+	return handle;
 }
