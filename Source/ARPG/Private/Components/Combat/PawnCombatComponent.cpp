@@ -2,6 +2,9 @@
 
 
 #include "Components/Combat/PawnCombatComponent.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "Items/Weapons/ARPGWeaponBase.h"
 
@@ -16,7 +19,7 @@ void UPawnCombatComponent::AddCarriedWeapon(FGameplayTag WeaponTag, AARPGWeaponB
 
 	if (bAsEquipped)
 	{
-		CurrentEquippedWeapon = WeaponTag;
+		SetCurrentEquippedWeapon(WeaponTag);
 	}
 
 	Debug::Print(FString::Printf(
@@ -45,8 +48,52 @@ AARPGWeaponBase* UPawnCombatComponent::GetCurrentEquippedWeapon() const
 	return GetCarriedWeapon(CurrentEquippedWeapon);
 }
 
+void UPawnCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
+{
+	Debug::Print(FString::Printf(TEXT("OnWeaponHit")));
+	FGameplayEventData data;
+	data.Instigator = GetOwner();
+	data.Target = ActorHitted;
+
+	if (HittedList.Contains(ActorHitted))
+	{
+		return;
+	}
+
+	HittedList.Add(ActorHitted);
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		GetOwner(),
+		ARPGGameplayTags::Shared_Event_MeleeHit,
+		data);
+}
+
+void UPawnCombatComponent::OnWeaponEndOverlap(AActor* ActorHitted, AActor* HittedBy)
+{
+	Debug::Print(FString::Printf(TEXT("OnWeaponEndOverlap")));
+	HittedList.Remove(ActorHitted);
+}
+
+void UPawnCombatComponent::SetupEvents(FGameplayTag OldEquipedWeapon, FGameplayTag WeaponToEquip)
+{
+	if (OldEquipedWeapon.IsValid())
+	{
+		auto weapon = GetCarriedWeapon(OldEquipedWeapon);
+		weapon->OnStartHit.RemoveDynamic(this, &UPawnCombatComponent::OnWeaponHit);
+		weapon->OnEndHit.RemoveDynamic(this, &UPawnCombatComponent::OnWeaponEndOverlap);
+	}
+
+	if (WeaponToEquip.IsValid())
+	{
+		auto weapon = GetCarriedWeapon(WeaponToEquip);
+		weapon->OnStartHit.AddDynamic(this, &UPawnCombatComponent::OnWeaponHit);
+		weapon->OnEndHit.AddDynamic(this, &UPawnCombatComponent::OnWeaponEndOverlap);
+	}
+}
+
 void UPawnCombatComponent::SetCurrentEquippedWeapon(FGameplayTag WeaponToEquip)
 {
+	SetupEvents(CurrentEquippedWeapon, WeaponToEquip);
 	CurrentEquippedWeapon = WeaponToEquip;
 }
 

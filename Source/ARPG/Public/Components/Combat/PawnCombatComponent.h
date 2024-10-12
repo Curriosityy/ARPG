@@ -22,6 +22,9 @@ class ARPG_API UPawnCombatComponent : public UPawnExtensionComponentBase
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess))
 	FGameplayTag CurrentEquippedWeapon = {};
 
+	UPROPERTY()
+	TSet<AActor*> HittedList = {};
+
 public:
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
 	void AddCarriedWeapon(FGameplayTag WeaponTag, AARPGWeaponBase* Weapon, bool bAsEquipped = false);
@@ -29,6 +32,14 @@ public:
 	AARPGWeaponBase* GetCarriedWeapon(FGameplayTag weaponTag) const;
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
 	AARPGWeaponBase* GetCurrentEquippedWeapon() const;
+
+	UFUNCTION()
+	void OnWeaponHit(AActor* ActorHitted, AActor* HittedBy);
+	UFUNCTION()
+	void OnWeaponEndOverlap(AActor* ActorHitted, AActor* HittedBy);
+
+	void SetupEvents(FGameplayTag OldEquipedWeapon, FGameplayTag WeaponToEquip);
+
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
 	void SetCurrentEquippedWeapon(FGameplayTag WeaponToEquip);
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat", meta=(ToggleType=-1))

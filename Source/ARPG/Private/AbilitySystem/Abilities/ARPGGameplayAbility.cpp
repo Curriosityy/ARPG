@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
 
 #include "AbilitySystemComponent.h"
+#include "ARPGGameplayTags.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
 
@@ -50,4 +51,46 @@ UPawnCombatComponent* UARPGGameplayAbility::GetCombatComponentFromActorInfo() co
 UARPGAbilitySystemComponent* UARPGGameplayAbility::GetARPGAbilitySystemComponentFromActorInfo() const
 {
 	return Cast<UARPGAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent);
+}
+
+FGameplayEffectSpecHandle UARPGGameplayAbility::MakeEffectSpecHandle(TSubclassOf<UGameplayEffect> Effect,
+                                                                     TMap<FGameplayTag, float> EffectData)
+{
+	checkf(Effect, TEXT("Effect in UARPGGameplayAbility::MakeEfectSpecHandle is NULLPTR"));
+
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponentFromActorInfo();
+	FGameplayEffectContextHandle ContextHandle = ASC->MakeEffectContext();
+	ContextHandle.SetAbility(this);
+	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+	ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+
+	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(
+		Effect,
+		GetAbilityLevel(),
+		ContextHandle
+	);
+	for (TTuple<FGameplayTag, float> Data : EffectData)
+	{
+		if (!Data.Key.IsValid() || EffectSpecHandle.Data->SetByCallerTagMagnitudes.Find(Data.Key))
+		{
+			continue;
+		}
+
+		EffectSpecHandle.Data->SetSetByCallerMagnitude(Data.Key, Data.Value);
+	}
+
+	return EffectSpecHandle;
+}
+
+TMap<FGameplayTag, float> UARPGGameplayAbility::MakeDamageSpecMap(float BaseDamage, FGameplayTag CurrentAttackTypeTag,
+                                                                  int CurrentComboCount)
+{
+	checkf(!CurrentAttackTypeTag.IsValid(),
+	       TEXT("UARPGGameplayAbility::MakeDamageSpecMap CurrentAttackTypeTag Need to be valid"))
+
+	TMap<FGameplayTag, float> HeroDamageSpecMap;
+	HeroDamageSpecMap.Add(ARPGGameplayTags::Shared_SetByCaller_BaseDamage, BaseDamage);
+	HeroDamageSpecMap.Add(CurrentAttackTypeTag, CurrentComboCount);
+
+	return HeroDamageSpecMap;
 }

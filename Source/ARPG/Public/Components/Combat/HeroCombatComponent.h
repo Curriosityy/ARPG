@@ -16,6 +16,11 @@ class ARPG_API UHeroCombatComponent : public UPawnCombatComponent
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, Category="Warrior|Combat")
+	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
 	AARPGHeroWeapon* GetHeroCarriedWeapon(FGameplayTag Tag) const;
+	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
+	AARPGHeroWeapon* GetHeroCurrentWeapon() const;
+
+	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
+	float GetCurrenHeroWeaponDamageAtLevel(int Level) const;
 };

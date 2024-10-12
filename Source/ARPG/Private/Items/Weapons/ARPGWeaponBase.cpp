@@ -21,12 +21,22 @@ void AARPGWeaponBase::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, 
 		return;
 	}
 
-	Debug::Print(FString::Printf(TEXT("%s weapon hitted %s"), *GetName(), *OtherActor->GetName()));
+	OnStartHit.Broadcast(OtherActor, WeaponOwningPawn);
 }
 
 void AARPGWeaponBase::OnWeaponEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                          UPrimitiveComponent* OtherComp, int OtherBodyIndex)
 {
+	APawn* WeaponOwningPawn = GetInstigator<APawn>();
+	checkf(WeaponOwningPawn, TEXT("Weapon have not setted Instigator as owning pawn of the weapon %s"), *GetName())
+
+	if (OtherActor == WeaponOwningPawn)
+	{
+		//Hit ourself
+		return;
+	}
+
+	OnEndHit.Broadcast(OtherActor, WeaponOwningPawn);
 }
 
 // Sets default values

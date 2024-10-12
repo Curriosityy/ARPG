@@ -42,4 +42,12 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="ARPG|Ability")
 	UARPGAbilitySystemComponent* GetARPGAbilitySystemComponentFromActorInfo() const;
+
+	UFUNCTION(BlueprintPure, Category = "ARPG|Ability")
+	FGameplayEffectSpecHandle MakeEffectSpecHandle(TSubclassOf<UGameplayEffect> EffectClass,
+	                                               TMap<FGameplayTag, float> EffectData);
+
+	UFUNCTION(BlueprintPure, Category = "ARPG|Ability")
+	static TMap<FGameplayTag, float> MakeDamageSpecMap(float BaseDamage, FGameplayTag CurrentAttackTypeTag,
+	                                                   int CurrentComboCount);
 };

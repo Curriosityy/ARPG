@@ -9,3 +9,13 @@ AARPGHeroWeapon* UHeroCombatComponent::GetHeroCarriedWeapon(FGameplayTag Tag) co
 {
 	return Cast<AARPGHeroWeapon>(GetCarriedWeapon(Tag));
 }
+
+AARPGHeroWeapon* UHeroCombatComponent::GetHeroCurrentWeapon() const
+{
+	return Cast<AARPGHeroWeapon>(GetCurrentEquippedWeapon());
+}
+
+float UHeroCombatComponent::GetCurrenHeroWeaponDamageAtLevel(int Level) const
+{
+	return GetHeroCurrentWeapon()->HeroWeaponData.WeaponBaseDamage.GetValueAtLevel(Level);
+}

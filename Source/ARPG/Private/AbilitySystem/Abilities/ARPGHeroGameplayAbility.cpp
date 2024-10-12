@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Abilities/ARPGHeroGameplayAbility.h"
 
+#include "ARPGGameplayTags.h"
 #include "Characters/ARPGHeroCharacter.h"
 #include "Controllers/ARPGHeroController.h"
 

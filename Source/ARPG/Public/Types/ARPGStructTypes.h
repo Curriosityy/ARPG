@@ -4,8 +4,10 @@
 #include "CoreMinimal.h"
 #include "CoreUObject.h"
 #include "GameplayTagContainer.h"
+#include "ScalableFloat.h"
 #include "ARPGStructTypes.generated.h"
 
+struct FScalableFloat;
 class UARPGGameplayAbility;
 class UInputAction;
 class UARPGHeroGameplayAbility;
@@ -53,4 +55,7 @@ struct ARPG_API FARPGHeroWeaponData
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UInputMappingContext> WeaponMappingContext = {};
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FScalableFloat WeaponBaseDamage;
 };

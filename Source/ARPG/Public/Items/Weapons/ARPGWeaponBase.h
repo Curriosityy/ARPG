@@ -8,6 +8,8 @@
 
 class UBoxComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHit, AActor*, ActorHitted, AActor*, HittedBy);
+
 UCLASS()
 class ARPG_API AARPGWeaponBase : public AActor
 {
@@ -25,7 +27,10 @@ public:
 	                             UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,
 	                             const FHitResult& SweepResult);
 
+	FOnHit OnStartHit;
+	FOnHit OnEndHit;
 
+	
 	UFUNCTION()
 	virtual void OnWeaponEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                                UPrimitiveComponent* OtherComp, int OtherBodyIndex);
