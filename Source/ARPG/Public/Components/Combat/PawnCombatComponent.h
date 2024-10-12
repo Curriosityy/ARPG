@@ -34,7 +34,7 @@ public:
 	AARPGWeaponBase* GetCurrentEquippedWeapon() const;
 
 	UFUNCTION()
-	void OnWeaponHit(AActor* ActorHitted, AActor* HittedBy);
+	virtual void OnWeaponHit(AActor* ActorHitted, AActor* HittedBy);
 	UFUNCTION()
 	void OnWeaponEndOverlap(AActor* ActorHitted, AActor* HittedBy);
 

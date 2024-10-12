@@ -3,6 +3,8 @@
 
 #include "Components/Combat/HeroCombatComponent.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "ARPGGameplayTags.h"
 #include "Items/Weapons/ARPGHeroWeapon.h"
 
 AARPGHeroWeapon* UHeroCombatComponent::GetHeroCarriedWeapon(FGameplayTag Tag) const
@@ -18,4 +20,13 @@ AARPGHeroWeapon* UHeroCombatComponent::GetHeroCurrentWeapon() const
 float UHeroCombatComponent::GetCurrenHeroWeaponDamageAtLevel(int Level) const
 {
 	return GetHeroCurrentWeapon()->HeroWeaponData.WeaponBaseDamage.GetValueAtLevel(Level);
+}
+
+void UHeroCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
+{
+	Super::OnWeaponHit(ActorHitted, HittedBy);
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(),
+	                                                         ARPGGameplayTags::Player_Event_HitPause,
+	                                                         {});
 }
