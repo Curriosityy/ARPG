@@ -4,7 +4,6 @@
 #include "AbilitySystem/ARPGAttributeSet.h"
 
 #include "GameplayEffectExtension.h"
-#include "Chaos/Deformable/Utilities.h"
 #include "Net/UnrealNetwork.h"
 
 UARPGAttributeSet::UARPGAttributeSet()
