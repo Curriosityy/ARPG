@@ -4,8 +4,11 @@
 #include "AbilitySystem/ARPGAttributeSet.h"
 
 #include "ARPGGameplayTags.h"
+#include "DebugHelper.h"
 #include "GameplayEffectExtension.h"
+#include "Components/UI/PawnUIComponent.h"
 #include "FunctionLibraries/ARPGFunctionLibrary.h"
+#include "Interfaces/UIComponentInterface.h"
 #include "Net/UnrealNetwork.h"
 
 UARPGAttributeSet::UARPGAttributeSet()
@@ -57,6 +60,17 @@ void UARPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 {
 	Super::PostGameplayEffectExecute(Data);
 
+	if (!UIComponentInterface.IsValid())
+	{
+		UIComponentInterface = Cast<IUIComponentInterface>(Data.Target.GetAvatarActor());
+	}
+
+	checkf(UIComponentInterface.IsValid(), TEXT("%s didn't implement IUIComponentInterface"),
+	       *Data.Target.GetAvatarActor()->GetName())
+
+	checkf(UIComponentInterface->GetUIComponent(), TEXT("%s UIComponentInterface->GetUIComponent() return nullptr"),
+	       *Data.Target.GetAvatarActor()->GetName())
+
 	if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute())
 	{
 		SetCurrentHealth(FMath::Clamp(GetCurrentHealth(), 0, GetMaxHealth()));
@@ -64,15 +78,17 @@ void UARPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 	if (Data.EvaluatedData.Attribute == GetDamageTakenAttribute())
 	{
-		const float newHealth = FMath::Clamp(GetCurrentHealth() - GetDamageTaken(), 0, GetMaxHealth());
-		SetCurrentHealth(newHealth);
+		const float OldHealth = GetCurrentHealth();
+		const float NewHealth = FMath::Clamp(OldHealth - GetDamageTaken(), 0, GetMaxHealth());
+		SetCurrentHealth(NewHealth);
 		SetDamageTaken(0.f);
 
-		if (newHealth <= 0)
+		if (NewHealth <= 0)
 		{
 			UARPGFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(),
 			                                                  ARPGGameplayTags::Shared_Status_Death);
 		}
-		//TODO:Notify UI
+
+		UIComponentInterface->GetUIComponent()->OnHealthChanged.Broadcast(OldHealth, NewHealth);
 	}
 }

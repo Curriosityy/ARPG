@@ -6,6 +6,8 @@
 #include "Components/PawnExtensionComponentBase.h"
 #include "PawnUIComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnValueChanged, float, OldValue, float, NewValue);
+
 /**
  * 
  */
@@ -13,5 +15,8 @@ UCLASS()
 class ARPG_API UPawnUIComponent : public UPawnExtensionComponentBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnValueChanged OnHealthChanged;
 };

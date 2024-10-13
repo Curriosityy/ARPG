@@ -11,6 +11,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+
+class IUIComponentInterface;
 /**
  * 
  */
@@ -18,7 +20,10 @@ UCLASS()
 class ARPG_API UARPGAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
-
+protected:
+	
+	TWeakInterfacePtr<IUIComponentInterface> UIComponentInterface;
+	
 public:
 	UPROPERTY(BlueprintReadOnly, Category="Health", ReplicatedUsing = OnRep_DamageTaken)
 	FGameplayAttributeData DamageTaken = {};

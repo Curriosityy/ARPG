@@ -4,6 +4,9 @@
 #include "AbilitySystem/ARPGHeroAttributeSet.h"
 
 #include "GameplayEffectExtension.h"
+#include "Components/Combat/HeroCombatComponent.h"
+#include "Components/UI/HeroUIComponent.h"
+#include "Interfaces/UIComponentInterface.h"
 #include "Net/UnrealNetwork.h"
 
 UARPGHeroAttributeSet::UARPGHeroAttributeSet()
@@ -36,6 +39,11 @@ void UARPGHeroAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffe
 
 	if (Data.EvaluatedData.Attribute == GetCurrentRageAttribute())
 	{
-		SetCurrentRage(FMath::Clamp(GetCurrentRage(), 0, GetMaxRage()));
+		const float NewRage = FMath::Clamp(GetCurrentRage(), 0, GetMaxRage());
+		const float OldRage = GetCurrentRage();
+
+		SetCurrentRage(NewRage);
+
+		Cast<UHeroUIComponent>(UIComponentInterface->GetUIComponent())->OnRageChanged.Broadcast(OldRage, NewRage);
 	}
 }
