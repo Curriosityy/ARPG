@@ -56,6 +56,24 @@ void UARPGAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, DamageTaken, COND_None, REPNOTIFY_Always);
 }
 
+void UARPGAttributeSet::DealDamage(const FGameplayEffectModCallbackData& Data)
+{
+	const float OldHealth = GetCurrentHealth();
+	const float NewHealth = FMath::Clamp(OldHealth - GetDamageTaken(), 0, GetMaxHealth());
+	SetCurrentHealth(NewHealth);
+	SetDamageTaken(0.f);
+
+	UIComponentInterface->GetUIComponent()->OnHealthChanged.Broadcast(OldHealth, NewHealth);
+
+	if (NewHealth > 0)
+	{
+		return;
+	}
+
+	UARPGFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(),
+	                                                  ARPGGameplayTags::Shared_Status_Death);
+}
+
 void UARPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -78,17 +96,6 @@ void UARPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 	if (Data.EvaluatedData.Attribute == GetDamageTakenAttribute())
 	{
-		const float OldHealth = GetCurrentHealth();
-		const float NewHealth = FMath::Clamp(OldHealth - GetDamageTaken(), 0, GetMaxHealth());
-		SetCurrentHealth(NewHealth);
-		SetDamageTaken(0.f);
-
-		if (NewHealth <= 0)
-		{
-			UARPGFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(),
-			                                                  ARPGGameplayTags::Shared_Status_Death);
-		}
-
-		UIComponentInterface->GetUIComponent()->OnHealthChanged.Broadcast(OldHealth, NewHealth);
+		DealDamage(Data);
 	}
 }

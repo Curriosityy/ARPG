@@ -20,10 +20,10 @@ UCLASS()
 class ARPG_API UARPGAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
+
 protected:
-	
 	TWeakInterfacePtr<IUIComponentInterface> UIComponentInterface;
-	
+
 public:
 	UPROPERTY(BlueprintReadOnly, Category="Health", ReplicatedUsing = OnRep_DamageTaken)
 	FGameplayAttributeData DamageTaken = {};
@@ -60,5 +60,6 @@ public:
 	void OnRep_DamageTaken(const FGameplayAttributeData& OldDamageTaken);
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	void DealDamage(const FGameplayEffectModCallbackData& Data);
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 };
