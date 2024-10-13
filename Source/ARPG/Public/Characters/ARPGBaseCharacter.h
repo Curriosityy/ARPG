@@ -13,6 +13,7 @@ class UPawnCombatComponent;
 class UDataAsset_StartUpDataBase;
 class UARPGAttributeSet;
 class UARPGAbilitySystemComponent;
+class UNiagaraSystem;
 
 UCLASS()
 class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatable,
@@ -50,5 +51,5 @@ public:
 	static FName AttributeSetName;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void HandleDeath_Implementation() override;
+	virtual void HandleDeath_Implementation(const TSoftObjectPtr<UNiagaraSystem>& NiagaraSystemToPlay) override;
 };

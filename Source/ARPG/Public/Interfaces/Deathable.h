@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "Deathable.generated.h"
 
+class UNiagaraSystem;
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI, BlueprintType)
 class UDeathable : public UInterface
@@ -23,7 +24,7 @@ class ARPG_API IDeathable
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	void HandleDeath();
+	void HandleDeath(const TSoftObjectPtr<UNiagaraSystem>& NiagaraSystemToPlay);
 
 	//virtual void HandleDeath_Implementation() = 0;
 };

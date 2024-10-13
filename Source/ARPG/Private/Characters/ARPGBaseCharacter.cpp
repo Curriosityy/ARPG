@@ -43,7 +43,7 @@ void AARPGBaseCharacter::PossessedBy(AController* NewController)
 	ensureMsgf(!CharacterStartupData.IsNull(), TEXT("Character Startup Data is not assigned in %s"), *GetName());
 }
 
-void AARPGBaseCharacter::HandleDeath_Implementation()
+void AARPGBaseCharacter::HandleDeath_Implementation(const TSoftObjectPtr<UNiagaraSystem>& NiagaraSystemToPlay)
 {
 	GetMesh()->bPauseAnims = true;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
