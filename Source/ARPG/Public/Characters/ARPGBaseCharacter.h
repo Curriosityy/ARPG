@@ -6,6 +6,7 @@
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/Combatable.h"
+#include "Interfaces/Deathable.h"
 #include "ARPGBaseCharacter.generated.h"
 
 class UPawnCombatComponent;
@@ -14,7 +15,8 @@ class UARPGAttributeSet;
 class UARPGAbilitySystemComponent;
 
 UCLASS()
-class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatable
+class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatable,
+                                    public IDeathable
 {
 	GENERATED_BODY()
 
@@ -46,4 +48,7 @@ public:
 
 	static FName CombatComponentName;
 	static FName AttributeSetName;
+
+	UFUNCTION(BlueprintCallable)
+	virtual void HandleDeath_Implementation() override;
 };

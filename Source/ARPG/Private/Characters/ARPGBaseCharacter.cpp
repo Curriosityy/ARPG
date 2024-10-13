@@ -2,8 +2,11 @@
 
 
 #include "Characters/ARPGBaseCharacter.h"
+
+#include "DebugHelper.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "AbilitySystem/ARPGAttributeSet.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
 
@@ -38,6 +41,12 @@ void AARPGBaseCharacter::PossessedBy(AController* NewController)
 
 
 	ensureMsgf(!CharacterStartupData.IsNull(), TEXT("Character Startup Data is not assigned in %s"), *GetName());
+}
+
+void AARPGBaseCharacter::HandleDeath_Implementation()
+{
+	GetMesh()->bPauseAnims = true;
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 UARPGAbilitySystemComponent* AARPGBaseCharacter::GetARPGAbilitySystemComponent() const

@@ -3,7 +3,9 @@
 
 #include "AbilitySystem/ARPGAttributeSet.h"
 
+#include "ARPGGameplayTags.h"
 #include "GameplayEffectExtension.h"
+#include "FunctionLibraries/ARPGFunctionLibrary.h"
 #include "Net/UnrealNetwork.h"
 
 UARPGAttributeSet::UARPGAttributeSet()
@@ -62,10 +64,15 @@ void UARPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 	if (Data.EvaluatedData.Attribute == GetDamageTakenAttribute())
 	{
-		SetCurrentHealth(FMath::Clamp(GetCurrentHealth() - GetDamageTaken(), 0, GetMaxHealth()));
+		const float newHealth = FMath::Clamp(GetCurrentHealth() - GetDamageTaken(), 0, GetMaxHealth());
+		SetCurrentHealth(newHealth);
 		SetDamageTaken(0.f);
 
+		if (newHealth <= 0)
+		{
+			UARPGFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(),
+			                                                  ARPGGameplayTags::Shared_Status_Death);
+		}
 		//TODO:Notify UI
-		//TODO:Kill if HP <=0
 	}
 }
