@@ -20,6 +20,8 @@
 #include "Components/UI/HeroUIComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
+#include "Engine/GameInstance.h"
+#include "GameFramework/GameplayMessageSubsystem.h"
 
 AARPGHeroCharacter::AARPGHeroCharacter(const FObjectInitializer& ObjectInitializer):
 	Super(ObjectInitializer
@@ -108,6 +110,8 @@ void AARPGHeroCharacter::PossessedBy(AController* NewController)
 
 void AARPGHeroCharacter::BeginPlay()
 {
+	auto subsystem = GetGameInstance()->GetSubsystem<UGameplayMessageSubsystem>();
+	//subsystem->BroadcastMessage(FGameplayTag::EmptyTag, {});
 	Super::BeginPlay();
 }
 
