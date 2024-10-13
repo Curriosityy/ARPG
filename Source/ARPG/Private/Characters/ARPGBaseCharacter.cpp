@@ -9,10 +9,13 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
+#include "Components/UI/PawnUIComponent.h"
 
 
 FName AARPGBaseCharacter::CombatComponentName(TEXT("CombatComponent"));
 FName AARPGBaseCharacter::AttributeSetName(TEXT("AttributeSet"));
+FName AARPGBaseCharacter::UIComponentName(TEXT("UIComponent"));
+
 // Sets default values
 AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
 {
@@ -26,6 +29,7 @@ AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializ
 
 	AttributeSet = CreateDefaultSubobject<UARPGAttributeSet>(AttributeSetName);
 	CombatComponent = CreateDefaultSubobject<UPawnCombatComponent>(CombatComponentName);
+	UIComponent = CreateDefaultSubobject<UPawnUIComponent>(UIComponentName);
 }
 
 void AARPGBaseCharacter::PossessedBy(AController* NewController)
@@ -47,6 +51,11 @@ void AARPGBaseCharacter::HandleDeath_Implementation(const TSoftObjectPtr<UNiagar
 {
 	GetMesh()->bPauseAnims = true;
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+UPawnUIComponent* AARPGBaseCharacter::GetUIComponent() const
+{
+	return UIComponent;
 }
 
 UARPGAbilitySystemComponent* AARPGBaseCharacter::GetARPGAbilitySystemComponent() const

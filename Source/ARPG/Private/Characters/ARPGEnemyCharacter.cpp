@@ -6,12 +6,14 @@
 #include "AbilitySystemComponent.h"
 #include "DebugHelper.h"
 #include "Components/Combat/EnemyCombatComponent.h"
+#include "Components/UI/EnemyUIComponent.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "Engine/AssetManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-AARPGEnemyCharacter::AARPGEnemyCharacter(const FObjectInitializer& ObjectInitializer): Super(
-	ObjectInitializer.SetDefaultSubobjectClass<UEnemyCombatComponent>(CombatComponentName))
+AARPGEnemyCharacter::AARPGEnemyCharacter(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer
+	.SetDefaultSubobjectClass<UEnemyCombatComponent>(CombatComponentName)
+	.SetDefaultSubobjectClass<UEnemyUIComponent>(UIComponentName))
 {
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 

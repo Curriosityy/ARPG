@@ -7,8 +7,10 @@
 #include "GameFramework/Character.h"
 #include "Interfaces/Combatable.h"
 #include "Interfaces/Deathable.h"
+#include "Interfaces/UIComponentInterface.h"
 #include "ARPGBaseCharacter.generated.h"
 
+class UPawnUIComponent;
 class UPawnCombatComponent;
 class UDataAsset_StartUpDataBase;
 class UARPGAttributeSet;
@@ -17,7 +19,7 @@ class UNiagaraSystem;
 
 UCLASS()
 class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatable,
-                                    public IDeathable
+                                    public IDeathable, public IUIComponentInterface
 {
 	GENERATED_BODY()
 
@@ -30,6 +32,9 @@ class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInte
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="Combat")
 	TObjectPtr<UPawnCombatComponent> CombatComponent = {};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="UI")
+	TObjectPtr<UPawnUIComponent> UIComponent = {};
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="AbilitySystem", meta=(AllowPrivateAccess))
@@ -49,7 +54,10 @@ public:
 
 	static FName CombatComponentName;
 	static FName AttributeSetName;
-
+	static FName UIComponentName;
+	
 	UFUNCTION(BlueprintCallable)
 	virtual void HandleDeath_Implementation(const TSoftObjectPtr<UNiagaraSystem>& NiagaraSystemToPlay) override;
+	
+	virtual UPawnUIComponent* GetUIComponent() const override;
 };
