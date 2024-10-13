@@ -8,8 +8,10 @@
 #include "GameplayEffectExtension.h"
 #include "Components/UI/PawnUIComponent.h"
 #include "FunctionLibraries/ARPGFunctionLibrary.h"
+#include "GameFramework/GameplayMessageSubsystem.h"
 #include "Interfaces/UIComponentInterface.h"
 #include "Net/UnrealNetwork.h"
+#include "Types/ARPGMessagesStruct.h"
 
 UARPGAttributeSet::UARPGAttributeSet()
 {
@@ -58,16 +60,20 @@ void UARPGAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 
 void UARPGAttributeSet::DealDamage(const FGameplayEffectModCallbackData& Data)
 {
-	const float OldHealth = GetCurrentHealth();
-	const float NewHealth = FMath::Clamp(OldHealth - GetDamageTaken(), 0, GetMaxHealth());
+	const float OldHealth = {GetCurrentHealth()};
+	const float NewHealth = {FMath::Clamp(OldHealth - GetDamageTaken(), 0, GetMaxHealth())};
 	SetCurrentHealth(NewHealth);
 	SetDamageTaken(0.f);
 
-	UIComponentInterface->GetUIComponent()->OnHealthChanged.Broadcast(OldHealth, NewHealth);
-
+	// UIComponentInterface->GetUIComponent()->OnHealthChanged.Broadcast(OldHealth, NewHealth);
+	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
+	MessageSubsystem.BroadcastMessage(ARPGGameplayTags::Message_OnAttributeChanged,
+	                                  FOnHpChanged{Data.Target.GetAvatarActor(), OldHealth, NewHealth});
 	if (NewHealth > 0)
 	{
-		return;
+		return
+			MessageSubsystem.BroadcastMessage(ARPGGameplayTags::Message_OnAttributeChanged,
+			                                  FOnDeath{Data.Target.GetAvatarActor()});
 	}
 
 	UARPGFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(),

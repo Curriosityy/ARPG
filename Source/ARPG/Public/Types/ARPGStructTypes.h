@@ -15,7 +15,7 @@ class UInputMappingContext;
 class UARPGHeroLinkedAnimLayer;
 
 USTRUCT(BlueprintType)
-struct FARPGInputConfig
+struct ARPG_API FARPGInputConfig
 {
 	GENERATED_BODY()
 
@@ -29,7 +29,7 @@ struct FARPGInputConfig
 };
 
 USTRUCT(BlueprintType)
-struct FARPGHeroAbilitySet
+struct ARPG_API FARPGHeroAbilitySet
 {
 	GENERATED_BODY()
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="InputTag", meta = (Categories = "InputTag"))

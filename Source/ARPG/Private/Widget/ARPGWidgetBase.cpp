@@ -9,6 +9,7 @@
 void UARPGWidgetBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	SubscribeToMessage();
 }
 
 void UARPGWidgetBase::SetOwningActor(AActor* InUIOwner)
@@ -19,4 +20,15 @@ void UARPGWidgetBase::SetOwningActor(AActor* InUIOwner)
 	       TEXT("UARPGWidgetBase::SetOwningActor InUIOwner %s not implementing IUIcomponentInterface"),
 	       *InUIOwner->GetName());
 	UIOwner = InUIOwner;
+}
+
+void UARPGWidgetBase::BeginDestroy()
+{
+	Super::BeginDestroy();
+	UnsubscribeFromMessage();
+}
+
+bool UARPGWidgetBase::IsSameAsOwningActor(const AActor* InActor) const
+{
+	return UIOwner.Get() == InActor;
 }

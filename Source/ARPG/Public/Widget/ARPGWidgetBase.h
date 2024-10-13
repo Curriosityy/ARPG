@@ -7,11 +7,12 @@
 #include "UObject/WeakInterfacePtr.h"
 #include "ARPGWidgetBase.generated.h"
 
+struct FOnDeath;
 /**
  * 
  */
 class IUIComponentInterface;
-
+//TODO: Move SubscribeToMessage UnsubscribeFromMessage to child? not every ARPG widget will subscribe to messages?
 UCLASS()
 class ARPG_API UARPGWidgetBase : public UUserWidget
 {
@@ -20,8 +21,17 @@ class ARPG_API UARPGWidgetBase : public UUserWidget
 	TWeakInterfacePtr<IUIComponentInterface> UIComponent;
 	TWeakObjectPtr<AActor> UIOwner;
 
+protected:
+	virtual void SubscribeToMessage() PURE_VIRTUAL();
+	virtual void UnsubscribeFromMessage() PURE_VIRTUAL();
+
 public:
 	virtual void NativeOnInitialized() override;
+
 	UFUNCTION(BlueprintCallable)
-	void SetOwningActor(AActor* InUIOwner);
+	virtual void SetOwningActor(AActor* InUIOwner);
+
+	virtual void BeginDestroy() override;
+
+	bool IsSameAsOwningActor(const AActor* InActor) const;
 };
