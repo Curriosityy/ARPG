@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
-#include "Interfaces/Combatable.h"
+#include "Interfaces/CombatComponentInterface.h"
 #include "Interfaces/Deathable.h"
 #include "Interfaces/UIComponentInterface.h"
 #include "ARPGBaseCharacter.generated.h"
@@ -18,7 +18,7 @@ class UARPGAbilitySystemComponent;
 class UNiagaraSystem;
 
 UCLASS()
-class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatable,
+class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatComponentInterface,
                                     public IDeathable, public IUIComponentInterface
 {
 	GENERATED_BODY()

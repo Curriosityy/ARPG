@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "Combatable.generated.h"
+#include "CombatComponentInterface.generated.h"
 
 class UPawnCombatComponent;
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UCombatable : public UInterface
+class UCombatComponentInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -17,7 +17,7 @@ class UCombatable : public UInterface
 /**
  * 
  */
-class ARPG_API ICombatable
+class ARPG_API ICombatComponentInterface
 {
 	GENERATED_BODY()
 

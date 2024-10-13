@@ -8,7 +8,7 @@
 #include "Types/ARPGEnumTypes.h"
 #include "ARPGFunctionLibrary.generated.h"
 
-class ICombatable;
+class ICombatComponentInterface;
 class UPawnCombatComponent;
 class UARPGAbilitySystemComponent;
 

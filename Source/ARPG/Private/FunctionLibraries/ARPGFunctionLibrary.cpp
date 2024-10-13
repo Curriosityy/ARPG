@@ -6,7 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "DebugHelper.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
-#include "Interfaces/Combatable.h"
+#include "Interfaces/CombatComponentInterface.h"
 
 UARPGAbilitySystemComponent* UARPGFunctionLibrary::NativeGetARPGASCFromActor(AActor* InActor)
 {
@@ -63,9 +63,9 @@ UPawnCombatComponent* UARPGFunctionLibrary::Native_GetCombatComponentFromActor(A
 {
 	checkf(Actor, TEXT("UARPGFunctionLibrary::Native_GetCombatComponentFromActor Actor is NULL"));
 
-	if (Actor->Implements<UCombatable>())
+	if (Actor->Implements<UCombatComponentInterface>())
 	{
-		return Cast<ICombatable>(Actor)->GetCombatComponent();
+		return Cast<ICombatComponentInterface>(Actor)->GetCombatComponent();
 	}
 
 	return nullptr;
