@@ -18,14 +18,14 @@ class ARPG_API UARPGWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 
-	TWeakInterfacePtr<IUIComponentInterface> UIComponent;
-	TWeakObjectPtr<AActor> UIOwner;
+	UPROPERTY()
+	TWeakObjectPtr<AActor> UIOwner = {};
 
 protected:
 	UFUNCTION(BlueprintNativeEvent)
 	void SubscribeToMessage();
 
-	virtual void SubscribeToMessage_Implementation() PURE_VIRTUAL();
+	virtual void SubscribeToMessage_Implementation();
 
 public:
 	virtual void NativeOnInitialized() override;

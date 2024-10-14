@@ -6,7 +6,9 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
+#include "GameFramework/GameplayMessageSubsystem.h"
 #include "Items/Weapons/ARPGWeaponBase.h"
+#include "Types/ARPGMessagesStruct.h"
 
 void UPawnCombatComponent::AddCarriedWeapon(FGameplayTag WeaponTag, AARPGWeaponBase* Weapon, bool bAsEquipped)
 {
@@ -95,6 +97,9 @@ void UPawnCombatComponent::SetCurrentEquippedWeapon(FGameplayTag WeaponToEquip)
 {
 	SetupEvents(CurrentEquippedWeapon, WeaponToEquip);
 	CurrentEquippedWeapon = WeaponToEquip;
+	UGameplayMessageSubsystem::Get(this)
+		.BroadcastMessage(ARPGGameplayTags::Message_WeaponChanged,
+		                  FWeaponChanged{GetOwner(), GetCarriedWeapon(WeaponToEquip)});
 }
 
 void UPawnCombatComponent::ToggleCurrentWeaponCollider(bool Toggle, int ToggleType)

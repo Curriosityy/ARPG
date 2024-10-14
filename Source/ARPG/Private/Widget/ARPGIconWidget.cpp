@@ -10,7 +10,7 @@
 
 void UARPGIconWidget::SetIconImage(const TSoftObjectPtr<UTexture2D>& NewTexture) const
 {
-	if (!NewTexture.IsValid())
+	if (!NewTexture.IsPending() && !NewTexture.IsValid())
 	{
 		Icon->SetVisibility(ESlateVisibility::Hidden);
 		return;
@@ -24,8 +24,6 @@ void UARPGIconWidget::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	if (IsDesignTime())
-	{
-		SetIconImage(PreviewTexture);
-	}
+
+	SetIconImage(IsDesignTime() ? PreviewTexture : nullptr);
 }

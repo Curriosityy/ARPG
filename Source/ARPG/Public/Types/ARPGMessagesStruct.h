@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "CoreUObject.h"
 #include "ARPGMessagesStruct.generated.h"
+class AARPGWeaponBase;
 class AActor;
 
 USTRUCT(BlueprintType)
@@ -45,4 +46,22 @@ struct ARPG_API FValueChanged : public FMessageBase
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float NewValue = {};
+};
+
+USTRUCT(BlueprintType)
+struct ARPG_API FWeaponChanged
+{
+	GENERATED_BODY()
+	FWeaponChanged() = default;
+
+	FWeaponChanged(AActor* InActor, AARPGWeaponBase* InNewWeapon): Owner(InActor),
+	                                                               NewWeapon(InNewWeapon)
+	{
+	}
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TWeakObjectPtr<AActor> Owner = {};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TWeakObjectPtr<AARPGWeaponBase> NewWeapon = {};
 };

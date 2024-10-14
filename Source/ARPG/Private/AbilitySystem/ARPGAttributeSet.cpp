@@ -79,9 +79,35 @@ void UARPGAttributeSet::DealDamage(const FGameplayEffectModCallbackData& Data)
 	                                                  ARPGGameplayTags::Shared_Status_Death);
 }
 
+void UARPGAttributeSet::DispatchMessage(float OldValue, const FGameplayEffectModCallbackData& Data)
+{
+	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
+	float NewValue = Data.EvaluatedData.Attribute.GetNumericValue(this);
+	FGameplayTag broadcastTag = {};
+
+	if (Data.EvaluatedData.Attribute == GetMaxHealthAttribute())
+	{
+		broadcastTag = ARPGGameplayTags::Message_OnMaxHealthChanged;
+	}
+
+	if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute())
+	{
+		broadcastTag = ARPGGameplayTags::Message_OnHealthChanged;
+	}
+
+
+	if (broadcastTag.IsValid())
+	{
+		MessageSubsystem.BroadcastMessage(broadcastTag, FValueChanged{
+			                                  Data.Target.GetAvatarActor(), OldValue, NewValue
+		                                  });
+	}
+}
+
 void UARPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
+
 
 	if (!UIComponentInterface.IsValid())
 	{
@@ -103,4 +129,12 @@ void UARPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		DealDamage(Data);
 	}
+}
+
+bool UARPGAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data)
+{
+	float OldValue = Data.EvaluatedData.Attribute.GetNumericValue(this);
+	bool Calculated = Super::PreGameplayEffectExecute(Data);
+	DispatchMessage(OldValue, Data);
+	return Calculated;
 }

@@ -3,8 +3,14 @@
 
 #include "Widget/ARPGWidgetBase.h"
 
+#include "DebugHelper.h"
 #include "Interfaces/UIComponentInterface.h"
 #include "UObject/WeakInterfacePtr.h"
+
+void UARPGWidgetBase::SubscribeToMessage_Implementation()
+{
+	Debug::Print(FString::Printf(TEXT("SubscribeToMessage_Implementation is not implemented in %s"), *GetName()));
+}
 
 void UARPGWidgetBase::NativeOnInitialized()
 {
@@ -15,11 +21,8 @@ void UARPGWidgetBase::NativeOnInitialized()
 void UARPGWidgetBase::SetOwningActor(AActor* InUIOwner)
 {
 	checkf(InUIOwner, TEXT("UARPGWidgetBase::SetOwningActor InUIOwner is nullptr"))
-	UIComponent = Cast<IUIComponentInterface>(GetOwningPlayerPawn());
-	checkf(UIComponent.IsValid(),
-	       TEXT("UARPGWidgetBase::SetOwningActor InUIOwner %s not implementing IUIcomponentInterface"),
-	       *InUIOwner->GetName());
-	UIOwner = InUIOwner;
+	UIOwner = MakeWeakObjectPtr(InUIOwner);
+	checkf(UIOwner.IsValid(), TEXT("UARPGWidgetBase::SetOwningActor UIOwner is nullptr"))
 }
 
 void UARPGWidgetBase::BeginDestroy()

@@ -49,3 +49,30 @@ void UARPGHeroAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffe
 		                     FValueChanged{Data.Target.GetAvatarActor(), OldRage, NewRage});
 	}
 }
+
+void UARPGHeroAttributeSet::DispatchMessage(float OldValue, const FGameplayEffectModCallbackData& Data)
+{
+	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
+	float NewValue = Data.EvaluatedData.Attribute.GetNumericValue(this);
+	FGameplayTag broadcastTag = {};
+
+	if (Data.EvaluatedData.Attribute == GetMaxRageAttribute())
+	{
+		broadcastTag = ARPGGameplayTags::Message_OnMaxRageChanged;
+	}
+
+	if (Data.EvaluatedData.Attribute == GetCurrentRageAttribute())
+	{
+		broadcastTag = ARPGGameplayTags::Message_OnRageChanged;
+	}
+
+
+	if (broadcastTag.IsValid())
+	{
+		MessageSubsystem.BroadcastMessage(broadcastTag, FValueChanged{
+			                                  Data.Target.GetAvatarActor(), OldValue, NewValue
+		                                  });
+	}
+
+	Super::DispatchMessage(OldValue, Data);
+}
