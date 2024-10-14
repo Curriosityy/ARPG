@@ -79,26 +79,26 @@ void UARPGAttributeSet::DealDamage(const FGameplayEffectModCallbackData& Data)
 	                                                  ARPGGameplayTags::Shared_Status_Death);
 }
 
-void UARPGAttributeSet::DispatchMessage(float OldValue, const FGameplayEffectModCallbackData& Data)
+void UARPGAttributeSet::DispatchMessage(const float OldValue, const FGameplayEffectModCallbackData& Data)
 {
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
-	float NewValue = Data.EvaluatedData.Attribute.GetNumericValue(this);
-	FGameplayTag broadcastTag = {};
+	const float NewValue = Data.EvaluatedData.Attribute.GetNumericValue(this);
+	FGameplayTag BroadcastTag = {};
 
 	if (Data.EvaluatedData.Attribute == GetMaxHealthAttribute())
 	{
-		broadcastTag = ARPGGameplayTags::Message_OnMaxHealthChanged;
+		BroadcastTag = ARPGGameplayTags::Message_OnMaxHealthChanged;
 	}
 
 	if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute())
 	{
-		broadcastTag = ARPGGameplayTags::Message_OnHealthChanged;
+		BroadcastTag = ARPGGameplayTags::Message_OnHealthChanged;
 	}
 
 
-	if (broadcastTag.IsValid())
+	if (BroadcastTag.IsValid())
 	{
-		MessageSubsystem.BroadcastMessage(broadcastTag, FValueChanged{
+		MessageSubsystem.BroadcastMessage(BroadcastTag, FValueChanged{
 			                                  Data.Target.GetAvatarActor(), OldValue, NewValue
 		                                  });
 	}

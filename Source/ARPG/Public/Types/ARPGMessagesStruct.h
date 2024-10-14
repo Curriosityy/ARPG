@@ -1,9 +1,9 @@
 ﻿#pragma once
 #include "CoreMinimal.h"
 #include "CoreUObject.h"
+#include "Items/Weapons/ARPGWeaponBase.h"
 #include "ARPGMessagesStruct.generated.h"
-class AARPGWeaponBase;
-class AActor;
+
 
 USTRUCT(BlueprintType)
 struct ARPG_API FMessageBase

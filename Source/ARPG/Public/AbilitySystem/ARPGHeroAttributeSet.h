@@ -32,5 +32,5 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
-	virtual void DispatchMessage(float OldValue, const FGameplayEffectModCallbackData& Data) override;
+	virtual void DispatchMessage(const float OldValue, const FGameplayEffectModCallbackData& Data) override;
 };
