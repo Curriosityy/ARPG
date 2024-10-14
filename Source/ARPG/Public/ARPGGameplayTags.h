@@ -55,5 +55,8 @@ namespace ARPGGameplayTags
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Death);
 
 	/*Message Tags*/
-	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_OnAttributeChanged);
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_OnHealthChanged);
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_OnMaxHealthChanged);
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_OnRageChanged);
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_OnMaxRageChanged);
 }

@@ -7,7 +7,7 @@
 #include "UObject/WeakInterfacePtr.h"
 #include "ARPGWidgetBase.generated.h"
 
-struct FOnDeath;
+struct FDeath;
 /**
  * 
  */
@@ -22,16 +22,19 @@ class ARPG_API UARPGWidgetBase : public UUserWidget
 	TWeakObjectPtr<AActor> UIOwner;
 
 protected:
-	virtual void SubscribeToMessage() PURE_VIRTUAL();
-	virtual void UnsubscribeFromMessage() PURE_VIRTUAL();
+	UFUNCTION(BlueprintNativeEvent)
+	void SubscribeToMessage();
+
+	virtual void SubscribeToMessage_Implementation() PURE_VIRTUAL();
 
 public:
 	virtual void NativeOnInitialized() override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category="ARPG|Widgets")
 	virtual void SetOwningActor(AActor* InUIOwner);
 
 	virtual void BeginDestroy() override;
 
+	UFUNCTION(BlueprintPure, Category="ARPG|Widgets")
 	bool IsSameAsOwningActor(const AActor* InActor) const;
 };

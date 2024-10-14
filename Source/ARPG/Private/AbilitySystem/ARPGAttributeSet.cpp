@@ -6,7 +6,6 @@
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "GameplayEffectExtension.h"
-#include "Components/UI/PawnUIComponent.h"
 #include "FunctionLibraries/ARPGFunctionLibrary.h"
 #include "GameFramework/GameplayMessageSubsystem.h"
 #include "Interfaces/UIComponentInterface.h"
@@ -67,13 +66,13 @@ void UARPGAttributeSet::DealDamage(const FGameplayEffectModCallbackData& Data)
 
 	// UIComponentInterface->GetUIComponent()->OnHealthChanged.Broadcast(OldHealth, NewHealth);
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
-	MessageSubsystem.BroadcastMessage(ARPGGameplayTags::Message_OnAttributeChanged,
-	                                  FOnHpChanged{Data.Target.GetAvatarActor(), OldHealth, NewHealth});
+	MessageSubsystem.BroadcastMessage(ARPGGameplayTags::Message_OnHealthChanged,
+	                                  FValueChanged{Data.Target.GetAvatarActor(), OldHealth, NewHealth});
 	if (NewHealth > 0)
 	{
 		return
-			MessageSubsystem.BroadcastMessage(ARPGGameplayTags::Message_OnAttributeChanged,
-			                                  FOnDeath{Data.Target.GetAvatarActor()});
+			MessageSubsystem.BroadcastMessage(ARPGGameplayTags::Message_OnHealthChanged,
+			                                  FDeath{Data.Target.GetAvatarActor()});
 	}
 
 	UARPGFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(),

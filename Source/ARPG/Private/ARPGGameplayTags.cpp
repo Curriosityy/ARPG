@@ -47,5 +47,8 @@ namespace ARPGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Death, "Shared.Status.Death");
 
 	/*Message Tags*/
-	UE_DEFINE_GAMEPLAY_TAG(Message_OnAttributeChanged, "Message.OnAttributeChanged");
+	UE_DEFINE_GAMEPLAY_TAG(Message_OnHealthChanged, "Message.OnHealthChanged");
+	UE_DEFINE_GAMEPLAY_TAG(Message_OnMaxHealthChanged, "Message.OnMaxHealthChanged");
+	UE_DEFINE_GAMEPLAY_TAG(Message_OnRageChanged, "Message.OnRageChanged");
+	UE_DEFINE_GAMEPLAY_TAG(Message_OnMaxRageChanged, "Message.OnMaxRageChanged");
 }

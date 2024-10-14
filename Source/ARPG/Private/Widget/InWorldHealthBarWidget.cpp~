@@ -18,11 +18,8 @@ void UInWorldHealthBarWidget::SubscribeToMessage()
 
 void UInWorldHealthBarWidget::UnsubscribeFromMessage()
 {
-	if (IsValid(this))
-	{
-		UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
-		MessageSubsystem.UnregisterListener(OnHealthChangedHandler);
-	}
+	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
+	MessageSubsystem.UnregisterListener(OnHealthChangedHandler);
 }
 
 void UInWorldHealthBarWidget::OnHealthChanged(FGameplayTag Tag, const FOnHpChanged& OnHpChanged)

@@ -25,7 +25,7 @@ void UARPGWidgetBase::SetOwningActor(AActor* InUIOwner)
 void UARPGWidgetBase::BeginDestroy()
 {
 	Super::BeginDestroy();
-	UnsubscribeFromMessage();
+	//UnsubscribeFromMessage();
 }
 
 bool UARPGWidgetBase::IsSameAsOwningActor(const AActor* InActor) const

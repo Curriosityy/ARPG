@@ -11,13 +11,13 @@ struct ARPG_API FMessageBase
 };
 
 USTRUCT(BlueprintType)
-struct ARPG_API FOnDeath : public FMessageBase
+struct ARPG_API FDeath : public FMessageBase
 {
 	GENERATED_BODY()
 
-	FOnDeath() = default;
+	FDeath() = default;
 
-	FOnDeath(AActor* InActor): Actor(InActor)
+	FDeath(AActor* InActor): Actor(InActor)
 	{
 	}
 
@@ -26,13 +26,14 @@ struct ARPG_API FOnDeath : public FMessageBase
 };
 
 USTRUCT(BlueprintType)
-struct ARPG_API FOnHpChanged : public FMessageBase
+struct ARPG_API FValueChanged : public FMessageBase
 {
 	GENERATED_BODY()
-	FOnHpChanged() = default;
+	FValueChanged() = default;
 
-	FOnHpChanged(AActor* InActor, const float InOldHp, const float InNewHp): Owner(InActor), OldHp(InOldHp),
-	                                                                         NewHp(InNewHp)
+	FValueChanged(AActor* InActor, const float InOldValue, const float InNewValue): Owner(InActor),
+		OldValue(InOldValue),
+		NewValue(InNewValue)
 	{
 	}
 
@@ -40,8 +41,8 @@ struct ARPG_API FOnHpChanged : public FMessageBase
 	TWeakObjectPtr<AActor> Owner = {};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float OldHp = {};
+	float OldValue = {};
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	float NewHp = {};
+	float NewValue = {};
 };
