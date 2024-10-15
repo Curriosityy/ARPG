@@ -7,8 +7,9 @@
 #include "Engine/AssetManager.h"
 #include "Engine/Texture2D.h"
 #include "GameFramework/GameplayMessageSubsystem.h"
+#include "Widget/ImageVisibleOnSet.h"
 
-void UARPGIconWidget::SetIconImage(const TSoftObjectPtr<UTexture2D>& NewTexture) const
+void UARPGIconWidget::SetIconImage(const TSoftObjectPtr<UTexture2D> NewTexture)
 {
 	if (!NewTexture.IsPending() && !NewTexture.IsValid())
 	{
@@ -17,7 +18,6 @@ void UARPGIconWidget::SetIconImage(const TSoftObjectPtr<UTexture2D>& NewTexture)
 	}
 
 	Icon->SetBrushFromSoftTexture(NewTexture, true);
-	Icon->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UARPGIconWidget::NativePreConstruct()

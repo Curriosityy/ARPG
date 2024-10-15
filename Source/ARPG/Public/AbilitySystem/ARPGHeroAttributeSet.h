@@ -9,6 +9,9 @@
 /**
  * 
  */
+class FLifetimeProperty;
+struct FGameplayEffectModCallbackData;
+
 UCLASS()
 class ARPG_API UARPGHeroAttributeSet : public UARPGAttributeSet
 {
@@ -30,7 +33,7 @@ public:
 	UFUNCTION()
 	void OnRep_MaxRage(const FGameplayAttributeData& OldRage);
 
-	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	virtual void DispatchMessage(const float OldValue, const FGameplayEffectModCallbackData& Data) override;
 };

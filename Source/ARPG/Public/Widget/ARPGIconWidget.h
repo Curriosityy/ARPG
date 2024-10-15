@@ -7,8 +7,8 @@
 #include "Widget/ARPGWidgetBase.h"
 #include "ARPGIconWidget.generated.h"
 
+class UImageVisibleOnSet;
 struct FGameplayTag;
-class UImage;
 /**
  * 
  */
@@ -18,7 +18,7 @@ class ARPG_API UARPGIconWidget : public UARPGWidgetBase
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleDefaultsOnly, meta=(BindWidget))
-	TObjectPtr<UImage> Icon = {};
+	TObjectPtr<UImageVisibleOnSet> Icon = {};
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<UTexture2D> PreviewTexture = {};
 
@@ -29,5 +29,5 @@ protected:
 	virtual void NativePreConstruct() override;
 
 	UFUNCTION(BlueprintCallable)
-	void SetIconImage(const TSoftObjectPtr<UTexture2D>& NewTexture) const;
+	void SetIconImage(const TSoftObjectPtr<UTexture2D> NewTexture);
 };

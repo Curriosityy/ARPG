@@ -7,6 +7,7 @@
 #include "ScalableFloat.h"
 #include "ARPGStructTypes.generated.h"
 
+class UTexture2D;
 struct FScalableFloat;
 class UARPGGameplayAbility;
 class UInputAction;
@@ -58,4 +59,7 @@ struct ARPG_API FARPGHeroWeaponData
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FScalableFloat WeaponBaseDamage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSoftObjectPtr<UTexture2D> WeaponIcon;
 };

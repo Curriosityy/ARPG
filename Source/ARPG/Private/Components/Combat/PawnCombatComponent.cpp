@@ -32,7 +32,6 @@ AARPGWeaponBase* UPawnCombatComponent::GetCarriedWeapon(FGameplayTag WeaponTag) 
 {
 	if (!CarriedWeapons.Contains(WeaponTag))
 	{
-		ensureMsgf(false, TEXT("Trying to get not existed weapon in inventory"));
 		return nullptr;
 	}
 
@@ -43,7 +42,6 @@ AARPGWeaponBase* UPawnCombatComponent::GetCurrentEquippedWeapon() const
 {
 	if (!CurrentEquippedWeapon.IsValid())
 	{
-		ensureMsgf(false, TEXT("Trying to get current equipped weapon when Invalid"));
 		return nullptr;
 	}
 

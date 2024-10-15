@@ -79,7 +79,7 @@ void UARPGAttributeSet::DealDamage(const FGameplayEffectModCallbackData& Data)
 	                                                  ARPGGameplayTags::Shared_Status_Death);
 }
 
-void UARPGAttributeSet::DispatchMessage(const float OldValue, const FGameplayEffectModCallbackData& Data)
+void UARPGAttributeSet::DispatchMessage (const float OldValue, const FGameplayEffectModCallbackData& Data)
 {
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
 	const float NewValue = Data.EvaluatedData.Attribute.GetNumericValue(this);
