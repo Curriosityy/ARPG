@@ -21,8 +21,8 @@ class ARPG_API UStatusBarWidget : public UARPGWidgetBase
 {
 	GENERATED_BODY()
 
-	float MaxValue = {};
-	float CurrentValue = {};
+	float MaxValue = {1};
+	float CurrentValue = {1};
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, meta=(BindWidget, AllowPrivateAccess))
 	TObjectPtr<UProgressBar> ProgressBar_Main;
