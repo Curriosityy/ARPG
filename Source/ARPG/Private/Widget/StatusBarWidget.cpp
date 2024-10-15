@@ -29,6 +29,7 @@ void UStatusBarWidget::RefreshProgressBar()
 		TEXT("UStatusBarWidget::RefreshProgressBar %s %s %f/%f"), *GetName(), *UIOwner->GetName(), CurrentValue,
 		MaxValue));
 	SetProgressbarColorBasedOnValues();
+	OnProgressBarChanged.Broadcast(ProgressBar_Main, this);
 }
 
 void UStatusBarWidget::SetProgressbarColorBasedOnValues() const

@@ -13,6 +13,9 @@ class UProgressBar;
 /**
  * 
  */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnProgressBarChanged, UProgressBar*, progressBar,
+                                             UStatusBarWidget*, instigator);
+
 UCLASS()
 class ARPG_API UStatusBarWidget : public UARPGWidgetBase
 {
@@ -36,4 +39,14 @@ protected:
 	virtual void RefreshProgressBar();
 
 	void SetProgressbarColorBasedOnValues() const;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintAssignable, Category="ARPG|Widgets")
+	FOnProgressBarChanged OnProgressBarChanged;
+
+	UFUNCTION(BlueprintCallable, Category="ARPG|Widgets")
+	float GetCurrentValue() const { return CurrentValue; }
+
+	UFUNCTION(BlueprintCallable, Category="ARPG|Widgets")
+	float GetMaxValue() const { return MaxValue; }
 };
