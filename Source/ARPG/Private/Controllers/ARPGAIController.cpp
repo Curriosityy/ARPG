@@ -4,15 +4,20 @@
 #include "Controllers/ARPGAIController.h"
 
 #include "DebugHelper.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 
 void AARPGAIController::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-	if (Stimulus.WasSuccessfullySensed() && Actor)
+	if (!Stimulus.WasSuccessfullySensed() || !Actor)
 	{
+		return;
 	}
+
+	checkf(GetBlackboardComponent(), TEXT("Blackboard component is invalid in %s"), *GetName());
+	GetBlackboardComponent()->SetValueAsObject(FName("TargetActor"), Actor);
 }
 
 void AARPGAIController::SetGenericTeamId(const FGenericTeamId& InTeamID)
@@ -28,6 +33,15 @@ FGenericTeamId AARPGAIController::GetGenericTeamId() const
 ETeamAttitude::Type AARPGAIController::GetTeamAttitudeTowards(const AActor& Other) const
 {
 	return Super::GetTeamAttitudeTowards(Other);
+}
+
+void AARPGAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	checkf(BehaviorTree, TEXT("Behaviour tree is not set in %s"), *GetName());
+
+	RunBehaviorTree(BehaviorTree);
 }
 
 AARPGAIController::AARPGAIController(const FObjectInitializer& ObjectInitializer): Super(
