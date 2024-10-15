@@ -44,6 +44,22 @@ void AARPGAIController::OnPossess(APawn* InPawn)
 	RunBehaviorTree(BehaviorTree);
 }
 
+void AARPGAIController::BeginPlay()
+{
+	Super::BeginPlay();
+	UCrowdFollowingComponent* CrowdFC = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent());
+
+	CrowdFC->SetCrowdSimulationState(bShouldSimulateAvoidance
+		                                 ? ECrowdSimulationState::Enabled
+		                                 : ECrowdSimulationState::Disabled);
+
+	CrowdFC->SetCrowdAvoidanceQuality(static_cast<ECrowdAvoidanceQuality::Type>(SimulationQuality));
+	CrowdFC->SetAvoidanceGroup(GetGenericTeamId());
+	CrowdFC->SetGroupsToAvoid(GetGenericTeamId());
+	CrowdFC->SetCrowdCollisionQueryRange(AvoidanceRange, true);
+	CrowdFC->SetCrowdSeparation(true, true);
+}
+
 AARPGAIController::AARPGAIController(const FObjectInitializer& ObjectInitializer): Super(
 	ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>("PathFollowingComponent"))
 {
