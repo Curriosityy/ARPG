@@ -71,7 +71,5 @@ void AARPGEnemyCharacter::InitEnemyStatupData()
 			}
 
 			loadedData->GiveToAbilitySystemComponent(GetARPGAbilitySystemComponent());
-
-			Debug::Print("Enemy start up data loaded");
 		});
 }

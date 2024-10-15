@@ -25,9 +25,6 @@ void UStatusBarWidget::SetCurrentValue(float InCurrentValue)
 void UStatusBarWidget::RefreshProgressBar()
 {
 	ProgressBar_Main->SetPercent(CurrentValue / MaxValue);
-	Debug::Print(FString::Printf(
-		TEXT("UStatusBarWidget::RefreshProgressBar %s %s %f/%f"), *GetName(), *UIOwner->GetName(), CurrentValue,
-		MaxValue));
 	SetProgressbarColorBasedOnValues();
 	OnProgressBarChanged.Broadcast(ProgressBar_Main, this);
 }

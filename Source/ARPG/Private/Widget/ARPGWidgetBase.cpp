@@ -9,7 +9,7 @@
 
 void UARPGWidgetBase::SubscribeToMessage_Implementation()
 {
-	Debug::Print(FString::Printf(TEXT("SubscribeToMessage_Implementation is not implemented in %s"), *GetName()));
+	ensureMsgf(true, TEXT("SubscribeToMessage_Implementation is not implemented in %s"), *GetName());
 }
 
 void UARPGWidgetBase::NativeOnInitialized()

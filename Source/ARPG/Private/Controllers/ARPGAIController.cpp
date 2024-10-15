@@ -12,7 +12,6 @@ void AARPGAIController::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	if (Stimulus.WasSuccessfullySensed() && Actor)
 	{
-		Debug::Print(Actor->GetActorLabel() + TEXT(" Was sensed"));
 	}
 }
 
@@ -28,7 +27,6 @@ FGenericTeamId AARPGAIController::GetGenericTeamId() const
 
 ETeamAttitude::Type AARPGAIController::GetTeamAttitudeTowards(const AActor& Other) const
 {
-	Debug::Print(Other.GetActorLabel() + TEXT(" CHECKIGN LABEL OF ACTOR"));
 	return Super::GetTeamAttitudeTowards(Other);
 }
 

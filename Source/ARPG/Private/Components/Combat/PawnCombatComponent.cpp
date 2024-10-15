@@ -23,9 +23,6 @@ void UPawnCombatComponent::AddCarriedWeapon(FGameplayTag WeaponTag, AARPGWeaponB
 	{
 		SetCurrentEquippedWeapon(WeaponTag);
 	}
-
-	Debug::Print(FString::Printf(
-		TEXT("Registered weapon %s name %s, auto equip %i"), *WeaponTag.ToString(), *Weapon->GetName(), bAsEquipped));
 }
 
 AARPGWeaponBase* UPawnCombatComponent::GetCarriedWeapon(FGameplayTag WeaponTag) const
@@ -50,7 +47,6 @@ AARPGWeaponBase* UPawnCombatComponent::GetCurrentEquippedWeapon() const
 
 void UPawnCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
 {
-	Debug::Print(FString::Printf(TEXT("OnWeaponHit")));
 	FGameplayEventData data;
 	data.Instigator = GetOwner();
 	data.Target = ActorHitted;
@@ -70,7 +66,6 @@ void UPawnCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
 
 void UPawnCombatComponent::OnWeaponEndOverlap(AActor* ActorHitted, AActor* HittedBy)
 {
-	Debug::Print(FString::Printf(TEXT("OnWeaponEndOverlap")));
 	HittedList.Remove(ActorHitted);
 }
 
