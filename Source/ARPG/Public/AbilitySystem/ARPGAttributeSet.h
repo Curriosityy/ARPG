@@ -47,6 +47,8 @@ public:
 
 	UARPGAttributeSet();
 
+private:
+	void DealDamage(const FGameplayEffectModCallbackData& Data);
 	UFUNCTION()
 	void OnRep_CurrentHealth(const FGameplayAttributeData& OldHealth);
 	UFUNCTION()
@@ -59,9 +61,8 @@ public:
 	UFUNCTION()
 	void OnRep_DamageTaken(const FGameplayAttributeData& OldDamageTaken);
 
+public:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
-	void DealDamage(const FGameplayEffectModCallbackData& Data);
-	virtual void DispatchMessage(const float OldValue, const FGameplayEffectModCallbackData& Data);
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
-	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 };

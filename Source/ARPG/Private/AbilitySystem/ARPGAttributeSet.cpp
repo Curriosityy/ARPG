@@ -64,45 +64,15 @@ void UARPGAttributeSet::DealDamage(const FGameplayEffectModCallbackData& Data)
 	SetCurrentHealth(NewHealth);
 	SetDamageTaken(0.f);
 
-	// UIComponentInterface->GetUIComponent()->OnHealthChanged.Broadcast(OldHealth, NewHealth);
-	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
-	MessageSubsystem.BroadcastMessage(ARPGGameplayTags::Message_OnHealthChanged,
-	                                  FValueChanged{Data.Target.GetAvatarActor(), OldHealth, NewHealth});
 	if (NewHealth > 0)
 	{
-		return
-			MessageSubsystem.BroadcastMessage(ARPGGameplayTags::Message_OnHealthChanged,
-			                                  FDeath{Data.Target.GetAvatarActor()});
+		return;
 	}
 
 	UARPGFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(),
 	                                                  ARPGGameplayTags::Shared_Status_Death);
 }
 
-void UARPGAttributeSet::DispatchMessage (const float OldValue, const FGameplayEffectModCallbackData& Data)
-{
-	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(this);
-	const float NewValue = Data.EvaluatedData.Attribute.GetNumericValue(this);
-	FGameplayTag BroadcastTag = {};
-
-	if (Data.EvaluatedData.Attribute == GetMaxHealthAttribute())
-	{
-		BroadcastTag = ARPGGameplayTags::Message_OnMaxHealthChanged;
-	}
-
-	if (Data.EvaluatedData.Attribute == GetCurrentHealthAttribute())
-	{
-		BroadcastTag = ARPGGameplayTags::Message_OnHealthChanged;
-	}
-
-
-	if (BroadcastTag.IsValid())
-	{
-		MessageSubsystem.BroadcastMessage(BroadcastTag, FValueChanged{
-			                                  Data.Target.GetAvatarActor(), OldValue, NewValue
-		                                  });
-	}
-}
 
 void UARPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
@@ -131,10 +101,23 @@ void UARPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	}
 }
 
-bool UARPGAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data)
+void UARPGAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
 {
-	float OldValue = Data.EvaluatedData.Attribute.GetNumericValue(this);
-	bool Calculated = Super::PreGameplayEffectExecute(Data);
-	DispatchMessage(OldValue, Data);
-	return Calculated;
+	FGameplayTag BroadcastTag = {};
+
+	if (Attribute == GetMaxHealthAttribute())
+	{
+		BroadcastTag = ARPGGameplayTags::Message_OnMaxHealthChanged;
+	}
+
+	if (Attribute == GetCurrentHealthAttribute())
+	{
+		BroadcastTag = ARPGGameplayTags::Message_OnHealthChanged;
+	}
+
+	if (BroadcastTag.IsValid())
+	{
+		UGameplayMessageSubsystem::Get(this).BroadcastMessage(BroadcastTag,
+		                                                      FValueChanged{GetOwningActor(), OldValue, NewValue});
+	}
 }

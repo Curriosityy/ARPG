@@ -18,10 +18,10 @@ class ARPG_API UARPGWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 
+protected:
 	UPROPERTY()
 	TWeakObjectPtr<AActor> UIOwner = {};
 
-protected:
 	UFUNCTION(BlueprintNativeEvent)
 	void SubscribeToMessage();
 

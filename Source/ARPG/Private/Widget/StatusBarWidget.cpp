@@ -13,16 +13,21 @@
 void UStatusBarWidget::SetMaxValue(float InMaxValue)
 {
 	MaxValue = InMaxValue;
+	RefreshProgressBar();
 }
 
 void UStatusBarWidget::SetCurrentValue(float InCurrentValue)
 {
 	CurrentValue = InCurrentValue;
+	RefreshProgressBar();
 }
 
 void UStatusBarWidget::RefreshProgressBar()
 {
 	ProgressBar_Main->SetPercent(CurrentValue / MaxValue);
+	Debug::Print(FString::Printf(
+		TEXT("UStatusBarWidget::RefreshProgressBar %s %s %f/%f"), *GetName(), *UIOwner->GetName(), CurrentValue,
+		MaxValue));
 	SetProgressbarColorBasedOnValues();
 }
 

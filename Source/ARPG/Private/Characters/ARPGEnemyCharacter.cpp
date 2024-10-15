@@ -2,14 +2,16 @@
 
 
 #include "Characters/ARPGEnemyCharacter.h"
-
 #include "AbilitySystemComponent.h"
 #include "DebugHelper.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Components/Combat/EnemyCombatComponent.h"
 #include "Components/UI/EnemyUIComponent.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "Engine/AssetManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Widget/ARPGWidgetBase.h"
 
 AARPGEnemyCharacter::AARPGEnemyCharacter(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer
 	.SetDefaultSubobjectClass<UEnemyCombatComponent>(CombatComponentName)
@@ -26,12 +28,28 @@ AARPGEnemyCharacter::AARPGEnemyCharacter(const FObjectInitializer& ObjectInitial
 	GetCharacterMovement()->RotationRate = {0.f, 180.f, 0.f};
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 1000.f;
+
+	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>("WidgetComponent");
+	WidgetComponent->SetupAttachment(GetMesh());
 }
 
 void AARPGEnemyCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitEnemyStatupData();
+}
+
+void AARPGEnemyCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (WidgetComponent->GetUserWidgetObject())
+	{
+		UARPGWidgetBase* Base = Cast<UARPGWidgetBase>(WidgetComponent->GetUserWidgetObject());
+		checkf(Base, TEXT("UserWidgetObject in WidgetComponent should be based on UARPGWidgetBase Actor name %s"),
+		       *GetName())
+		Base->SetOwningActor(this);
+	}
 }
 
 void AARPGEnemyCharacter::InitEnemyStatupData()

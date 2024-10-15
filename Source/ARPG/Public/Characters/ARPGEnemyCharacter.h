@@ -7,6 +7,7 @@
 #include "Components/Combat/EnemyCombatComponent.h"
 #include "ARPGEnemyCharacter.generated.h"
 
+class UWidgetComponent;
 /**
  * 
  */
@@ -14,6 +15,9 @@ UCLASS()
 class ARPG_API AARPGEnemyCharacter : public AARPGBaseCharacter
 {
 	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = UI, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UWidgetComponent> WidgetComponent = {};
 
 public:
 	AARPGEnemyCharacter(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
@@ -24,6 +28,8 @@ public:
 	}
 
 	virtual void PossessedBy(AController* NewController) override;
+
+	virtual void BeginPlay() override;
 
 private:
 	void InitEnemyStatupData();
