@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "Characters/ARPGBaseCharacter.h"
 #include "Components/Combat/EnemyCombatComponent.h"
 #include "ARPGEnemyCharacter.generated.h"

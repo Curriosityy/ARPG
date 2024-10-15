@@ -52,6 +52,7 @@ void AARPGEnemyCharacter::BeginPlay()
 	}
 }
 
+
 void AARPGEnemyCharacter::InitEnemyStatupData()
 {
 	if (CharacterStartupData.IsNull())

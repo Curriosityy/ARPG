@@ -58,6 +58,22 @@ UPawnUIComponent* AARPGBaseCharacter::GetUIComponent() const
 	return UIComponent;
 }
 
+void AARPGBaseCharacter::SetGenericTeamId(const FGenericTeamId& TeamID)
+{
+	checkf(Cast<IGenericTeamAgentInterface>(GetController()),
+	       TEXT("Controller is not implementing an IGenericTeamAgentInterface %s"),
+	       *GetName());
+	Cast<IGenericTeamAgentInterface>(GetController())->SetGenericTeamId(TeamID);
+}
+
+FGenericTeamId AARPGBaseCharacter::GetGenericTeamId() const
+{
+	checkf(Cast<IGenericTeamAgentInterface>(GetController()),
+	       TEXT("Controller is not implementing an IGenericTeamAgentInterface %s"),
+	       *GetName());
+	return Cast<IGenericTeamAgentInterface>(GetController())->GetGenericTeamId();
+}
+
 UARPGAbilitySystemComponent* AARPGBaseCharacter::GetARPGAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;

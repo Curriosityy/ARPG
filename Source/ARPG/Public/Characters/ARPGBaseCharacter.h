@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/CombatComponentInterface.h"
 #include "Interfaces/Deathable.h"
@@ -19,7 +20,7 @@ class UNiagaraSystem;
 
 UCLASS()
 class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatComponentInterface,
-                                    public IDeathable, public IUIComponentInterface
+                                    public IDeathable, public IUIComponentInterface, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -55,9 +56,12 @@ public:
 	static FName CombatComponentName;
 	static FName AttributeSetName;
 	static FName UIComponentName;
-	
+
 	UFUNCTION(BlueprintCallable)
 	virtual void HandleDeath_Implementation(const TSoftObjectPtr<UNiagaraSystem>& NiagaraSystemToPlay) override;
-	
+
 	virtual UPawnUIComponent* GetUIComponent() const override;
+
+	virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override;
+	virtual FGenericTeamId GetGenericTeamId() const override;
 };

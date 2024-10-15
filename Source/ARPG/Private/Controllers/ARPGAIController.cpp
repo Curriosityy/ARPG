@@ -3,12 +3,33 @@
 
 #include "Controllers/ARPGAIController.h"
 
+#include "DebugHelper.h"
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 
 void AARPGAIController::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
+	if (Stimulus.WasSuccessfullySensed() && Actor)
+	{
+		Debug::Print(Actor->GetActorLabel() + TEXT(" Was sensed"));
+	}
+}
+
+void AARPGAIController::SetGenericTeamId(const FGenericTeamId& InTeamID)
+{
+	Super::SetGenericTeamId(InTeamID);
+}
+
+FGenericTeamId AARPGAIController::GetGenericTeamId() const
+{
+	return Super::GetGenericTeamId();
+}
+
+ETeamAttitude::Type AARPGAIController::GetTeamAttitudeTowards(const AActor& Other) const
+{
+	Debug::Print(Other.GetActorLabel() + TEXT(" CHECKIGN LABEL OF ACTOR"));
+	return Super::GetTeamAttitudeTowards(Other);
 }
 
 AARPGAIController::AARPGAIController(const FObjectInitializer& ObjectInitializer): Super(
@@ -26,4 +47,6 @@ AARPGAIController::AARPGAIController(const FObjectInitializer& ObjectInitializer
 	PerceptionComponent->ConfigureSense(*SenseConfig_Sight);
 	PerceptionComponent->SetDominantSense(UAISenseConfig_Sight::StaticClass());
 	PerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ThisClass::OnPerceptionUpdated);
+
+	AARPGAIController::SetGenericTeamId(FGenericTeamId{1});
 }

@@ -18,7 +18,8 @@ public class ARPG : ModuleRules
 			"GameplayTags",
 			"GameplayAbilities",
 			"GameplayTasks",
-			"Niagara"
+			"Niagara",
+			"AIModule"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new[] { "GameplayMessageRuntime" });
