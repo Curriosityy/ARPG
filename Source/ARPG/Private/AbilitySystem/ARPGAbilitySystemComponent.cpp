@@ -73,3 +73,19 @@ void UARPGAbilitySystemComponent::RemoveGrantedHeroWeaponAbilities(
 
 	AbilitiesToRemove.Empty();
 }
+
+bool UARPGAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate)
+{
+	checkf(AbilityTagToActivate.IsValid(), TEXT("TAG Passed to %s is invalid"), *GetName())
+	TArray<FGameplayAbilitySpec*> SpecPointers;
+
+	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagToActivate.GetSingleTagContainer(), SpecPointers);
+
+	if (!SpecPointers.IsEmpty())
+	{
+		return false;
+	}
+	checkf(SpecPointers[0], TEXT("Spec pointer is invalid %s"), *GetName());
+
+	return TryActivateAbility(SpecPointers[0]->Handle, true);
+}
