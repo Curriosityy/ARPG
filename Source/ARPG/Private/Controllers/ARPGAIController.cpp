@@ -17,6 +17,7 @@ void AARPGAIController::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 	}
 
 	checkf(GetBlackboardComponent(), TEXT("Blackboard component is invalid in %s"), *GetName());
+
 	GetBlackboardComponent()->SetValueAsObject(FName("TargetActor"), Actor);
 }
 
