@@ -30,3 +30,8 @@ EBTNodeResult::Type UBTTask_TriggerAbilityByClass::ExecuteTask(UBehaviorTreeComp
 
 	return abilityActivated ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 }
+
+FName UBTTask_TriggerAbilityByClass::GetFNameForStatID() const
+{
+	return FName(FString::Printf(TEXT("Trigger Ability %s"), *AbilityToActivate->GetName()));
+}
