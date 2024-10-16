@@ -2,8 +2,8 @@
 
 
 #include "Characters/ARPGBaseCharacter.h"
-
 #include "DebugHelper.h"
+#include "MotionWarpingComponent.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "AbilitySystem/ARPGAttributeSet.h"
 #include "Components/ARPGMovementComponentBase.h"
@@ -33,6 +33,7 @@ AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializ
 	AttributeSet = CreateDefaultSubobject<UARPGAttributeSet>(AttributeSetName);
 	CombatComponent = CreateDefaultSubobject<UPawnCombatComponent>(CombatComponentName);
 	UIComponent = CreateDefaultSubobject<UPawnUIComponent>(UIComponentName);
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>("MotionWarpingComponent");
 }
 
 void AARPGBaseCharacter::PossessedBy(AController* NewController)

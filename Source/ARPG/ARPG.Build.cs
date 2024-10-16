@@ -20,7 +20,8 @@ public class ARPG : ModuleRules
 			"GameplayTasks",
 			"Niagara",
 			"AIModule",
-			"AnimGraphRuntime"
+			"AnimGraphRuntime",
+			"MotionWarping"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new[] { "GameplayMessageRuntime" });

@@ -11,6 +11,7 @@
 #include "Interfaces/UIComponentInterface.h"
 #include "ARPGBaseCharacter.generated.h"
 
+class UMotionWarpingComponent;
 class UPawnUIComponent;
 class UPawnCombatComponent;
 class UDataAsset_StartUpDataBase;
@@ -36,6 +37,9 @@ class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInte
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="UI")
 	TObjectPtr<UPawnUIComponent> UIComponent = {};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess), Category="MotionWarping")
+	TObjectPtr<UMotionWarpingComponent> MotionWarpingComponent = {};
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="AbilitySystem", meta=(AllowPrivateAccess))
