@@ -46,6 +46,11 @@ void UARPGAttributeSet::OnRep_DamageTaken(const FGameplayAttributeData& OldDamag
 	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, DamageTaken, OldDamageTaken);
 }
 
+void UARPGAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldMovementSpeed)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, MovementSpeed, OldMovementSpeed);
+}
+
 void UARPGAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -55,6 +60,7 @@ void UARPGAttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, AttackPower, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, DefencePower, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, DamageTaken, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MovementSpeed, COND_None, REPNOTIFY_Always);
 }
 
 void UARPGAttributeSet::DealDamage(const FGameplayEffectModCallbackData& Data)

@@ -25,25 +25,29 @@ protected:
 	TWeakInterfacePtr<IUIComponentInterface> UIComponentInterface;
 
 public:
-	UPROPERTY(BlueprintReadOnly, Category="Health", ReplicatedUsing = OnRep_DamageTaken)
+	UPROPERTY(BlueprintReadOnly, Category="Values", ReplicatedUsing = OnRep_DamageTaken)
 	FGameplayAttributeData DamageTaken = {};
 	ATTRIBUTE_ACCESSORS(ThisClass, DamageTaken);
 
-	UPROPERTY(BlueprintReadOnly, Category="Health", ReplicatedUsing = OnRep_CurrentHealth)
+	UPROPERTY(BlueprintReadOnly, Category="Values", ReplicatedUsing = OnRep_CurrentHealth)
 	FGameplayAttributeData CurrentHealth = {};
 	ATTRIBUTE_ACCESSORS(ThisClass, CurrentHealth);
 
-	UPROPERTY(BlueprintReadOnly, Category="Health", ReplicatedUsing = OnRep_MaxHealth)
+	UPROPERTY(BlueprintReadOnly, Category="Values", ReplicatedUsing = OnRep_MaxHealth)
 	FGameplayAttributeData MaxHealth = {};
 	ATTRIBUTE_ACCESSORS(ThisClass, MaxHealth);
 
-	UPROPERTY(BlueprintReadOnly, Category="Damage", ReplicatedUsing = OnRep_AttackPower)
+	UPROPERTY(BlueprintReadOnly, Category="Values", ReplicatedUsing = OnRep_AttackPower)
 	FGameplayAttributeData AttackPower = {};
 	ATTRIBUTE_ACCESSORS(ThisClass, AttackPower);
 
-	UPROPERTY(BlueprintReadOnly, Category="Damage", ReplicatedUsing = OnRep_DefencePower)
+	UPROPERTY(BlueprintReadOnly, Category="Values", ReplicatedUsing = OnRep_DefencePower)
 	FGameplayAttributeData DefencePower = {};
 	ATTRIBUTE_ACCESSORS(ThisClass, DefencePower);
+
+	UPROPERTY(BlueprintReadOnly, Category="Values", ReplicatedUsing = OnRep_MovementSpeed)
+	FGameplayAttributeData MovementSpeed = {};
+	ATTRIBUTE_ACCESSORS(ThisClass, MovementSpeed);
 
 	UARPGAttributeSet();
 
@@ -60,6 +64,9 @@ private:
 
 	UFUNCTION()
 	void OnRep_DamageTaken(const FGameplayAttributeData& OldDamageTaken);
+
+	UFUNCTION()
+	void OnRep_MovementSpeed(const FGameplayAttributeData& OldMovementSpeed);
 
 public:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;

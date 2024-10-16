@@ -6,6 +6,7 @@
 #include "DebugHelper.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "AbilitySystem/ARPGAttributeSet.h"
+#include "Components/ARPGMovementComponentBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
@@ -17,7 +18,9 @@ FName AARPGBaseCharacter::AttributeSetName(TEXT("AttributeSet"));
 FName AARPGBaseCharacter::UIComponentName(TEXT("UIComponent"));
 
 // Sets default values
-AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
+AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializer):
+	Super(ObjectInitializer
+		.SetDefaultSubobjectClass<UARPGMovementComponentBase>(CharacterMovementComponentName))
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
