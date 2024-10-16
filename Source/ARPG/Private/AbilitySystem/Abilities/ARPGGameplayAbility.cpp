@@ -90,7 +90,7 @@ TMap<FGameplayTag, float> UARPGGameplayAbility::MakeDamageSpecMap(float BaseDama
 {
 	checkf(CurrentAttackTypeTag.IsValid(),
 	       TEXT("UARPGGameplayAbility::MakeDamageSpecMap CurrentAttackTypeTag Need to be valid"))
-	Debug::Print(CurrentAttackTypeTag.ToString());
+
 	TMap<FGameplayTag, float> HeroDamageSpecMap;
 	HeroDamageSpecMap.Add(ARPGGameplayTags::Shared_SetByCaller_BaseDamage, BaseDamage);
 	HeroDamageSpecMap.Add(CurrentAttackTypeTag, 0);

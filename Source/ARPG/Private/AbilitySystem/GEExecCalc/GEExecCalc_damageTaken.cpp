@@ -52,12 +52,12 @@ void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustom
 {
 	Super::Execute_Implementation(ExecutionParams, OutExecutionOutput);
 
-	const FGameplayEffectSpec& owningSpec = ExecutionParams.GetOwningSpec();
-	const FGameplayEffectContextHandle& handle = owningSpec.GetContext();
+	const FGameplayEffectSpec& OwningSpec = ExecutionParams.GetOwningSpec();
+	const FGameplayEffectContextHandle& Handle = OwningSpec.GetContext();
 
 	FAggregatorEvaluateParameters EvaluateParams;
-	EvaluateParams.SourceTags = owningSpec.CapturedSourceTags.GetAggregatedTags();
-	EvaluateParams.TargetTags = owningSpec.CapturedTargetTags.GetAggregatedTags();
+	EvaluateParams.SourceTags = OwningSpec.CapturedSourceTags.GetAggregatedTags();
+	EvaluateParams.TargetTags = OwningSpec.CapturedTargetTags.GetAggregatedTags();
 
 	float AttPower = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageCapture().AttackPowerDef, EvaluateParams,
@@ -67,22 +67,22 @@ void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustom
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(GetDamageCapture().DefencePowerDef, EvaluateParams,
 	                                                           DefPower);
 
-	float BaseDamage = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Shared_SetByCaller_BaseDamage);
-	float ComboCount = owningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Shared_SetByCaller_ComboCount);
+	const float BaseDamage = OwningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Shared_SetByCaller_BaseDamage);
+	const float ComboCount = OwningSpec.GetSetByCallerMagnitude(ARPGGameplayTags::Shared_SetByCaller_ComboCount);
 
-	float damageMultiplier = 1.0f;
+	float DamageMultiplier = 1.0f;
 	//TODO Multiplier should be injected by tag, not calculated like that (calculated in ability not here)
-	if (owningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Player_SetByCaller_AttackType_Light))
+	if (OwningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Player_SetByCaller_AttackType_Light))
 	{
-		damageMultiplier = (ComboCount - 1) * 0.05f + 1;
+		DamageMultiplier = (ComboCount - 1) * 0.05f + 1;
 	}
 
-	if (owningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Player_SetByCaller_AttackType_Heavy))
+	if (OwningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Player_SetByCaller_AttackType_Heavy))
 	{
-		damageMultiplier = ComboCount * 0.15f + 1;
+		DamageMultiplier = ComboCount * 0.15f + 1;
 	}
 
-	float FinalDamage = BaseDamage * damageMultiplier * AttPower / DefPower;
+	const float FinalDamage = BaseDamage * DamageMultiplier * AttPower / DefPower;
 
 	OutExecutionOutput.AddOutputModifier(
 		{GetDamageCapture().DamageTakenProperty, EGameplayModOp::Additive, FinalDamage});

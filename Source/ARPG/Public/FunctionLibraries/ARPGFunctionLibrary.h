@@ -8,6 +8,7 @@
 #include "Types/ARPGEnumTypes.h"
 #include "ARPGFunctionLibrary.generated.h"
 
+struct FScalableFloat;
 class ICombatComponentInterface;
 class UPawnCombatComponent;
 class UARPGAbilitySystemComponent;
@@ -41,5 +42,7 @@ public:
 	static UPawnCombatComponent* GetCombatComponentFromActor(AActor* Actor, EARPGValidType& OutValidType);
 
 	static UPawnCombatComponent* Native_GetCombatComponentFromActor(AActor* Actor);
+
+	UFUNCTION(BlueprintCallable, Category = "ARPG|FunctionLibrary")
+	static float GetScalableFloatValue(const FScalableFloat& InScalableFloat, const int Level);
 };
- 

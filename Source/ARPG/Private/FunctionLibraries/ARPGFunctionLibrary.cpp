@@ -70,3 +70,8 @@ UPawnCombatComponent* UARPGFunctionLibrary::Native_GetCombatComponentFromActor(A
 
 	return nullptr;
 }
+
+float UARPGFunctionLibrary::GetScalableFloatValue(const FScalableFloat& InScalableFloat, const int Level)
+{
+	return InScalableFloat.GetValueAtLevel(Level);
+}

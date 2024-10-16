@@ -4,6 +4,7 @@
 #include "Components/Combat/PawnCombatComponent.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemInterface.h"
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "GameFramework/GameplayMessageSubsystem.h"
@@ -47,6 +48,12 @@ AARPGWeaponBase* UPawnCombatComponent::GetCurrentEquippedWeapon() const
 
 void UPawnCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
 {
+	if (!Cast<IAbilitySystemInterface>(ActorHitted))
+	{
+		//Hitted wall without ASC WALL,Other weapon ETC.
+		return;
+	}
+
 	FGameplayEventData data;
 	data.Instigator = GetOwner();
 	data.Target = ActorHitted;
