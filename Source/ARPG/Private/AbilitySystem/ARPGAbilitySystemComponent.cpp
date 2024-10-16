@@ -6,7 +6,9 @@
 #include <Windows.ApplicationModel.Activation.h>
 
 #include "DebugHelper.h"
+#include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
 #include "Helpers/GrantASCHelper.h"
+#include "Kismet/KismetMathLibrary.h"
 
 int32 UARPGAbilitySystemComponent::GetActivatableAbilityIndexBasedOnDynamicTag(
 	const FGameplayTag& InInputTag)
@@ -74,10 +76,16 @@ void UARPGAbilitySystemComponent::RemoveGrantedHeroWeaponAbilities(
 	AbilitiesToRemove.Empty();
 }
 
-bool UARPGAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate)
+bool UARPGAbilitySystemComponent::TryActivateAbilityByTagActivationPolicy(const FGameplayTag AbilityTagToActivate,
+                                                                          const FActivationPolicy ActivationPolicy)
 {
 	checkf(AbilityTagToActivate.IsValid(), TEXT("TAG Passed to %s is invalid"), *GetName())
 	TArray<FGameplayAbilitySpec*> SpecPointers;
+
+	if (ActivationPolicy == FActivationPolicy::All)
+	{
+		return TryActivateAbilitiesByTag(AbilityTagToActivate.GetSingleTagContainer());
+	}
 
 	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagToActivate.GetSingleTagContainer(), SpecPointers);
 
@@ -85,7 +93,80 @@ bool UARPGAbilitySystemComponent::TryActivateAbilityByTag(FGameplayTag AbilityTa
 	{
 		return false;
 	}
+
 	checkf(SpecPointers[0], TEXT("Spec pointer is invalid %s"), *GetName());
 
-	return TryActivateAbility(SpecPointers[0]->Handle, true);
+	int Index = {0};
+
+	switch (ActivationPolicy)
+	{
+	case FActivationPolicy::First:
+		Index = 0;
+		break;
+	case FActivationPolicy::Last:
+		Index = SpecPointers.Num() - 1;
+		break;
+	case FActivationPolicy::Random:
+		Index = UKismetMathLibrary::RandomInteger(SpecPointers.Num());
+		break;
+
+	default:
+		break;
+	}
+
+	return TryActivateAbility(SpecPointers[Index]->Handle, true);
+}
+
+bool UARPGAbilitySystemComponent::TryActivateAbilityByClassActivationPolicy(
+	const TSubclassOf<UARPGGameplayAbility> AbilityToActivate,
+	const FActivationPolicy ActivationPolicy)
+{
+	if (ActivationPolicy == FActivationPolicy::First)
+	{
+		return TryActivateAbilityByClass(AbilityToActivate);
+	}
+
+	const UGameplayAbility* const InAbilityCDO = AbilityToActivate.GetDefaultObject();
+	TArray<int> Indexes = {};
+	int Ite = 0;
+	bool bAnyActivated = false;
+
+	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if (Spec.Ability != InAbilityCDO)
+		{
+			continue;
+		}
+
+		Indexes.Add(Ite);
+
+		if (ActivationPolicy == FActivationPolicy::All)
+		{
+			bAnyActivated |= TryActivateAbility(Spec.Handle, true);
+		}
+		Ite++;
+	}
+
+	if (ActivationPolicy == FActivationPolicy::All)
+	{
+		return bAnyActivated;
+	}
+
+	int Index = {0};
+
+	switch (ActivationPolicy)
+	{
+	case FActivationPolicy::Last:
+		Index = Indexes.Num() - 1;
+		break;
+	case FActivationPolicy::Random:
+		Index = UKismetMathLibrary::RandomInteger(Indexes.Num());
+		break;
+	default:
+		break;
+	}
+
+	bAnyActivated = TryActivateAbility(GetActivatableAbilities()[Index].Handle, true);
+
+	return bAnyActivated;
 }

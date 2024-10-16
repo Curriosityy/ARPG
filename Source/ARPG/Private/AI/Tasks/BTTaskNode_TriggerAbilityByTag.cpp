@@ -1,20 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AI/Tasks/BTTask_TriggerAbilityByClass.h"
+#include "AI/Tasks/BTTaskNode_TriggerAbilityByTag.h"
 
 #include "AbilitySystemInterface.h"
 #include "AIController.h"
-#include "DebugHelper.h"
-#include "AbilitySystem/ARPGAbilitySystemComponent.h"
-#include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
 
-UBTTask_TriggerAbilityByClass::UBTTask_TriggerAbilityByClass()
+UBTTaskNode_TriggerAbilityByTag::UBTTaskNode_TriggerAbilityByTag()
 {
-	NodeName = "Trigger Ability By Class";
+	NodeName = "Trigger Ability By Tag";
 }
 
-EBTNodeResult::Type UBTTask_TriggerAbilityByClass::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UBTTaskNode_TriggerAbilityByTag::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	const AAIController* AIController = OwnerComp.GetAIOwner();
 
@@ -27,15 +24,14 @@ EBTNodeResult::Type UBTTask_TriggerAbilityByClass::ExecuteTask(UBehaviorTreeComp
 	checkf(ASI, TEXT("Trying to execute ability on AI without AbilitySystemInterface"));
 
 	const bool bAbilityActivated = Cast<UARPGAbilitySystemComponent>(ASI->GetAbilitySystemComponent())->
-		TryActivateAbilityByClassActivationPolicy(AbilityToActivate, ActivationPolicy);
+		TryActivateAbilityByTagActivationPolicy(AbilityToActivate, ActivationPolicy);
 
 	return bAbilityActivated ? EBTNodeResult::Succeeded : EBTNodeResult::Failed;
 }
 
-FString UBTTask_TriggerAbilityByClass::GetStaticDescription() const
+FString UBTTaskNode_TriggerAbilityByTag::GetStaticDescription() const
 {
-	FString AbilityName = AbilityToActivate ? AbilityToActivate->GetName() : "Nullptr";
 	return Super::GetStaticDescription() + FString::Printf(
-		TEXT("\nTrigger Ability %s Mode %s"), *AbilityName,
+		TEXT("\nTrigger Ability Tag %s Mode %s"), *AbilityToActivate.ToString(),
 		*UEnum::GetValueAsName(ActivationPolicy).ToString());
 }

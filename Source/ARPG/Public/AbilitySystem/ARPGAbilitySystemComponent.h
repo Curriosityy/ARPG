@@ -10,6 +10,15 @@
 /**
  * 
  */
+UENUM()
+enum class FActivationPolicy
+{
+	First,
+	Last,
+	Random,
+	All
+};
+
 UCLASS()
 class ARPG_API UARPGAbilitySystemComponent : public UAbilitySystemComponent
 {
@@ -28,5 +37,8 @@ public:
 	void RemoveGrantedHeroWeaponAbilities(UPARAM(ref) TArray<FGameplayAbilitySpecHandle>& AbilitiesToRemove);
 
 	UFUNCTION(BlueprintCallable, Category = "ARPG|Ability|TryActivate")
-	bool TryActivateAbilityByTag(FGameplayTag AbilityTagToActivate);
+	bool TryActivateAbilityByTagActivationPolicy(FGameplayTag AbilityTagToActivate, FActivationPolicy ActivationPolicy);
+	UFUNCTION(BlueprintCallable, Category = "ARPG|Ability|TryActivate")
+	bool TryActivateAbilityByClassActivationPolicy(TSubclassOf<UARPGGameplayAbility> AbilityToActivate,
+	                                               FActivationPolicy ActivationPolicy);
 };

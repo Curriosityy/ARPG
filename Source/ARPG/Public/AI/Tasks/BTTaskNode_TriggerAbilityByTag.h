@@ -5,24 +5,25 @@
 #include "CoreMinimal.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "BTTask_TriggerAbilityByClass.generated.h"
+#include "BTTaskNode_TriggerAbilityByTag.generated.h"
 
-class UARPGGameplayAbility;
 /**
  * 
  */
 UCLASS()
-class ARPG_API UBTTask_TriggerAbilityByClass : public UBTTaskNode
+class ARPG_API UBTTaskNode_TriggerAbilityByTag : public UBTTaskNode
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Abilities", meta=(AllowPrivateAccess))
-	TSubclassOf<UARPGGameplayAbility> AbilityToActivate;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Abilities",
+		meta=(AllowPrivateAccess, Categories="Enemy.Ability"))
+	FGameplayTag AbilityToActivate;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Abilities", meta=(AllowPrivateAccess))
 	FActivationPolicy ActivationPolicy = {FActivationPolicy::First};
 
 public:
-	UBTTask_TriggerAbilityByClass();
+	UBTTaskNode_TriggerAbilityByTag();
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	virtual FString GetStaticDescription() const override;

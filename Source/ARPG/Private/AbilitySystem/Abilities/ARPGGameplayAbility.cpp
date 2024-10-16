@@ -56,7 +56,7 @@ UARPGAbilitySystemComponent* UARPGGameplayAbility::GetARPGAbilitySystemComponent
 }
 
 FGameplayEffectSpecHandle UARPGGameplayAbility::MakeEffectSpecHandle(TSubclassOf<UGameplayEffect> Effect,
-                                                                     TMap<FGameplayTag, float> EffectData)
+                                                                     TMap<FGameplayTag, float> EffectData) const
 {
 	checkf(Effect, TEXT("Effect in UARPGGameplayAbility::MakeEfectSpecHandle is NULLPTR"));
 
