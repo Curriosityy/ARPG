@@ -37,7 +37,7 @@ struct ARPG_API FARPGHeroAbilitySet
 	FGameplayTag InputTag = {};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="InputTag")
-	TSubclassOf<UARPGHeroGameplayAbility> AbilityToGrant = {};
+	TSubclassOf<UARPGGameplayAbility> AbilityToGrant = {};
 
 	bool IsValid() const;
 };

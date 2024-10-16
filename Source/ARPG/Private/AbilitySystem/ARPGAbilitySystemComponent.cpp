@@ -89,12 +89,10 @@ bool UARPGAbilitySystemComponent::TryActivateAbilityByTagActivationPolicy(const 
 
 	GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTagToActivate.GetSingleTagContainer(), SpecPointers);
 
-	if (!SpecPointers.IsEmpty())
+	if (SpecPointers.IsEmpty())
 	{
 		return false;
 	}
-
-	checkf(SpecPointers[0], TEXT("Spec pointer is invalid %s"), *GetName());
 
 	int Index = {0};
 

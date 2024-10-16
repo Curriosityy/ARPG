@@ -51,13 +51,6 @@ void UPawnCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
 	data.Instigator = GetOwner();
 	data.Target = ActorHitted;
 
-	if (HittedList.Contains(ActorHitted))
-	{
-		return;
-	}
-
-	HittedList.Add(ActorHitted);
-
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 		GetOwner(),
 		ARPGGameplayTags::Shared_Event_MeleeHit,
@@ -66,7 +59,6 @@ void UPawnCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
 
 void UPawnCombatComponent::OnWeaponEndOverlap(AActor* ActorHitted, AActor* HittedBy)
 {
-	HittedList.Remove(ActorHitted);
 }
 
 void UPawnCombatComponent::SetupEvents(FGameplayTag OldEquipedWeapon, FGameplayTag WeaponToEquip)

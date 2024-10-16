@@ -4,6 +4,7 @@
 #include "Items/Weapons/ARPGWeaponBase.h"
 
 #include "DebugHelper.h"
+#include "GenericTeamAgentInterface.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/Pawn.h"
@@ -15,9 +16,10 @@ void AARPGWeaponBase::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, 
 	APawn* WeaponOwningPawn = GetInstigator<APawn>();
 	checkf(WeaponOwningPawn, TEXT("Weapon have not setted Instigator as owning pawn of the weapon %s"), *GetName())
 
-	if (OtherActor == WeaponOwningPawn)
+	if (Cast<IGenericTeamAgentInterface>(WeaponOwningPawn)->
+		GetTeamAttitudeTowards(*OtherActor) == ETeamAttitude::Friendly)
 	{
-		//Hit ourself
+		//Hit friend
 		return;
 	}
 
@@ -30,9 +32,10 @@ void AARPGWeaponBase::OnWeaponEndOverlap(UPrimitiveComponent* OverlappedComponen
 	APawn* WeaponOwningPawn = GetInstigator<APawn>();
 	checkf(WeaponOwningPawn, TEXT("Weapon have not setted Instigator as owning pawn of the weapon %s"), *GetName())
 
-	if (OtherActor == WeaponOwningPawn)
+	if (Cast<IGenericTeamAgentInterface>(WeaponOwningPawn)->
+		GetTeamAttitudeTowards(*OtherActor) == ETeamAttitude::Friendly)
 	{
-		//Hit ourself
+		//Hit friend
 		return;
 	}
 

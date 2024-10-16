@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "ARPGGameplayTags.h"
+#include "DebugHelper.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
 #include "Types/ARPGEnumTypes.h"
@@ -89,7 +90,7 @@ TMap<FGameplayTag, float> UARPGGameplayAbility::MakeDamageSpecMap(float BaseDama
 {
 	checkf(CurrentAttackTypeTag.IsValid(),
 	       TEXT("UARPGGameplayAbility::MakeDamageSpecMap CurrentAttackTypeTag Need to be valid"))
-
+	Debug::Print(CurrentAttackTypeTag.ToString());
 	TMap<FGameplayTag, float> HeroDamageSpecMap;
 	HeroDamageSpecMap.Add(ARPGGameplayTags::Shared_SetByCaller_BaseDamage, BaseDamage);
 	HeroDamageSpecMap.Add(CurrentAttackTypeTag, 0);
