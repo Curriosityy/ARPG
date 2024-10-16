@@ -25,7 +25,7 @@ void UBTService_OrientToActor::InitializeFromAsset(UBehaviorTree& Asset)
 {
 	Super::InitializeFromAsset(Asset);
 
-	auto BlackBoard = GetBlackboardAsset();
+	const UBlackboardData* BlackBoard = GetBlackboardAsset();
 
 	if (!BlackBoard)
 	{
