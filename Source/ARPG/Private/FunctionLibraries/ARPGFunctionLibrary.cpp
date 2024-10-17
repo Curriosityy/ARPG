@@ -7,6 +7,7 @@
 #include "DebugHelper.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "Interfaces/CombatComponentInterface.h"
+#include "Kismet/KismetMathLibrary.h"
 
 UARPGAbilitySystemComponent* UARPGFunctionLibrary::NativeGetARPGASCFromActor(AActor* InActor)
 {
@@ -74,4 +75,31 @@ UPawnCombatComponent* UARPGFunctionLibrary::Native_GetCombatComponentFromActor(A
 float UARPGFunctionLibrary::GetScalableFloatValue(const FScalableFloat& InScalableFloat, const int Level)
 {
 	return InScalableFloat.GetValueAtLevel(Level);
+}
+
+EARPGHitDirection UARPGFunctionLibrary::GetHitDirection(const AActor* Victim, const AActor* Attacker)
+{
+	const FVector ForwardVector = Victim->GetActorForwardVector();
+	const FVector HitDirection = (Attacker->GetActorLocation() - Victim->GetActorLocation()).GetSafeNormal();
+
+
+	const FVector Cross = FVector::CrossProduct(ForwardVector, HitDirection);
+	const float Angle = UKismetMathLibrary::DegAcos(FVector::DotProduct(ForwardVector, HitDirection));
+
+	if (Angle <= 45)
+	{
+		return EARPGHitDirection::Front;
+	}
+
+	if (Angle >= 135)
+	{
+		return EARPGHitDirection::Back;
+	}
+
+	if (Cross.Z >= 0)
+	{
+		return EARPGHitDirection::Right;
+	}
+
+	return EARPGHitDirection::Left;
 }

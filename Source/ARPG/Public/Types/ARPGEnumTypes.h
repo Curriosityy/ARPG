@@ -22,3 +22,12 @@ enum class EARPGSuccessType: uint8
 	Successful,
 	Unsuccessful
 };
+
+UENUM()
+enum class EARPGHitDirection: uint8
+{
+	Front,
+	Back,
+	Left,
+	Right
+};
