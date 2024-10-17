@@ -73,12 +73,24 @@ EBTNodeResult::Type UBTTask_RotatePawnToFaceBBEntry::ExecuteTask(UBehaviorTreeCo
 	const FVector::FReal AngleDifference = CalculateAngleDifferenceDot(PawnLocation,
 	                                                                   TargetActor->GetActorLocation() - PawnLocation);
 
-	if (AngleDifference >= PrecisionCos)
+	if (HasReachedPrecision(NodeMemory))
 	{
 		return EBTNodeResult::Succeeded;
 	}
 
 	return EBTNodeResult::InProgress;
+}
+
+bool UBTTask_RotatePawnToFaceBBEntry::HasReachedPrecision(uint8* NodeMemory) const
+{
+	FRotatePawnMemory* MyMemory = CastInstanceNodeMemory<FRotatePawnMemory>(NodeMemory);
+	check(MyMemory)
+
+	const FVector PawnForwardVector = MyMemory->OwnerPawn->GetActorForwardVector();
+	const FVector PawnLocation = MyMemory->OwnerPawn->GetActorLocation();
+	const FVector TargetLocation = MyMemory->Target->GetActorLocation();
+	return CalculateAngleDifferenceDot(PawnForwardVector, (TargetLocation - PawnLocation).GetSafeNormal()) >=
+		PrecisionCos;
 }
 
 void UBTTask_RotatePawnToFaceBBEntry::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
@@ -94,16 +106,16 @@ void UBTTask_RotatePawnToFaceBBEntry::TickTask(UBehaviorTreeComponent& OwnerComp
 		return;
 	}
 
-	const FVector PawnLocation = MyMemory->OwnerPawn->GetActorLocation();
-	const FVector TargetLocation = MyMemory->Target->GetActorLocation();
 
-	if (CalculateAngleDifferenceDot(PawnLocation, TargetLocation - PawnLocation) >= PrecisionCos)
+	if (HasReachedPrecision(NodeMemory))
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		return;
 	}
 
-	const FRotator FinalRotator = UKismetMathLibrary::FindLookAtRotation(PawnLocation, TargetLocation);
+	const FVector OwnerLocation = MyMemory->OwnerPawn->GetActorLocation();
+	const FVector TargetLocation = MyMemory->Target->GetActorLocation();
+	const FRotator FinalRotator = UKismetMathLibrary::FindLookAtRotation(OwnerLocation, TargetLocation);
 	const FRotator LerpRot = UKismetMathLibrary::RInterpTo(MyMemory->OwnerPawn->GetActorRotation(), FinalRotator,
 	                                                       DeltaSeconds,
 	                                                       InterpSpeed);

@@ -8,6 +8,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/Combat/EnemyCombatComponent.h"
 #include "Components/UI/EnemyUIComponent.h"
+#include "Controllers/ARPGAIController.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
 #include "Engine/AssetManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -72,4 +73,10 @@ void AARPGEnemyCharacter::InitEnemyStatupData()
 
 			loadedData->GiveToAbilitySystemComponent(GetARPGAbilitySystemComponent());
 		});
+}
+
+void AARPGEnemyCharacter::HandleDeath_Implementation(const TSoftObjectPtr<UNiagaraSystem>& NiagaraSystemToPlay)
+{
+	Super::HandleDeath_Implementation(NiagaraSystemToPlay);
+	GetController()->UnPossess();
 }

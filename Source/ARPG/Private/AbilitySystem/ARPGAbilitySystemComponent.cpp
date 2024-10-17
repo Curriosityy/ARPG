@@ -112,7 +112,9 @@ bool UARPGAbilitySystemComponent::TryActivateAbilityByTagActivationPolicy(const 
 		break;
 	}
 
-	return TryActivateAbility(SpecPointers[Index]->Handle, true);
+	bool ability = TryActivateAbility(SpecPointers[Index]->Handle, true);
+
+	return ability;
 }
 
 bool UARPGAbilitySystemComponent::TryActivateAbilityByClassActivationPolicy(

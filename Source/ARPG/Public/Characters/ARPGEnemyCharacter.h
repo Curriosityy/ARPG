@@ -34,4 +34,6 @@ public:
 
 private:
 	void InitEnemyStatupData();
+
+	virtual void HandleDeath_Implementation(const TSoftObjectPtr<UNiagaraSystem>& NiagaraSystemToPlay) override;
 };
