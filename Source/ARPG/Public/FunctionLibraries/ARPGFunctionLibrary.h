@@ -43,6 +43,6 @@ public:
 
 	static UPawnCombatComponent* Native_GetCombatComponentFromActor(AActor* Actor);
 
-	UFUNCTION(BlueprintCallable, Category = "ARPG|FunctionLibrary")
+	UFUNCTION(BlueprintPure, Category = "ARPG|FunctionLibrary")
 	static float GetScalableFloatValue(const FScalableFloat& InScalableFloat, const int Level);
 };
