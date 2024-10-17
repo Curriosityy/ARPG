@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayTagAssetInterface.h"
 #include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/CombatComponentInterface.h"
@@ -21,7 +22,8 @@ class UNiagaraSystem;
 
 UCLASS()
 class ARPG_API AARPGBaseCharacter : public ACharacter, public IAbilitySystemInterface, public ICombatComponentInterface,
-                                    public IDeathable, public IUIComponentInterface, public IGenericTeamAgentInterface
+                                    public IDeathable, public IUIComponentInterface, public IGenericTeamAgentInterface,
+                                    public IGameplayTagAssetInterface
 {
 	GENERATED_BODY()
 
@@ -69,4 +71,6 @@ public:
 
 	virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override;
 	virtual FGenericTeamId GetGenericTeamId() const override;
+
+	virtual void GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const override;
 };

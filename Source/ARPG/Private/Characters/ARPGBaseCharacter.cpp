@@ -17,6 +17,11 @@ FName AARPGBaseCharacter::CombatComponentName(TEXT("CombatComponent"));
 FName AARPGBaseCharacter::AttributeSetName(TEXT("AttributeSet"));
 FName AARPGBaseCharacter::UIComponentName(TEXT("UIComponent"));
 
+void AARPGBaseCharacter::GetOwnedGameplayTags(FGameplayTagContainer& TagContainer) const
+{
+	TagContainer = GetAbilitySystemComponent()->GetOwnedGameplayTags();
+}
+
 // Sets default values
 AARPGBaseCharacter::AARPGBaseCharacter(const FObjectInitializer& ObjectInitializer):
 	Super(ObjectInitializer
