@@ -5,6 +5,7 @@
 
 #include <Windows.ApplicationModel.Activation.h>
 
+#include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
 #include "Helpers/GrantASCHelper.h"
@@ -22,19 +23,19 @@ int32 UARPGAbilitySystemComponent::GetActivatableAbilityIndexBasedOnDynamicTag(
 
 void UARPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
 {
-	if (!InInputTag.IsValid())
+	if (!InInputTag.IsValid() || !InInputTag.MatchesTag(ARPGGameplayTags::InputTag_MustBeHeld))
 	{
 		return;
 	}
 
-	int idx = GetActivatableAbilityIndexBasedOnDynamicTag(InInputTag);
+	const int Idx = GetActivatableAbilityIndexBasedOnDynamicTag(InInputTag);
 
-	if (INDEX_NONE == idx)
+	if (INDEX_NONE == Idx)
 	{
 		return;
 	}
 
-	TryActivateAbility(GetActivatableAbilities()[idx].Handle);
+	TryActivateAbility(GetActivatableAbilities()[Idx].Handle);
 }
 
 void UARPGAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
@@ -44,13 +45,17 @@ void UARPGAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InI
 		return;
 	}
 
-	int idx = GetActivatableAbilityIndexBasedOnDynamicTag(InInputTag);
+	const int Idx = GetActivatableAbilityIndexBasedOnDynamicTag(InInputTag);
 
-	if (INDEX_NONE == idx)
+	if (INDEX_NONE == Idx)
 	{
+		return;
 	}
 
-	//(Ability.Handle);
+	if (GetActivatableAbilities()[Idx].IsActive())
+	{
+		CancelAbilityHandle(GetActivatableAbilities()[Idx].Handle);
+	}
 }
 
 void UARPGAbilitySystemComponent::GrandHeroWeaponAbilities(const TArray<FARPGHeroAbilitySet> HeroAbilitiesesToGrant,
