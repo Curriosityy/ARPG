@@ -3,6 +3,7 @@
 
 #include "Components/Combat/EnemyCombatComponent.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "FunctionLibraries/ARPGFunctionLibrary.h"
@@ -21,4 +22,12 @@ void UEnemyCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
 	{
 		Super::OnWeaponHit(ActorHitted, HittedBy);
 	}
+
+	FGameplayEventData data;
+	data.Instigator = GetOwner();
+	data.Target = ActorHitted;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(ActorHitted,
+	                                                         ARPGGameplayTags::Player_Event_SuccessfulBlock,
+	                                                         data);
 }
