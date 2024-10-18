@@ -7,6 +7,7 @@
 
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
+#include "GlobalShader.h"
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
 #include "Helpers/GrantASCHelper.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -35,7 +36,18 @@ void UARPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InIn
 		return;
 	}
 
-	TryActivateAbility(GetActivatableAbilities()[Idx].Handle);
+	const FGameplayAbilitySpec& AbilityToManage = GetActivatableAbilities()[Idx];
+
+
+	if (InInputTag.MatchesTag(ARPGGameplayTags::InputTag_Toggle) &&
+		GetActivatableAbilities()[Idx].IsActive())
+	{
+		CancelAbilityHandle(GetActivatableAbilities()[Idx].Handle);
+
+		return;
+	}
+
+	TryActivateAbility(AbilityToManage.Handle);
 }
 
 void UARPGAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
@@ -73,6 +85,7 @@ void UARPGAbilitySystemComponent::RemoveGrantedHeroWeaponAbilities(
 	{
 		if (!ToRemove.IsValid())
 		{
+			continue;
 		}
 
 		ClearAbility(ToRemove);
