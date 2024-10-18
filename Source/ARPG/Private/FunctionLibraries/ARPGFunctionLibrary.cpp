@@ -77,7 +77,8 @@ float UARPGFunctionLibrary::GetScalableFloatValue(const FScalableFloat& InScalab
 	return InScalableFloat.GetValueAtLevel(Level);
 }
 
-EARPGHitDirection UARPGFunctionLibrary::GetHitDirection(const AActor* Victim, const AActor* Attacker)
+EARPGHitDirection UARPGFunctionLibrary::GetHitDirection(const AActor* Victim, const AActor* Attacker,
+                                                        const float FrontAngle, const float BackAngle)
 {
 	const FVector ForwardVector = Victim->GetActorForwardVector();
 	const FVector HitDirection = (Attacker->GetActorLocation() - Victim->GetActorLocation()).GetSafeNormal();
@@ -86,12 +87,12 @@ EARPGHitDirection UARPGFunctionLibrary::GetHitDirection(const AActor* Victim, co
 	const FVector Cross = FVector::CrossProduct(ForwardVector, HitDirection);
 	const float Angle = UKismetMathLibrary::DegAcos(FVector::DotProduct(ForwardVector, HitDirection));
 
-	if (Angle <= 45)
+	if (Angle <= FrontAngle)
 	{
 		return EARPGHitDirection::Front;
 	}
 
-	if (Angle >= 135)
+	if (Angle >= (180 - BackAngle))
 	{
 		return EARPGHitDirection::Back;
 	}

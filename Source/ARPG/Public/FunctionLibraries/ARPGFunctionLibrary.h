@@ -47,5 +47,6 @@ public:
 	static float GetScalableFloatValue(const FScalableFloat& InScalableFloat, const int Level);
 
 	UFUNCTION(BlueprintPure, Category = "ARPG|FunctionLibrary")
-	static EARPGHitDirection GetHitDirection(const AActor* Victim, const AActor* Attacker);
+	static EARPGHitDirection GetHitDirection(const AActor* Victim, const AActor* Attacker,
+	                                         const float FrontAngle = 45.f, const float BackAngle = 45.f);
 };

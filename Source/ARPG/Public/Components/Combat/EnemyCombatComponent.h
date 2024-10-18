@@ -13,5 +13,7 @@ UCLASS()
 class ARPG_API UEnemyCombatComponent : public UPawnCombatComponent
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void OnWeaponHit(AActor* ActorHitted, AActor* HittedBy) override;
 };
