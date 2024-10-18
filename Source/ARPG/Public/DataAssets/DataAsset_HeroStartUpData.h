@@ -19,7 +19,7 @@ class ARPG_API UDataAsset_HeroStartUpData : public UDataAsset_StartUpDataBase
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="StartupData",
 		meta=(Title="InputTag", AllowPrivateAccess, Categories="InputTag"))
-	TArray<FARPGHeroAbilitySet> HeroStartupAbilitySets = {};
+	TArray<FARPGHeroAbilitySet> BasicHeroInputAbilities = {};
 
 public:
 	virtual void GiveToAbilitySystemComponent(UARPGAbilitySystemComponent* InASC, int32 Level) override;
