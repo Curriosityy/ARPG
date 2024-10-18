@@ -4,12 +4,19 @@
 #include "Components/Combat/EnemyCombatComponent.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemInterface.h"
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "FunctionLibraries/ARPGFunctionLibrary.h"
 
 void UEnemyCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
 {
+	if (!Cast<IAbilitySystemInterface>(ActorHitted))
+	{
+		//Hitted wall without ASC WALL,Other weapon ETC.
+		return;
+	}
+
 	bool bIsPlayerBlocking = UARPGFunctionLibrary::NativeDoesActorHaveTag(
 		ActorHitted, ARPGGameplayTags::Player_Status_Blocking);
 	bool bIsBlockValid = false;
