@@ -23,7 +23,7 @@ int32 UARPGAbilitySystemComponent::GetActivatableAbilityIndexBasedOnDynamicTag(
 
 void UARPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
 {
-	if (!InInputTag.IsValid() || !InInputTag.MatchesTag(ARPGGameplayTags::InputTag_MustBeHeld))
+	if (!InInputTag.IsValid())
 	{
 		return;
 	}
@@ -40,7 +40,7 @@ void UARPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InIn
 
 void UARPGAbilitySystemComponent::OnAbilityInputReleased(const FGameplayTag& InInputTag)
 {
-	if (!InInputTag.IsValid())
+	if (!InInputTag.IsValid() || !InInputTag.MatchesTag(ARPGGameplayTags::InputTag_MustBeHeld))
 	{
 		return;
 	}
