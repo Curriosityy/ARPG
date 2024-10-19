@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Abilities/ARPGGameplayAbility.h"
+#include "Interfaces/OverHeadDebuggerInterface.h"
 #include "ARPGEnemyGameplayAbility.generated.h"
 
 class UEnemyCombatComponent;

@@ -50,6 +50,8 @@ public:
 		return Cast<UHeroCombatComponent>(GetCombatComponent());
 	}
 
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;

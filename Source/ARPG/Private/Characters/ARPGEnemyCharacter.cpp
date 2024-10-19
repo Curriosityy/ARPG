@@ -13,6 +13,7 @@
 #include "Engine/AssetManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Widget/ARPGWidgetBase.h"
+#include "Widget/OverHeadDebuggingWidget.h"
 
 AARPGEnemyCharacter::AARPGEnemyCharacter(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer
 	.SetDefaultSubobjectClass<UEnemyCombatComponent>(CombatComponentName)
@@ -32,6 +33,9 @@ AARPGEnemyCharacter::AARPGEnemyCharacter(const FObjectInitializer& ObjectInitial
 
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>("WidgetComponent");
 	WidgetComponent->SetupAttachment(GetMesh());
+
+	DebugWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("DebugWidgetComponent");
+	DebugWidgetComponent->SetupAttachment(GetMesh());
 }
 
 void AARPGEnemyCharacter::PossessedBy(AController* NewController)
@@ -79,4 +83,14 @@ void AARPGEnemyCharacter::HandleDeath_Implementation(const TSoftObjectPtr<UNiaga
 {
 	Super::HandleDeath_Implementation(NiagaraSystemToPlay);
 	GetController()->UnPossess();
+}
+
+void AARPGEnemyCharacter::SetOverHeadDebugText(const FString& Msg)
+{
+	if (WidgetComponent->GetUserWidgetObject())
+	{
+		UOverHeadDebuggingWidget* Base = Cast<UOverHeadDebuggingWidget>(DebugWidgetComponent->GetUserWidgetObject());
+		checkf(Base, TEXT("DEBUG WIDGET COMPONENT IS NOT BASED ON UOverHeadDebuggingWidget"))
+		Base->SetMessage(Msg);
+	}
 }
