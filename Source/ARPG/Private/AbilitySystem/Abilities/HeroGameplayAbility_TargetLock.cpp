@@ -6,8 +6,13 @@
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "InteractiveGizmo.h"
+#include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
+#include "Blueprint/WidgetTree.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/ARPGHeroCharacter.h"
+#include "Components/SizeBox.h"
+#include "Controllers/ARPGHeroController.h"
 #include "Interfaces/OverHeadDebuggerInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -90,11 +95,55 @@ AActor* UHeroGameplayAbility_TargetLock::GetBestLockActor(const TArray<FHitResul
 	return BestActor;
 }
 
+void UHeroGameplayAbility_TargetLock::Setup()
+{
+	if (!TargetLockingImage)
+	{
+		checkf(TargetLockingImageClass, TEXT("TargetLockingImageClass is not setted"))
+		TargetLockingImage = CreateWidget<UUserWidget>(GetHeroControllerFromActorInfo(), TargetLockingImageClass);
+		check(TargetLockingImage)
+		TargetLockingImage->SetVisibility(ESlateVisibility::Hidden);
+		TargetLockingImage->AddToViewport(-1);
+	}
+}
+
+void UHeroGameplayAbility_TargetLock::SetTarget(AActor* BestTarget)
+{
+	check(BestTarget)
+	CurrentLockedActor = {BestTarget};
+	FVector2D OutScreenPosition{};
+	UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(GetHeroControllerFromActorInfo(),
+	                                                           CurrentLockedActor->GetActorLocation(),
+	                                                           OutScreenPosition,
+	                                                           true);
+
+
+	FVector2d ImageSize = TargetLockingImage->GetDesiredSize();
+
+	if (ImageSize == FVector2D::ZeroVector)
+	{
+		//Creation tick return 00
+		TargetLockingImage->WidgetTree->ForEachWidget([&](UWidget* Widget)
+		{
+			if (const USizeBox* SizeBox = Cast<USizeBox>(Widget))
+			{
+				ImageSize.X = SizeBox->GetWidthOverride();
+				ImageSize.Y = SizeBox->GetHeightOverride();
+			}
+		});
+	}
+
+	TargetLockingImage->SetPositionInViewport(OutScreenPosition - ImageSize / 2, false);
+	TargetLockingImage->SetVisibility(ESlateVisibility::Visible);
+}
+
 void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                       const FGameplayAbilityActorInfo* ActorInfo,
                                                       const FGameplayAbilityActivationInfo ActivationInfo,
                                                       const FGameplayEventData* TriggerEventData)
 {
+	Setup();
+
 	TArray<FHitResult> Results;
 	GetValidLockActor(Results);
 
@@ -109,6 +158,8 @@ void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpec
 
 	UKismetSystemLibrary::DrawDebugLine(BestTarget, GetAvatarActorFromActorInfo()->GetActorLocation(),
 	                                    BestTarget->GetActorLocation(), FColor::Blue, 6, 2);
+
+	SetTarget(BestTarget);
 
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 }
