@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Abilities/ARPGHeroGameplayAbility.h"
+#include "AbilitySystem/Tasks/AbilityTask_ExecuteOnTick.h"
 #include "HeroGameplayAbility_TargetLock.generated.h"
 
 class UUserWidget;
@@ -34,9 +35,14 @@ class ARPG_API UHeroGameplayAbility_TargetLock : public UARPGHeroGameplayAbility
 	UPROPERTY()
 	TWeakObjectPtr<AActor> CurrentLockedActor;
 
+	UPROPERTY()
+	TObjectPtr<UAbilityTask_ExecuteOnTick> Task;
+
 public:
 	UHeroGameplayAbility_TargetLock();
 
+	UFUNCTION()
+	void OnTick(float DeltaTime);
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	                             const FGameplayAbilityActivationInfo ActivationInfo,
 	                             const FGameplayEventData* TriggerEventData) override;
@@ -48,5 +54,7 @@ private:
 	void GetValidLockActor(TArray<FHitResult>& Results);
 	AActor* GetBestLockActor(const TArray<FHitResult>& Results);
 	void Setup();
+	void SetWidgetPositionOnValidTarget();
 	void SetTarget(AActor* BestTarget);
+	void LockOnNewTarget();
 };

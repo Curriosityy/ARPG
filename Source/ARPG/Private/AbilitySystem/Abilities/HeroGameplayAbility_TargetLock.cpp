@@ -6,6 +6,7 @@
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "InteractiveGizmo.h"
+#include "AbilitySystem/Tasks/AbilityTask_ExecuteOnTick.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Blueprint/WidgetTree.h"
@@ -13,6 +14,7 @@
 #include "Characters/ARPGHeroCharacter.h"
 #include "Components/SizeBox.h"
 #include "Controllers/ARPGHeroController.h"
+#include "FunctionLibraries/ARPGFunctionLibrary.h"
 #include "Interfaces/OverHeadDebuggerInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -24,6 +26,34 @@ UHeroGameplayAbility_TargetLock::UHeroGameplayAbility_TargetLock()
 	ActivationOwnedTags.AddTag(ARPGGameplayTags::Player_Status_TargetLock);
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 	//bRetriggerInstancedAbility = true;
+}
+
+void UHeroGameplayAbility_TargetLock::OnTick(float DeltaTime)
+{
+	if (!CurrentLockedActor.IsValid())
+	{
+		TargetLockingImage->SetVisibility(ESlateVisibility::Hidden);
+		LockOnNewTarget();
+	}
+
+	if (!CurrentLockedActor.IsValid())
+	{
+		EndAbility(
+			GetCurrentAbilitySpecHandle(),
+			CurrentActorInfo,
+			GetCurrentActivationInfo(),
+			true,
+			false);
+
+		return;
+	}
+
+	SetWidgetPositionOnValidTarget();
+
+	if (UARPGFunctionLibrary::NativeDoesActorHaveTag(CurrentLockedActor.Get(), ARPGGameplayTags::Shared_Status_Death))
+	{
+		CurrentLockedActor = {};
+	}
 }
 
 void UHeroGameplayAbility_TargetLock::GetValidLockActor(TArray<FHitResult>& Results)
@@ -43,7 +73,18 @@ void UHeroGameplayAbility_TargetLock::GetValidLockActor(TArray<FHitResult>& Resu
 	                                              bShowDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
 	                                              Results,
 	                                              true);
+	//Filters
+	Results = Results.FilterByPredicate([](const FHitResult& Result)
+	{
+		return Cast<IAbilitySystemInterface>(Result.GetActor());
+	});
+
+	Results = Results.FilterByPredicate([](const FHitResult& Result)
+	{
+		return !UARPGFunctionLibrary::NativeDoesActorHaveTag(Result.GetActor(), ARPGGameplayTags::Shared_Status_Death);
+	});
 }
+
 
 AActor* UHeroGameplayAbility_TargetLock::GetBestLockActor(const TArray<FHitResult>& Results)
 {
@@ -71,21 +112,14 @@ AActor* UHeroGameplayAbility_TargetLock::GetBestLockActor(const TArray<FHitResul
 			continue;
 		}
 
-
-		if ((Normal - Precision) > BestNormal)
-		{
-			BestActor = Result.GetActor();
-			BestNormal = Normal;
-			BestDistance = Result.Distance;
-			continue;
-		}
-
 		//Super close normal variant
 		//Pick enemy based on distance
-		if (BestDistance < Result.Distance)
+		if (Normal - Precision < BestNormal &&
+			BestDistance < Result.Distance)
 		{
 			continue;
 		}
+
 
 		BestActor = Result.GetActor();
 		BestNormal = Normal;
@@ -107,10 +141,11 @@ void UHeroGameplayAbility_TargetLock::Setup()
 	}
 }
 
-void UHeroGameplayAbility_TargetLock::SetTarget(AActor* BestTarget)
+void UHeroGameplayAbility_TargetLock::SetWidgetPositionOnValidTarget()
 {
-	check(BestTarget)
-	CurrentLockedActor = {BestTarget};
+	check(CurrentLockedActor.IsValid());
+	check(TargetLockingImage);
+
 	FVector2D OutScreenPosition{};
 	UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(GetHeroControllerFromActorInfo(),
 	                                                           CurrentLockedActor->GetActorLocation(),
@@ -134,7 +169,35 @@ void UHeroGameplayAbility_TargetLock::SetTarget(AActor* BestTarget)
 	}
 
 	TargetLockingImage->SetPositionInViewport(OutScreenPosition - ImageSize / 2, false);
+}
+
+void UHeroGameplayAbility_TargetLock::SetTarget(AActor* BestTarget)
+{
+	check(BestTarget)
+	CurrentLockedActor = {BestTarget};
+	SetWidgetPositionOnValidTarget();
 	TargetLockingImage->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UHeroGameplayAbility_TargetLock::LockOnNewTarget()
+{
+	TArray<FHitResult> Results;
+	GetValidLockActor(Results);
+
+	if (Results.Num() <= 0)
+	{
+		return;
+	}
+
+	AActor* BestTarget = GetBestLockActor(Results);
+
+	if (bShowDebug)
+	{
+		UKismetSystemLibrary::DrawDebugLine(BestTarget, GetAvatarActorFromActorInfo()->GetActorLocation(),
+		                                    BestTarget->GetActorLocation(), FColor::Blue, 6, 2);
+	}
+
+	SetTarget(BestTarget);
 }
 
 void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -142,24 +205,22 @@ void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpec
                                                       const FGameplayAbilityActivationInfo ActivationInfo,
                                                       const FGameplayEventData* TriggerEventData)
 {
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
 	Setup();
 
-	TArray<FHitResult> Results;
-	GetValidLockActor(Results);
 
-	if (Results.Num() <= 0)
+	LockOnNewTarget();
+
+	if (!CurrentLockedActor.IsValid())
 	{
-		Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
 		return;
 	}
 
-	AActor* BestTarget = GetBestLockActor(Results);
-
-	UKismetSystemLibrary::DrawDebugLine(BestTarget, GetAvatarActorFromActorInfo()->GetActorLocation(),
-	                                    BestTarget->GetActorLocation(), FColor::Blue, 6, 2);
-
-	SetTarget(BestTarget);
+	Task = UAbilityTask_ExecuteOnTick::ExecuteOnTick(this);
+	Task->OnTick.AddDynamic(this, &ThisClass::OnTick);
+	Task->ReadyForActivation();
 
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 }
