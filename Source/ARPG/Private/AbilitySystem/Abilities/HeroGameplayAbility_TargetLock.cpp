@@ -23,20 +23,19 @@ UHeroGameplayAbility_TargetLock::UHeroGameplayAbility_TargetLock()
 {
 	AbilityTags.AddTag(ARPGGameplayTags::Player_Ability_TargetLock);
 
-	ActivationOwnedTags.AddTag(ARPGGameplayTags::Player_Status_TargetLock);
+	ActivationOwnedTags.AddTag(ARPGGameplayTags::Player_Status_TargetLocking);
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 	//bRetriggerInstancedAbility = true;
 }
 
 void UHeroGameplayAbility_TargetLock::OnTick(float DeltaTime)
 {
-	if (!CurrentLockedActor.IsValid())
+	if (!CurrentLockedTarget.IsValid())
 	{
-		TargetLockingImage->SetVisibility(ESlateVisibility::Hidden);
 		LockOnNewTarget();
 	}
 
-	if (!CurrentLockedActor.IsValid())
+	if (!CurrentLockedTarget.IsValid())
 	{
 		EndAbility(
 			GetCurrentAbilitySpecHandle(),
@@ -50,9 +49,15 @@ void UHeroGameplayAbility_TargetLock::OnTick(float DeltaTime)
 
 	SetWidgetPositionOnValidTarget();
 
-	if (UARPGFunctionLibrary::NativeDoesActorHaveTag(CurrentLockedActor.Get(), ARPGGameplayTags::Shared_Status_Death))
+	if (!UARPGFunctionLibrary::NativeDoesActorHaveTag(GetOwningActorFromActorInfo(),
+	                                                  ARPGGameplayTags::Player_Status_Rolling))
 	{
-		CurrentLockedActor = {};
+		SetRotationOnValidTarget(DeltaTime);
+	}
+
+	if (UARPGFunctionLibrary::NativeDoesActorHaveTag(CurrentLockedTarget.Get(), ARPGGameplayTags::Shared_Status_Death))
+	{
+		CurrentLockedTarget = {};
 	}
 }
 
@@ -143,12 +148,12 @@ void UHeroGameplayAbility_TargetLock::Setup()
 
 void UHeroGameplayAbility_TargetLock::SetWidgetPositionOnValidTarget()
 {
-	check(CurrentLockedActor.IsValid());
+	check(CurrentLockedTarget.IsValid());
 	check(TargetLockingImage);
 
 	FVector2D OutScreenPosition{};
 	UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(GetHeroControllerFromActorInfo(),
-	                                                           CurrentLockedActor->GetActorLocation(),
+	                                                           CurrentLockedTarget->GetActorLocation(),
 	                                                           OutScreenPosition,
 	                                                           true);
 
@@ -174,7 +179,7 @@ void UHeroGameplayAbility_TargetLock::SetWidgetPositionOnValidTarget()
 void UHeroGameplayAbility_TargetLock::SetTarget(AActor* BestTarget)
 {
 	check(BestTarget)
-	CurrentLockedActor = {BestTarget};
+	CurrentLockedTarget = {BestTarget};
 	SetWidgetPositionOnValidTarget();
 	TargetLockingImage->SetVisibility(ESlateVisibility::Visible);
 }
@@ -200,6 +205,25 @@ void UHeroGameplayAbility_TargetLock::LockOnNewTarget()
 	SetTarget(BestTarget);
 }
 
+void UHeroGameplayAbility_TargetLock::SetRotationOnValidTarget(float DeltaTime)
+{
+	check(CurrentLockedTarget.IsValid());
+	AActor* OwningActor = GetAvatarActorFromActorInfo();
+	const FRotator CurrentRotation = GetHeroControllerFromActorInfo()->GetControlRotation();
+	const FRotator FinalRotation = UKismetMathLibrary::FindLookAtRotation(
+		OwningActor->GetActorLocation(),
+		CurrentLockedTarget->GetActorLocation());
+
+	const FRotator InterpRotator = UKismetMathLibrary::RInterpTo(CurrentRotation,
+	                                                             FinalRotation,
+	                                                             DeltaTime,
+	                                                             RotationSpeed);
+
+	OwningActor->SetActorRotation({0, InterpRotator.Yaw, 0});
+
+	GetHeroControllerFromActorInfo()->SetControlRotation({InterpRotator.Pitch, InterpRotator.Yaw, 0});
+}
+
 void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                       const FGameplayAbilityActorInfo* ActorInfo,
                                                       const FGameplayAbilityActivationInfo ActivationInfo,
@@ -212,7 +236,7 @@ void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpec
 
 	LockOnNewTarget();
 
-	if (!CurrentLockedActor.IsValid())
+	if (!CurrentLockedTarget.IsValid())
 	{
 		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
 		return;
@@ -231,4 +255,5 @@ void UHeroGameplayAbility_TargetLock::EndAbility(const FGameplayAbilitySpecHandl
                                                  bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	TargetLockingImage->SetVisibility(ESlateVisibility::Hidden);
 }

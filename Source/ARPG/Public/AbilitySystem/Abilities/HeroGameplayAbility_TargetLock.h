@@ -26,14 +26,15 @@ class ARPG_API UHeroGameplayAbility_TargetLock : public UARPGHeroGameplayAbility
 	bool bShowDebug{false};
 	UPROPERTY(EditDefaultsOnly)
 	float Precision{.05f};
-
+	UPROPERTY(EditDefaultsOnly)
+	float RotationSpeed{5};
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> TargetLockingImageClass{};
 
 	UPROPERTY()
 	TObjectPtr<UUserWidget> TargetLockingImage;
 	UPROPERTY()
-	TWeakObjectPtr<AActor> CurrentLockedActor;
+	TWeakObjectPtr<AActor> CurrentLockedTarget;
 
 	UPROPERTY()
 	TObjectPtr<UAbilityTask_ExecuteOnTick> Task;
@@ -41,8 +42,6 @@ class ARPG_API UHeroGameplayAbility_TargetLock : public UARPGHeroGameplayAbility
 public:
 	UHeroGameplayAbility_TargetLock();
 
-	UFUNCTION()
-	void OnTick(float DeltaTime);
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 	                             const FGameplayAbilityActivationInfo ActivationInfo,
 	                             const FGameplayEventData* TriggerEventData) override;
@@ -57,4 +56,7 @@ private:
 	void SetWidgetPositionOnValidTarget();
 	void SetTarget(AActor* BestTarget);
 	void LockOnNewTarget();
+	void SetRotationOnValidTarget(float DeltaTime);
+	UFUNCTION()
+	void OnTick(float DeltaTime);
 };

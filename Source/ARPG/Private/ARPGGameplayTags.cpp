@@ -39,7 +39,7 @@ namespace ARPGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Finisher, "Player.Status.Finisher")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Rolling, "Player.Status.Rolling")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Blocking, "Player.Status.Blocking")
-	UE_DEFINE_GAMEPLAY_TAG(Player_Status_TargetLock, "Player.Status.Blocking")
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_TargetLocking, "Player.Status.TargetLocking")
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_SetByCaller_AttackType_Light, "Player.SetByCaller.AttackType.Light")
 	UE_DEFINE_GAMEPLAY_TAG(Player_SetByCaller_AttackType_Heavy, "Player.SetByCaller.AttackType.Heavy")
