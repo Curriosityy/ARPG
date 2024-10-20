@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Abilities/HeroGameplayAbility_TargetLock.h"
 
+#include "AbilitySystemComponent.h"
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "InteractiveGizmo.h"
@@ -245,7 +246,11 @@ void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpec
 	Task = UAbilityTask_ExecuteOnTick::ExecuteOnTick(this);
 	Task->OnTick.AddDynamic(this, &ThisClass::OnTick);
 	Task->ReadyForActivation();
-
+	EffectHandle = ApplyGameplayEffectSpecToOwner(
+		Handle,
+		ActorInfo,
+		ActivationInfo,
+		MakeOutgoingGameplayEffectSpec(TargetLockingGameplayEffect));
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 }
 
@@ -256,4 +261,5 @@ void UHeroGameplayAbility_TargetLock::EndAbility(const FGameplayAbilitySpecHandl
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 	TargetLockingImage->SetVisibility(ESlateVisibility::Hidden);
+	GetAbilitySystemComponentFromActorInfo()->RemoveActiveGameplayEffect(EffectHandle);
 }

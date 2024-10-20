@@ -31,6 +31,9 @@ class ARPG_API UHeroGameplayAbility_TargetLock : public UARPGHeroGameplayAbility
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> TargetLockingImageClass{};
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> TargetLockingGameplayEffect{};
+
 	UPROPERTY()
 	TObjectPtr<UUserWidget> TargetLockingImage;
 	UPROPERTY()
@@ -38,6 +41,9 @@ class ARPG_API UHeroGameplayAbility_TargetLock : public UARPGHeroGameplayAbility
 
 	UPROPERTY()
 	TObjectPtr<UAbilityTask_ExecuteOnTick> Task;
+
+	UPROPERTY()
+	FActiveGameplayEffectHandle EffectHandle;
 
 public:
 	UHeroGameplayAbility_TargetLock();
