@@ -18,7 +18,6 @@ void AARPGAIController::OnPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 		return;
 	}
 
-	//AGRO LOGIC
 	checkf(GetBlackboardComponent(), TEXT("Blackboard component is invalid in %s"), *GetName());
 
 	if (!UARPGFunctionLibrary::NativeDoesActorHaveTag(Actor, ARPGGameplayTags::Shared_Status_Death))
