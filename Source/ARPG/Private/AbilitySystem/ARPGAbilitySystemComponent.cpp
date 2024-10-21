@@ -15,11 +15,13 @@
 int32 UARPGAbilitySystemComponent::GetActivatableAbilityIndexBasedOnDynamicTag(
 	const FGameplayTag& InInputTag)
 {
-	return GetActivatableAbilities().IndexOfByPredicate([&]
+	const auto Abilities = GetActivatableAbilities();
+	const int AbilityIndex = Abilities.IndexOfByPredicate([&]
 	(const FGameplayAbilitySpec& Ability)
 		{
 			return Ability.DynamicAbilityTags.HasTagExact(InInputTag);
 		});
+	return AbilityIndex;
 }
 
 void UARPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
@@ -31,7 +33,7 @@ void UARPGAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InIn
 
 	const int Idx = GetActivatableAbilityIndexBasedOnDynamicTag(InInputTag);
 
-	if (INDEX_NONE == Idx)
+	if (-1 == Idx)
 	{
 		return;
 	}

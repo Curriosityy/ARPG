@@ -3,6 +3,7 @@
 
 #include "Characters/ARPGHeroCharacter.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "ARPGGameplayTags.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -20,6 +21,7 @@
 #include "Components/UI/HeroUIComponent.h"
 #include "DataAssets/DataAsset_InputConfig.h"
 #include "DataAssets/DataAsset_StartUpDataBase.h"
+#include "DTO/InputActionValueDTO.h"
 #include "Engine/GameInstance.h"
 #include "GameFramework/GameplayMessageSubsystem.h"
 
@@ -82,6 +84,25 @@ void AARPGHeroCharacter::Input_Move(const FInputActionValue& Value)
 	}
 }
 
+void AARPGHeroCharacter::Input_SwitchTarget(const FInputActionValue& Value)
+{
+	const int SwitchTagAbility = GetARPGAbilitySystemComponent()->
+		GetActivatableAbilityIndexBasedOnDynamicTag(ARPGGameplayTags::InputTag_Toggle_TargetLock);
+	check(SwitchTagAbility!=-1);
+
+	auto AbilityToTrigger = GetARPGAbilitySystemComponent()->GetActivatableAbilities()[SwitchTagAbility];
+
+	FGameplayEventData EventData;
+	EventData.Instigator = this;
+	EventData.Target = this;
+	auto DTO = NewObject<UInputActionValueDTO>();
+	DTO->Value = Value;
+	EventData.OptionalObject = DTO;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, ARPGGameplayTags::Player_Event_ChangeTarget,
+	                                                         EventData);
+}
+
 void AARPGHeroCharacter::Input_AbilityInputPressed(FGameplayTag InInputTag)
 {
 	GetARPGAbilitySystemComponent()->OnAbilityInputPressed(InInputTag);
@@ -140,6 +161,12 @@ void AARPGHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	                                          ETriggerEvent::Triggered,
 	                                          this,
 	                                          &ThisClass::Input_Move);
+
+	ARPGInputComponent->BindNativeInputAction(InputConfigDataAsset,
+	                                          ARPGGameplayTags::InputTag_SwitchTarget,
+	                                          ETriggerEvent::Triggered,
+	                                          this,
+	                                          &AARPGHeroCharacter::Input_SwitchTarget);
 
 	ARPGInputComponent->BindAbilityInputAction(InputConfigDataAsset, this,
 	                                           &ThisClass::Input_AbilityInputPressed,

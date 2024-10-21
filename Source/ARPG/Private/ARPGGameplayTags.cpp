@@ -8,6 +8,8 @@ namespace ARPGGameplayTags
 	/*Input Tags*/
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Move, "InputTag.Move")
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Look, "InputTag.Look")
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_SwitchTarget, "InputTag.SwitchTarget")
+
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_EquipAxe, "InputTag.EquipAxe")
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_UnequipAxe, "InputTag.UnequipAxe")
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_LightAttack_Axe, "InputTag.LightAttack.Axe")
@@ -35,6 +37,7 @@ namespace ARPGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Unequip_Axe, "Player.Event.Unequip.Axe")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_HitPause, "Player.Event.HitPause")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_SuccessfulBlock, "Player.Event.SuccessfulBlock")
+	UE_DEFINE_GAMEPLAY_TAG(Player_Event_ChangeTarget, "Player.Event.ChangeTarget")
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Finisher, "Player.Status.Finisher")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Rolling, "Player.Status.Rolling")

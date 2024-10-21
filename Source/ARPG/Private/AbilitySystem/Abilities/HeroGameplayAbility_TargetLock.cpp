@@ -6,7 +6,9 @@
 #include "AbilitySystemComponent.h"
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
+#include "EnhancedInputSubsystems.h"
 #include "InteractiveGizmo.h"
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "AbilitySystem/Tasks/AbilityTask_ExecuteOnTick.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
@@ -15,10 +17,12 @@
 #include "Characters/ARPGHeroCharacter.h"
 #include "Components/SizeBox.h"
 #include "Controllers/ARPGHeroController.h"
+#include "DTO/InputActionValueDTO.h"
 #include "FunctionLibraries/ARPGFunctionLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Interfaces/OverHeadDebuggerInterface.h"
+#include "Kismet/KismetInputLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -29,6 +33,99 @@ UHeroGameplayAbility_TargetLock::UHeroGameplayAbility_TargetLock()
 	ActivationOwnedTags.AddTag(ARPGGameplayTags::Player_Status_TargetLocking);
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 	//bRetriggerInstancedAbility = true;
+}
+
+bool UHeroGameplayAbility_TargetLock::TryLockOnNewTarget(const FGameplayAbilitySpecHandle& Handle,
+                                                         const FGameplayAbilityActorInfo* ActorInfo,
+                                                         const FGameplayAbilityActivationInfo&
+                                                         ActivationInfo)
+{
+	Setup();
+
+	LockOnNewTarget();
+
+	if (!CurrentLockedTarget.IsValid())
+	{
+		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+		return false;
+	}
+
+	GetHeroCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetHeroCharacterFromActorInfo()->Controller->SetIgnoreLookInput(true);
+
+	return true;
+}
+
+void UHeroGameplayAbility_TargetLock::TryChangeLockedTarget(FGameplayEventData Payload)
+{
+	check(Payload.OptionalObject);
+	const UInputActionValueDTO* DTO = Cast<UInputActionValueDTO>(Payload.OptionalObject);
+	const FVector2D Value = DTO->Value.Get<FVector2D>();
+	TArray<FHitResult> TargetActors;
+	GetValidLockActor(TargetActors);
+
+	TargetActors = TargetActors.FilterByPredicate([&](const FHitResult& Result)
+	{
+		return Result.GetActor() != CurrentLockedTarget;
+	});
+
+	const FVector ActorPosition = GetAvatarActorFromActorInfo()->GetActorLocation();
+
+	if (Value.X < 0)
+	{
+		//FindTargetOnLeft
+		TargetActors = TargetActors.FilterByPredicate([&](const FHitResult& Result)
+		{
+			return GetAvatarActorFromActorInfo()->
+			       GetActorForwardVector().
+			       Cross(Result.ImpactPoint - ActorPosition).Z < 0;
+		});
+	}
+
+	if (Value.X > 0)
+	{
+		//FindTargetOnRight
+		TargetActors = TargetActors.FilterByPredicate([&](const FHitResult& Result)
+		{
+			return GetAvatarActorFromActorInfo()->
+			       GetActorForwardVector().
+			       Cross((Result.ImpactPoint - ActorPosition).GetSafeNormal()).Z > 0;
+		});
+	}
+
+	for (const FHitResult& Result : TargetActors)
+	{
+		if (IOverHeadDebuggerInterface* Interface = Cast<IOverHeadDebuggerInterface>(Result.GetActor()))
+		{
+			Interface->SetOverHeadDebugText((GetAvatarActorFromActorInfo()->
+			                                 GetActorForwardVector().
+			                                 Cross((Result.ImpactPoint - ActorPosition).GetSafeNormal()).
+			                                 ToString()));
+		}
+	}
+
+	AActor* BestActor = nullptr;
+	float BestProduct = 12;
+
+	for (const FHitResult& Result : TargetActors)
+	{
+		const float CrossProduct = GetAvatarActorFromActorInfo()->
+		                           GetActorForwardVector().
+		                           Cross((Result.ImpactPoint - ActorPosition).GetSafeNormal()).Z;
+
+		if (abs(CrossProduct) < BestProduct)
+		{
+			BestActor = Result.GetActor();
+			BestProduct = abs(CrossProduct);
+		}
+	}
+
+	if (BestActor)
+	{
+		Debug::Print("BestActor: " + FString(BestActor->GetName()) + "\n");
+		Debug::Print("CurrentLockedTarget: " + FString(CurrentLockedTarget->GetName()) + "\n");
+		CurrentLockedTarget = BestActor;
+	}
 }
 
 void UHeroGameplayAbility_TargetLock::OnTick(float DeltaTime)
@@ -147,6 +244,9 @@ void UHeroGameplayAbility_TargetLock::Setup()
 		TargetLockingImage->SetVisibility(ESlateVisibility::Hidden);
 		TargetLockingImage->AddToViewport(-1);
 	}
+
+	const ULocalPlayer* LocalPlayer = GetHeroControllerFromActorInfo()->GetLocalPlayer();
+	ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer)->AddMappingContext(InputMapping, 3);
 }
 
 void UHeroGameplayAbility_TargetLock::SetWidgetPositionOnValidTarget()
@@ -241,30 +341,29 @@ void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpec
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	Setup();
-
-	LockOnNewTarget();
-
-	if (!CurrentLockedTarget.IsValid())
+	if (!TryLockOnNewTarget(Handle, ActorInfo, ActivationInfo))
 	{
-		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
 		return;
 	}
 
-	GetHeroCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = false;
-	GetHeroCharacterFromActorInfo()->Controller->SetIgnoreLookInput(true);
-
-	Task = UAbilityTask_ExecuteOnTick::ExecuteOnTick(this);
-	Task->OnTick.AddDynamic(this, &ThisClass::OnTick);
-	Task->ReadyForActivation();
+	TickTask = UAbilityTask_ExecuteOnTick::ExecuteOnTick(this);
+	TickTask->OnTick.AddDynamic(this, &ThisClass::OnTick);
+	TickTask->ReadyForActivation();
 	EffectHandle = ApplyGameplayEffectSpecToOwner(
 		Handle,
 		ActorInfo,
 		ActivationInfo,
 		MakeOutgoingGameplayEffectSpec(TargetLockingGameplayEffect));
+
+	WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this,
+	                                                                  ARPGGameplayTags::Player_Event_ChangeTarget);
+	WaitEventTask->EventReceived.AddDynamic(this, &ThisClass::TryChangeLockedTarget);
+	WaitEventTask->ReadyForActivation();
 	CommitAbility(Handle, ActorInfo, ActivationInfo);
 }
 
+
+//TODO REFACTOR
 void UHeroGameplayAbility_TargetLock::EndAbility(const FGameplayAbilitySpecHandle Handle,
                                                  const FGameplayAbilityActorInfo* ActorInfo,
                                                  const FGameplayAbilityActivationInfo ActivationInfo,
@@ -281,6 +380,19 @@ void UHeroGameplayAbility_TargetLock::EndAbility(const FGameplayAbilitySpecHandl
 	{
 		Controller->SetIgnoreLookInput(false);
 	}
+
+
+	if (GetHeroControllerFromActorInfo())
+	{
+		const ULocalPlayer* LocalPlayer = GetHeroControllerFromActorInfo()->GetLocalPlayer();
+
+		if (UEnhancedInputLocalPlayerSubsystem* const InputSubsystem =
+			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer))
+		{
+			InputSubsystem->RemoveMappingContext(InputMapping);
+		}
+	}
+
 
 	TargetLockingImage->SetVisibility(ESlateVisibility::Hidden);
 	GetAbilitySystemComponentFromActorInfo()->RemoveActiveGameplayEffect(EffectHandle);

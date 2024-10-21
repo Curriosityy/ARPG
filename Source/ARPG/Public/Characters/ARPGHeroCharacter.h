@@ -39,6 +39,9 @@ public:
 	void Input_Move(const FInputActionValue& Value);
 
 	UFUNCTION()
+	void Input_SwitchTarget(const FInputActionValue& Value);
+
+	UFUNCTION()
 	void Input_AbilityInputPressed(FGameplayTag InInputTag);
 	UFUNCTION()
 	void Input_AbilityInputReleased(FGameplayTag InInputTag);
