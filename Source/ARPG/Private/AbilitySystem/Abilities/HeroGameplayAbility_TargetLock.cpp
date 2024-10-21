@@ -122,8 +122,6 @@ void UHeroGameplayAbility_TargetLock::TryChangeLockedTarget(FGameplayEventData P
 
 	if (BestActor)
 	{
-		Debug::Print("BestActor: " + FString(BestActor->GetName()) + "\n");
-		Debug::Print("CurrentLockedTarget: " + FString(CurrentLockedTarget->GetName()) + "\n");
 		CurrentLockedTarget = BestActor;
 	}
 }
@@ -319,7 +317,7 @@ void UHeroGameplayAbility_TargetLock::SetRotationOnValidTarget(float DeltaTime)
 
 
 	const FRotator InterpRotator = UKismetMathLibrary::RInterpTo(CurrentRotation,
-	                                                             FinalRotation,
+	                                                             FinalRotation + FRotator{CameraPitchOffset, 0, 0},
 	                                                             DeltaTime,
 	                                                             CameraRotationSpeed);
 
@@ -331,7 +329,8 @@ void UHeroGameplayAbility_TargetLock::SetRotationOnValidTarget(float DeltaTime)
 
 	OwningActor->SetActorRotation({0, HeroInterpRotator.Yaw, 0});
 
-	GetHeroControllerFromActorInfo()->SetControlRotation({InterpRotator.Pitch, InterpRotator.Yaw, 0});
+	GetHeroControllerFromActorInfo()->SetControlRotation(
+		{InterpRotator.Pitch, InterpRotator.Yaw, 0});
 }
 
 void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpecHandle Handle,

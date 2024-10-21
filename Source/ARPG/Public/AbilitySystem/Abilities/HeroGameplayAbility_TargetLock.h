@@ -39,6 +39,8 @@ class ARPG_API UHeroGameplayAbility_TargetLock : public UARPGHeroGameplayAbility
 
 	UPROPERTY(EditDefaultsOnly, Category="Setup")
 	TSubclassOf<UGameplayEffect> TargetLockingGameplayEffect{};
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float CameraPitchOffset = -20.f;
 
 	UPROPERTY()
 	TObjectPtr<UUserWidget> TargetLockingImage;
