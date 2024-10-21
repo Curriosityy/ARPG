@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "AbilitySystem/ARPGAttributeSet.h"
+#include "FunctionLibraries/ARPGFunctionLibrary.h"
 
 UARPGMovementComponentBase::UARPGMovementComponentBase()
 {
@@ -13,6 +14,9 @@ UARPGMovementComponentBase::UARPGMovementComponentBase()
 
 float UARPGMovementComponentBase::GetMaxSpeed() const
 {
+	//if(UARPGFunctionLibrary::NativeDoesActorHaveTag(GetOwner(),STUN))
+	//VALID WAY TO HANDLE STUN
+
 	float maxSpeed = Super::GetMaxSpeed();
 
 	switch (MovementMode)

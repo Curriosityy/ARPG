@@ -16,6 +16,8 @@
 #include "Components/SizeBox.h"
 #include "Controllers/ARPGHeroController.h"
 #include "FunctionLibraries/ARPGFunctionLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 #include "Interfaces/OverHeadDebuggerInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -215,12 +217,19 @@ void UHeroGameplayAbility_TargetLock::SetRotationOnValidTarget(float DeltaTime)
 		OwningActor->GetActorLocation(),
 		CurrentLockedTarget->GetActorLocation());
 
+
 	const FRotator InterpRotator = UKismetMathLibrary::RInterpTo(CurrentRotation,
 	                                                             FinalRotation,
 	                                                             DeltaTime,
-	                                                             RotationSpeed);
+	                                                             CameraRotationSpeed);
 
-	OwningActor->SetActorRotation({0, InterpRotator.Yaw, 0});
+	const FRotator HeroInterpRotator = UKismetMathLibrary::RInterpTo(OwningActor->GetActorRotation(),
+	                                                                 FinalRotation,
+	                                                                 DeltaTime,
+	                                                                 CameraRotationSpeed);
+
+
+	OwningActor->SetActorRotation({0, HeroInterpRotator.Yaw, 0});
 
 	GetHeroControllerFromActorInfo()->SetControlRotation({InterpRotator.Pitch, InterpRotator.Yaw, 0});
 }
@@ -234,7 +243,6 @@ void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpec
 
 	Setup();
 
-
 	LockOnNewTarget();
 
 	if (!CurrentLockedTarget.IsValid())
@@ -242,6 +250,9 @@ void UHeroGameplayAbility_TargetLock::ActivateAbility(const FGameplayAbilitySpec
 		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
 		return;
 	}
+
+	GetHeroCharacterFromActorInfo()->GetCharacterMovement()->bOrientRotationToMovement = false;
+	GetHeroCharacterFromActorInfo()->Controller->SetIgnoreLookInput(true);
 
 	Task = UAbilityTask_ExecuteOnTick::ExecuteOnTick(this);
 	Task->OnTick.AddDynamic(this, &ThisClass::OnTick);
@@ -260,6 +271,17 @@ void UHeroGameplayAbility_TargetLock::EndAbility(const FGameplayAbilitySpecHandl
                                                  bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+	if (auto* Movement = GetHeroCharacterFromActorInfo()->GetCharacterMovement())
+	{
+		Movement->bOrientRotationToMovement = true;
+	}
+
+	if (AController* Controller = GetHeroCharacterFromActorInfo()->Controller)
+	{
+		Controller->SetIgnoreLookInput(false);
+	}
+
 	TargetLockingImage->SetVisibility(ESlateVisibility::Hidden);
 	GetAbilitySystemComponentFromActorInfo()->RemoveActiveGameplayEffect(EffectHandle);
 }

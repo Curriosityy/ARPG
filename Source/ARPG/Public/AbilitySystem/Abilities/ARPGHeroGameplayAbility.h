@@ -12,7 +12,7 @@ class AARPGHeroCharacter;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class ARPG_API UARPGHeroGameplayAbility : public UARPGGameplayAbility
 {
 	GENERATED_BODY()

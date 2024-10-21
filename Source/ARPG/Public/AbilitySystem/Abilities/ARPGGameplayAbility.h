@@ -21,7 +21,7 @@ enum class EARPGAbilityActivationPolicy : uint8
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class ARPG_API UARPGGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()

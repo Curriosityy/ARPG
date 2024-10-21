@@ -11,7 +11,7 @@ class UUserWidget;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class ARPG_API UHeroGameplayAbility_TargetLock : public UARPGHeroGameplayAbility
 {
 	GENERATED_BODY()
@@ -27,7 +27,9 @@ class ARPG_API UHeroGameplayAbility_TargetLock : public UARPGHeroGameplayAbility
 	UPROPERTY(EditDefaultsOnly)
 	float Precision{.05f};
 	UPROPERTY(EditDefaultsOnly)
-	float RotationSpeed{5};
+	float CameraRotationSpeed{5};
+	UPROPERTY(EditDefaultsOnly)
+	float HeroRotationSpeed{5};
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UUserWidget> TargetLockingImageClass{};
 
