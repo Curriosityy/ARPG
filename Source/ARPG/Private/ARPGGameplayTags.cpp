@@ -36,12 +36,11 @@ namespace ARPGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Equip_Axe, "Player.Event.Equip.Axe")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_Unequip_Axe, "Player.Event.Unequip.Axe")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_HitPause, "Player.Event.HitPause")
-	UE_DEFINE_GAMEPLAY_TAG(Player_Event_SuccessfulBlock, "Player.Event.SuccessfulBlock")
+
 	UE_DEFINE_GAMEPLAY_TAG(Player_Event_ChangeTarget, "Player.Event.ChangeTarget")
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Finisher, "Player.Status.Finisher")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Rolling, "Player.Status.Rolling")
-	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Blocking, "Player.Status.Blocking")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_TargetLocking, "Player.Status.TargetLocking")
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_SetByCaller_AttackType_Light, "Player.SetByCaller.AttackType.Light")
@@ -59,6 +58,7 @@ namespace ARPGGameplayTags
 	/*Shared Tags */
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_MeleeHit, "Shared.Event.MeleeHit");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact, "Shared.Event.HitReact");
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_SuccessfulBlock, "Shared.Event.SuccessfulBlock")
 
 	UE_DEFINE_GAMEPLAY_TAG(Shared_SetByCaller_BaseDamage, "Shared.SetByCaller.BaseDamage");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_SetByCaller_ComboCount, "Shared.SetByCaller.ComboCount");
@@ -67,7 +67,7 @@ namespace ARPGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_Death, "Shared.Ability.Death");
 
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Death, "Shared.Status.Death");
-
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Blocking, "Shared.Status.Blocking")
 	/*Message Tags*/
 	UE_DEFINE_GAMEPLAY_TAG(Message_OnHealthChanged, "Message.OnHealthChanged");
 	UE_DEFINE_GAMEPLAY_TAG(Message_OnMaxHealthChanged, "Message.OnMaxHealthChanged");

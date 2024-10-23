@@ -3,11 +3,74 @@
 
 #include "Items/Weapons/ARPGWeaponBase.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemInterface.h"
+#include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
+#include "GameplayTagAssetInterface.h"
 #include "GenericTeamAgentInterface.h"
+#include "Abilities/GameplayAbilityTypes.h"
+#include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "FunctionLibraries/ARPGFunctionLibrary.h"
 #include "GameFramework/Pawn.h"
+
+void AARPGWeaponBase::SendHitEventToOwner(AActor* OtherActor) const
+{
+	FGameplayEventData data;
+	data.Instigator = GetOwner();
+	data.Target = OtherActor;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		GetOwner(),
+		ARPGGameplayTags::Shared_Event_MeleeHit,
+		data);
+}
+
+bool AARPGWeaponBase::IsHitValid(AActor* OtherActor, APawn* WeaponOwningPawn)
+{
+	if (Cast<IGenericTeamAgentInterface>(WeaponOwningPawn)->
+		GetTeamAttitudeTowards(*OtherActor) == ETeamAttitude::Friendly)
+	{
+		//Hit friend
+		return false;
+	}
+
+	if (!Cast<IAbilitySystemInterface>(OtherActor))
+	{
+		//Hitted wall without ASC WALL,Other weapon ETC.
+		return false;
+	}
+
+	return true;
+}
+
+bool AARPGWeaponBase::IsBlockValid(AActor* OtherActor, const APawn* WeaponOwningPawn)
+{
+	FGameplayTag blockTag = ARPGGameplayTags::Shared_Status_Blocking;
+	bool bIsPlayerBlocking = UARPGFunctionLibrary::NativeDoesActorHaveTag(OtherActor, blockTag);
+	bool bIsBlockValid = false;
+
+	if (bIsPlayerBlocking)
+	{
+		bIsBlockValid = UARPGFunctionLibrary::GetHitDirection(OtherActor, WeaponOwningPawn, 60) ==
+			EARPGHitDirection::Front;
+	}
+
+	return bIsBlockValid;
+}
+
+void AARPGWeaponBase::SendBlockValidToDefender(AActor* OtherActor)
+{
+	FGameplayEventData data;
+	data.Instigator = GetOwner();
+	data.Target = OtherActor;
+
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(OtherActor,
+	                                                         ARPGGameplayTags::Shared_Event_SuccessfulBlock,
+	                                                         data);
+}
 
 void AARPGWeaponBase::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                       UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,
@@ -16,14 +79,19 @@ void AARPGWeaponBase::OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, 
 	APawn* WeaponOwningPawn = GetInstigator<APawn>();
 	checkf(WeaponOwningPawn, TEXT("Weapon have not setted Instigator as owning pawn of the weapon %s"), *GetName())
 
-	if (Cast<IGenericTeamAgentInterface>(WeaponOwningPawn)->
-		GetTeamAttitudeTowards(*OtherActor) == ETeamAttitude::Friendly)
+	if (!IsHitValid(OtherActor, WeaponOwningPawn))
 	{
-		//Hit friend
 		return;
 	}
 
-	OnStartHit.Broadcast(OtherActor, WeaponOwningPawn);
+
+	if (IsBlockValid(OtherActor, WeaponOwningPawn))
+	{
+		SendBlockValidToDefender(OtherActor);
+		return;
+	}
+
+	SendHitEventToOwner(OtherActor);
 }
 
 void AARPGWeaponBase::OnWeaponEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

@@ -21,19 +21,28 @@ class ARPG_API AARPGWeaponBase : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons", meta=(AllowPrivateAccess))
 	TObjectPtr<UBoxComponent> WeaponCollider = {};
 
-public:
+	void SendHitEventToOwner(AActor* OtherActor) const;
+
+protected:
 	UFUNCTION()
 	virtual void OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                             UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,
 	                             const FHitResult& SweepResult);
 
-	FOnHit OnStartHit;
-	FOnHit OnEndHit;
 
-	
 	UFUNCTION()
 	virtual void OnWeaponEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                                UPrimitiveComponent* OtherComp, int OtherBodyIndex);
+
+
+	static bool IsHitValid(AActor* OtherActor, APawn* WeaponOwningPawn);
+	static bool IsBlockValid(AActor* OtherActor, const APawn* WeaponOwningPawn);
+	void SendBlockValidToDefender(AActor* OtherActor);
+
+public:
+	FOnHit OnStartHit;
+	FOnHit OnEndHit;
+
 	AARPGWeaponBase();
 
 	FORCEINLINE TObjectPtr<UStaticMeshComponent> GetWeaponMesh() const { return WeaponMesh; }

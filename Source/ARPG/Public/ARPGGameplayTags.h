@@ -45,12 +45,11 @@ namespace ARPGGameplayTags
 	// ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Light_Axe);
 	// ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_Attack_Heavy_Axe);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_HitPause);
-	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_SuccessfulBlock);
+
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Event_ChangeTarget);
 
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_Finisher);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_Rolling);
-	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_Blocking);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_TargetLocking);
 
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_SetByCaller_AttackType_Light);
@@ -68,6 +67,7 @@ namespace ARPGGameplayTags
 	/*Shared Tags*/
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_MeleeHit)
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_HitReact)
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Event_SuccessfulBlock);
 
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_SetByCaller_BaseDamage)
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_SetByCaller_ComboCount)
@@ -76,7 +76,7 @@ namespace ARPGGameplayTags
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Ability_Death)
 
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Death);
-
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Blocking);
 	/*Message Tags*/
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_OnHealthChanged);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_OnMaxHealthChanged);

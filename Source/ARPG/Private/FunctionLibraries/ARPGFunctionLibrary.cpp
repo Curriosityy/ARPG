@@ -43,7 +43,7 @@ void UARPGFunctionLibrary::RemoveGameplayTagFromActorIfFound(AActor* Actor, FGam
 bool UARPGFunctionLibrary::NativeDoesActorHaveTag(AActor* Actor, FGameplayTag Tag)
 {
 	UARPGAbilitySystemComponent* asc = NativeGetARPGASCFromActor(Actor);
-	return asc->HasMatchingGameplayTag(Tag);
+	return asc->HasAnyMatchingGameplayTags(Tag.GetSingleTagContainer());
 }
 
 void UARPGFunctionLibrary::BP_DoesActorHaveTag(AActor* Actor, FGameplayTag Tag, EARPGConfirmType& OutConfirmType)

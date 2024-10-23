@@ -46,43 +46,9 @@ AARPGWeaponBase* UPawnCombatComponent::GetCurrentEquippedWeapon() const
 	return GetCarriedWeapon(CurrentEquippedWeapon);
 }
 
-void UPawnCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
-{
-	if (!Cast<IAbilitySystemInterface>(ActorHitted))
-	{
-		//Hitted wall without ASC WALL,Other weapon ETC.
-		return;
-	}
-
-	FGameplayEventData data;
-	data.Instigator = GetOwner();
-	data.Target = ActorHitted;
-
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-		GetOwner(),
-		ARPGGameplayTags::Shared_Event_MeleeHit,
-		data);
-}
-
-void UPawnCombatComponent::OnWeaponEndOverlap(AActor* ActorHitted, AActor* HittedBy)
-{
-}
 
 void UPawnCombatComponent::SetupEvents(FGameplayTag OldEquipedWeapon, FGameplayTag WeaponToEquip)
 {
-	if (OldEquipedWeapon.IsValid())
-	{
-		auto weapon = GetCarriedWeapon(OldEquipedWeapon);
-		weapon->OnStartHit.RemoveDynamic(this, &UPawnCombatComponent::OnWeaponHit);
-		weapon->OnEndHit.RemoveDynamic(this, &UPawnCombatComponent::OnWeaponEndOverlap);
-	}
-
-	if (WeaponToEquip.IsValid())
-	{
-		auto weapon = GetCarriedWeapon(WeaponToEquip);
-		weapon->OnStartHit.AddDynamic(this, &UPawnCombatComponent::OnWeaponHit);
-		weapon->OnEndHit.AddDynamic(this, &UPawnCombatComponent::OnWeaponEndOverlap);
-	}
 }
 
 void UPawnCombatComponent::SetCurrentEquippedWeapon(FGameplayTag WeaponToEquip)

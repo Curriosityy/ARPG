@@ -23,6 +23,4 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
 	float GetCurrenHeroWeaponDamageAtLevel(int Level) const;
-
-	virtual void OnWeaponHit(AActor* ActorHitted, AActor* HittedBy) override;
 };

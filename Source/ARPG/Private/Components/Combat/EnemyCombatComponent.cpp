@@ -8,33 +8,3 @@
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "FunctionLibraries/ARPGFunctionLibrary.h"
-
-void UEnemyCombatComponent::OnWeaponHit(AActor* ActorHitted, AActor* HittedBy)
-{
-	if (!Cast<IAbilitySystemInterface>(ActorHitted))
-	{
-		//Hitted wall without ASC WALL,Other weapon ETC.
-		return;
-	}
-
-	bool bIsPlayerBlocking = UARPGFunctionLibrary::NativeDoesActorHaveTag(
-		ActorHitted, ARPGGameplayTags::Player_Status_Blocking);
-	bool bIsBlockValid = false;
-	if (bIsPlayerBlocking)
-	{
-		bIsBlockValid = UARPGFunctionLibrary::GetHitDirection(ActorHitted, HittedBy, 60) == EARPGHitDirection::Front;
-	}
-
-	if (!bIsBlockValid)
-	{
-		Super::OnWeaponHit(ActorHitted, HittedBy);
-	}
-
-	FGameplayEventData data;
-	data.Instigator = GetOwner();
-	data.Target = ActorHitted;
-
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(ActorHitted,
-	                                                         ARPGGameplayTags::Player_Event_SuccessfulBlock,
-	                                                         data);
-}

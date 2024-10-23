@@ -28,4 +28,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="WeaponData")
 	FARPGHeroWeaponData HeroWeaponData;
+
+	virtual void OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	                             UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,
+	                             const FHitResult& SweepResult) override;
 };

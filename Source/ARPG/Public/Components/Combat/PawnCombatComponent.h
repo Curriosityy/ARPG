@@ -30,11 +30,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
 	AARPGWeaponBase* GetCurrentEquippedWeapon() const;
 
-	UFUNCTION()
-	virtual void OnWeaponHit(AActor* ActorHitted, AActor* HittedBy);
-	UFUNCTION()
-	void OnWeaponEndOverlap(AActor* ActorHitted, AActor* HittedBy);
-
 	void SetupEvents(FGameplayTag OldEquipedWeapon, FGameplayTag WeaponToEquip);
 
 	UFUNCTION(BlueprintCallable, Category="ARPG|Combat")
