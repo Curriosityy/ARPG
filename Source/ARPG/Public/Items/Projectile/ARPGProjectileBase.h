@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "ARPGProjectileBase.generated.h"
 
+struct FGameplayEffectSpecHandle;
+class UGameplayEffect;
 class UMovementComponent;
 class UNiagaraComponent;
 
@@ -46,16 +48,29 @@ class ARPG_API AARPGProjectileBase : public AActor
 	UPROPERTY(EditDefaultsOnly)
 	ECollisionType CollisionType = ECollisionType::Enemy | ECollisionType::Friendly;
 
+	UPROPERTY(EditDefaultsOnly)
+	TArray<AActor*> AffectedActors{};
+
+	UPROPERTY()
+	TArray<FGameplayEffectSpecHandle> EffectsToApplyOnHit;
+
 public:
-	bool ProjectileShouldAffect(ETeamAttitude::Type Attitude);
+	UFUNCTION(BlueprintCallable)
+	void Inject(const TArray<FGameplayEffectSpecHandle>& InEffectsToApplyOnHit);
+
+	virtual bool ProjectileShouldAffect(ETeamAttitude::Type Attitude);
 
 	UFUNCTION()
-	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	               int OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void Affect(AActor* ActorToAffect);
+	//Place where we can implement penetrating projectiles
+	virtual bool ShouldBeDestroyed() { return true; }
+	UFUNCTION()
+	virtual void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	                       int OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	           FVector NormalImpulse, const FHitResult& Hit);
+	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	                   FVector NormalImpulse, const FHitResult& Hit);
 	// Sets default values for this actor's properties
 	AARPGProjectileBase();
 

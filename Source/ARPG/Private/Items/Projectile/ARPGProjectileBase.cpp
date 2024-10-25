@@ -3,23 +3,45 @@
 
 #include "Items/Projectile/ARPGProjectileBase.h"
 
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemInterface.h"
 #include "GenericTeamAgentInterface.h"
 #include "NiagaraComponent.h"
+#include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
+#include "FunctionLibraries/ARPGFunctionLibrary.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
+void AARPGProjectileBase::Inject(const TArray<FGameplayEffectSpecHandle>& InEffectsToApplyOnHit)
+{
+	EffectsToApplyOnHit = InEffectsToApplyOnHit;
+}
+
 bool AARPGProjectileBase::ProjectileShouldAffect(ETeamAttitude::Type Attitude)
 {
-	bool IsAffectingFriendly = Attitude == ETeamAttitude::Friendly && (ECollisionType::Friendly & CollisionType) ==
-		ECollisionType::Friendly;
+	const bool IsAffectingFriendly = Attitude == ETeamAttitude::Friendly &&
+		(ECollisionType::Friendly & CollisionType) == ECollisionType::Friendly;
 
-	bool IsAffectingEnemy = Attitude == ETeamAttitude::Hostile && (ECollisionType::Enemy & CollisionType) ==
-		ECollisionType::Enemy;
+	const bool IsAffectingEnemy = Attitude == ETeamAttitude::Hostile &&
+		(ECollisionType::Enemy & CollisionType) == ECollisionType::Enemy;
 
 	return IsAffectingFriendly || IsAffectingEnemy;
+}
+
+void AARPGProjectileBase::Affect(AActor* ActorToAffect)
+{
+	UARPGAbilitySystemComponent* OwnerASC = Cast<UARPGAbilitySystemComponent>(
+		Cast<IAbilitySystemInterface>(GetInstigator())->GetAbilitySystemComponent());
+	UARPGAbilitySystemComponent* TargetASC = Cast<UARPGAbilitySystemComponent>(
+		Cast<IAbilitySystemInterface>(ActorToAffect)->GetAbilitySystemComponent());
+
+	for (FGameplayEffectSpecHandle& Effect : EffectsToApplyOnHit)
+	{
+		OwnerASC->ApplyGameplayEffectSpecToTarget(*Effect.Data.Get(), TargetASC);
+	}
 }
 
 void AARPGProjectileBase::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -31,8 +53,17 @@ void AARPGProjectileBase::OnOverlap(UPrimitiveComponent* OverlappedComponent, AA
 
 	ETeamAttitude::Type Attitude = Team->GetTeamAttitudeTowards(*OtherActor);
 
-	if (ProjectileShouldAffect(Attitude))
+	if (!ProjectileShouldAffect(Attitude) || AffectedActors.Contains(OtherActor))
 	{
+		return;
+	}
+
+	Affect(OtherActor);
+	AffectedActors.Add(OtherActor);
+
+	if (ShouldBeDestroyed())
+	{
+		Destroy();
 	}
 }
 
