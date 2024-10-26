@@ -117,5 +117,9 @@ void AARPGProjectileBase::Tick(float DeltaTime)
 void AARPGProjectileBase::BeginDestroy()
 {
 	Super::BeginDestroy();
-	NiagaraOnDestroy->SetPaused(false);
+
+	if (NiagaraOnDestroy && NiagaraOnDestroy->GetFXSystemAsset())
+	{
+		NiagaraOnDestroy->Activate(true);
+	}
 }

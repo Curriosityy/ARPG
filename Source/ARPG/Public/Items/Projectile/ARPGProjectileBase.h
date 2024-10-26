@@ -24,7 +24,7 @@ ENUM_CLASS_FLAGS(ECollisionType);
 
 class UCapsuleComponent;
 
-UCLASS()
+UCLASS(Abstract)
 class ARPG_API AARPGProjectileBase : public AActor
 {
 	GENERATED_BODY()
