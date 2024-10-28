@@ -90,6 +90,8 @@ void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustom
 	{
 		FGameplayEventData payload;
 		payload.Instigator = OwningSpec.GetEffectContext().GetInstigator();
+		payload.Target = ExecutionParams.GetTargetAbilitySystemComponent()->GetAvatarActor();
+
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			ExecutionParams.GetTargetAbilitySystemComponent()->GetAvatarActor(),
 			ARPGGameplayTags::Shared_Event_HitReact,
