@@ -84,17 +84,18 @@ AARPGProjectileBase::AARPGProjectileBase()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>("ProjectileMesh");
-	SetRootComponent(ProjectileMesh);
 
 	Collider = CreateDefaultSubobject<UCapsuleComponent>("Collider");
-	Collider->SetupAttachment(GetRootComponent());
-	Collider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	SetRootComponent(Collider);
+	Collider->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	Collider->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-	Collider->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
-	Collider->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	Collider->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_MAX);
+	Collider->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_MAX);
 	Collider->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnOverlap);
 	Collider->OnComponentHit.AddDynamic(this, &ThisClass::OnHit);
+
+	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>("ProjectileMesh");
+	ProjectileMesh->SetupAttachment(GetRootComponent());
 
 	ProjectileNiagara = CreateDefaultSubobject<UNiagaraComponent>("ProjectileNiagara");
 	ProjectileNiagara->SetupAttachment(GetRootComponent());
