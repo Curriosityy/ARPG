@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/GEExecCalc/GEExecCalc_damageTaken.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "ARPGGameplayTags.h"
 #include "DebugHelper.h"
 #include "GameplayAbilityBlueprint.h"
@@ -82,7 +83,16 @@ void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustom
 		DamageMultiplier = ComboCount * 0.15f + 1;
 	}
 
+
 	const float FinalDamage = BaseDamage * DamageMultiplier * AttPower / DefPower;
+
+	if (OwningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Shared_Ability_HitReact) && FinalDamage > 0)
+	{
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+			ExecutionParams.GetTargetAbilitySystemComponent()->GetAvatarActor(),
+			ARPGGameplayTags::Shared_Ability_HitReact,
+			{});
+	}
 
 	OutExecutionOutput.AddOutputModifier(
 		{GetDamageCapture().DamageTakenProperty, EGameplayModOp::Additive, FinalDamage});
