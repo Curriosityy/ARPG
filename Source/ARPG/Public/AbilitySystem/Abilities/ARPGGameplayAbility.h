@@ -51,7 +51,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "ARPG|Ability")
 	static TMap<FGameplayTag, float> MakeDamageSpecMap(float BaseDamage, FGameplayTag CurrentAttackTypeTag,
-	                                                   int CurrentComboCount);
+	                                                   int CurrentComboCount, bool ShouldHitReact);
 
 	FActiveGameplayEffectHandle Native_ApplyEffectSpecHandle(AActor* TargetActor,
 	                                                         const FGameplayEffectSpecHandle& InSpecHandle);

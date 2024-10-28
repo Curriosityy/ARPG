@@ -85,18 +85,25 @@ FGameplayEffectSpecHandle UARPGGameplayAbility::MakeEffectSpecHandle(TSubclassOf
 	return EffectSpecHandle;
 }
 
-TMap<FGameplayTag, float> UARPGGameplayAbility::MakeDamageSpecMap(float BaseDamage, FGameplayTag CurrentAttackTypeTag,
-                                                                  int CurrentComboCount)
+TMap<FGameplayTag, float> UARPGGameplayAbility::MakeDamageSpecMap(const float BaseDamage,
+                                                                  const FGameplayTag CurrentAttackTypeTag,
+                                                                  const int CurrentComboCount,
+                                                                  const bool ShouldHitReact)
 {
 	checkf(CurrentAttackTypeTag.IsValid(),
 	       TEXT("UARPGGameplayAbility::MakeDamageSpecMap CurrentAttackTypeTag Need to be valid"))
 
-	TMap<FGameplayTag, float> HeroDamageSpecMap;
-	HeroDamageSpecMap.Add(ARPGGameplayTags::Shared_SetByCaller_BaseDamage, BaseDamage);
-	HeroDamageSpecMap.Add(CurrentAttackTypeTag, 0);
-	HeroDamageSpecMap.Add(ARPGGameplayTags::Shared_SetByCaller_ComboCount, CurrentComboCount);
+	TMap<FGameplayTag, float> DamageSpecMap;
+	DamageSpecMap.Add(ARPGGameplayTags::Shared_SetByCaller_BaseDamage, BaseDamage);
+	DamageSpecMap.Add(CurrentAttackTypeTag, {});
+	DamageSpecMap.Add(ARPGGameplayTags::Shared_SetByCaller_ComboCount, CurrentComboCount);
 
-	return HeroDamageSpecMap;
+	if (ShouldHitReact)
+	{
+		DamageSpecMap.Add(ARPGGameplayTags::Shared_Event_HitReact, {});
+	}
+
+	return DamageSpecMap;
 }
 
 FActiveGameplayEffectHandle UARPGGameplayAbility::Native_ApplyEffectSpecHandle(AActor* TargetActor,
