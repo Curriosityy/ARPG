@@ -108,12 +108,26 @@ AARPGProjectileBase::AARPGProjectileBase()
 void AARPGProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
+	ExecuteCue(CueOnSpawn);
+	ExecuteCue(CueToAttach);
 }
 
 // Called every frame
 void AARPGProjectileBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AARPGProjectileBase::ExecuteCue(FGameplayTag CueToPlay)
+{
+	FGameplayCueParameters Parameters;
+	Parameters.Instigator = GetInstigator();
+	Parameters.Location = GetActorLocation();
+	Parameters.Normal = GetActorForwardVector() * -1;
+	Parameters.TargetAttachComponent = GetRootComponent();
+
+	Cast<IAbilitySystemInterface>(GetInstigator())->GetAbilitySystemComponent()->ExecuteGameplayCue(
+		CueToPlay, Parameters);
 }
 
 void AARPGProjectileBase::DestroyProjectile()
@@ -123,12 +137,7 @@ void AARPGProjectileBase::DestroyProjectile()
 		return;
 	}
 
-	FGameplayCueParameters Parameters;
-	Parameters.Instigator = GetInstigator();
-	Parameters.Location = GetActorLocation();
-	Parameters.Normal = GetActorForwardVector() * -1;
-	Cast<IAbilitySystemInterface>(GetInstigator())->GetAbilitySystemComponent()->ExecuteGameplayCue(
-		CueOnDestroy, Parameters);
+	ExecuteCue(CueOnDestroy);
 	Destroy();
 }
 

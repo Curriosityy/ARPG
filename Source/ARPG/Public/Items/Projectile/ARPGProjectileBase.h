@@ -40,6 +40,12 @@ class ARPG_API AARPGProjectileBase : public AActor
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Niagara, meta = (AllowPrivateAccess))
 	FGameplayTag CueOnDestroy;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Niagara, meta = (AllowPrivateAccess))
+	FGameplayTag CueOnSpawn;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Niagara, meta = (AllowPrivateAccess))
+	FGameplayTag CueToAttach;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess))
 	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
 
@@ -83,6 +89,7 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void ExecuteCue(FGameplayTag CueToPlay);
 	virtual void DestroyProjectile();
 	virtual void LifeSpanExpired() override;
 };
