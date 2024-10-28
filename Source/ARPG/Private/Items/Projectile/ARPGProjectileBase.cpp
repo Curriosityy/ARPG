@@ -5,12 +5,17 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
+#include "DebugHelper.h"
 #include "GenericTeamAgentInterface.h"
+#include "NiagaraActor.h"
 #include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystemInstance.h"
 #include "AbilitySystem/ARPGAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/Combat/PawnCombatComponent.h"
+#include "Engine/World.h"
 #include "FunctionLibraries/ARPGFunctionLibrary.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -63,14 +68,14 @@ void AARPGProjectileBase::OnOverlap(UPrimitiveComponent* OverlappedComponent, AA
 
 	if (ShouldBeDestroyed())
 	{
-		Destroy();
+		DestroyProjectile();
 	}
 }
 
 void AARPGProjectileBase::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
                                 UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	Destroy();
+	DestroyProjectile();
 }
 
 // Sets default values
@@ -96,10 +101,6 @@ AARPGProjectileBase::AARPGProjectileBase()
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComponent");
 	ProjectileMovementComponent->Velocity = {1.f, 0.f, 0.f};
-
-	NiagaraOnDestroy = CreateDefaultSubobject<UNiagaraComponent>("NiagaraOnDestroy");
-	NiagaraOnDestroy->SetupAttachment(GetRootComponent());
-	NiagaraOnDestroy->SetPaused(true);
 }
 
 // Called when the game starts or when spawned
@@ -114,12 +115,23 @@ void AARPGProjectileBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AARPGProjectileBase::BeginDestroy()
+void AARPGProjectileBase::DestroyProjectile()
 {
-	Super::BeginDestroy();
-
-	if (NiagaraOnDestroy && NiagaraOnDestroy->GetFXSystemAsset())
+	if (!GetInstigator() || !IsValidChecked(GetInstigator()))
 	{
-		NiagaraOnDestroy->Activate(true);
+		return;
 	}
+
+	FGameplayCueParameters Parameters;
+	Parameters.Instigator = GetInstigator();
+	Parameters.Location = GetActorLocation();
+	Parameters.Normal = GetActorForwardVector() * -1;
+	Cast<IAbilitySystemInterface>(GetInstigator())->GetAbilitySystemComponent()->ExecuteGameplayCue(
+		CueOnDestroy, Parameters);
+	Destroy();
+}
+
+void AARPGProjectileBase::LifeSpanExpired()
+{
+	DestroyProjectile();
 }

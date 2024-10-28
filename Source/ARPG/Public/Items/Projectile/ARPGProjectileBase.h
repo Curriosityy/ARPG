@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GenericTeamAgentInterface.h"
 #include "GameFramework/Actor.h"
 #include "ARPGProjectileBase.generated.h"
 
+class UNiagaraSystem;
 struct FGameplayEffectSpecHandle;
 class UGameplayEffect;
 class UMovementComponent;
@@ -35,8 +37,8 @@ class ARPG_API AARPGProjectileBase : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Niagara, meta = (AllowPrivateAccess))
 	TObjectPtr<UNiagaraComponent> ProjectileNiagara;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Niagara, meta = (AllowPrivateAccess))
-	TObjectPtr<UNiagaraComponent> NiagaraOnDestroy;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Niagara, meta = (AllowPrivateAccess))
+	FGameplayTag CueOnDestroy;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess))
 	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
@@ -81,5 +83,6 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void BeginDestroy() override;
+	virtual void DestroyProjectile();
+	virtual void LifeSpanExpired() override;
 };
