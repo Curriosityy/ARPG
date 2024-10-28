@@ -53,7 +53,7 @@ class ARPG_API AARPGProjectileBase : public AActor
 	UPROPERTY(EditDefaultsOnly)
 	TArray<AActor*> AffectedActors{};
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, meta=(ExposeOnSpawn = true, AllowPrivateAccess))
 	TArray<FGameplayEffectSpecHandle> EffectsToApplyOnHit;
 
 public:

@@ -57,8 +57,11 @@ void AARPGBaseCharacter::PossessedBy(AController* NewController)
 
 void AARPGBaseCharacter::HandleDeath_Implementation(const TSoftObjectPtr<UNiagaraSystem>& NiagaraSystemToPlay)
 {
-	GetMesh()->bPauseAnims = true;
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	if (IsValidChecked(this))
+	{
+		GetMesh()->bPauseAnims = true;
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
 
 UPawnUIComponent* AARPGBaseCharacter::GetUIComponent() const

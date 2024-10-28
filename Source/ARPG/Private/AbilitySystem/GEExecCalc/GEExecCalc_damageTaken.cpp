@@ -86,12 +86,14 @@ void UGEExecCalc_damageTaken::Execute_Implementation(const FGameplayEffectCustom
 
 	const float FinalDamage = BaseDamage * DamageMultiplier * AttPower / DefPower;
 
-	if (OwningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Shared_Ability_HitReact) && FinalDamage > 0)
+	if (OwningSpec.SetByCallerTagMagnitudes.Find(ARPGGameplayTags::Shared_Event_HitReact) && FinalDamage > 0)
 	{
+		FGameplayEventData payload;
+		payload.Instigator = OwningSpec.GetEffectContext().GetInstigator();
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
 			ExecutionParams.GetTargetAbilitySystemComponent()->GetAvatarActor(),
-			ARPGGameplayTags::Shared_Ability_HitReact,
-			{});
+			ARPGGameplayTags::Shared_Event_HitReact,
+			payload);
 	}
 
 	OutExecutionOutput.AddOutputModifier(
