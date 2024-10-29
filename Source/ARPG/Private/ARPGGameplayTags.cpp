@@ -76,4 +76,5 @@ namespace ARPGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Message_OnRageChanged, "Message.OnRageChanged");
 	UE_DEFINE_GAMEPLAY_TAG(Message_OnMaxRageChanged, "Message.OnMaxRageChanged");
 	UE_DEFINE_GAMEPLAY_TAG(Message_WeaponChanged, "Message.WeaponChanged");
+	UE_DEFINE_GAMEPLAY_TAG(Message_Death, "Message.Death");
 }

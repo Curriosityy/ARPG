@@ -77,6 +77,9 @@ void UARPGAttributeSet::DealDamage(const FGameplayEffectModCallbackData& Data)
 
 	UARPGFunctionLibrary::AddGameplayTagToActorIfNone(Data.Target.GetAvatarActor(),
 	                                                  ARPGGameplayTags::Shared_Status_Death);
+
+	UGameplayMessageSubsystem::Get(this).BroadcastMessage(ARPGGameplayTags::Message_Death,
+	                                                      FDeath{GetOwningActor()});
 }
 
 
