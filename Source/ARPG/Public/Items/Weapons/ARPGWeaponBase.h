@@ -36,7 +36,7 @@ protected:
 
 
 	static bool IsHitValid(AActor* OtherActor, APawn* WeaponOwningPawn);
-	static bool IsBlockValid(AActor* OtherActor, const APawn* WeaponOwningPawn);
+	static bool IsBlockValid(AActor* OtherActor, APawn* WeaponOwningPawn);
 	void SendBlockValidToDefender(AActor* OtherActor);
 
 public:

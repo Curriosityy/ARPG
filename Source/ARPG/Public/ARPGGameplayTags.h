@@ -78,7 +78,7 @@ namespace ARPGGameplayTags
 
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Death);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Blocking);
-
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Unblockable);
 
 	/*Message Tags*/
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_OnHealthChanged);

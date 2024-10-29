@@ -66,9 +66,10 @@ namespace ARPGGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_HitReact, "Shared.Ability.HitReact");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_Death, "Shared.Ability.Death");
-
+	;
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Death, "Shared.Status.Death");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Blocking, "Shared.Status.Blocking")
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Unblockable, "Shared.Status.Unblockable")
 	/*Message Tags*/
 	UE_DEFINE_GAMEPLAY_TAG(Message_OnHealthChanged, "Message.OnHealthChanged");
 	UE_DEFINE_GAMEPLAY_TAG(Message_OnMaxHealthChanged, "Message.OnMaxHealthChanged");

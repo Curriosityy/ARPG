@@ -46,10 +46,15 @@ bool AARPGWeaponBase::IsHitValid(AActor* OtherActor, APawn* WeaponOwningPawn)
 	return true;
 }
 
-bool AARPGWeaponBase::IsBlockValid(AActor* OtherActor, const APawn* WeaponOwningPawn)
+bool AARPGWeaponBase::IsBlockValid(AActor* OtherActor, APawn* WeaponOwningPawn)
 {
-	FGameplayTag blockTag = ARPGGameplayTags::Shared_Status_Blocking;
-	bool bIsPlayerBlocking = UARPGFunctionLibrary::NativeDoesActorHaveTag(OtherActor, blockTag);
+	if (UARPGFunctionLibrary::NativeDoesActorHaveTag(WeaponOwningPawn, ARPGGameplayTags::Shared_Status_Unblockable))
+	{
+		return false;
+	}
+
+	bool bIsPlayerBlocking = UARPGFunctionLibrary::NativeDoesActorHaveTag(
+		OtherActor, ARPGGameplayTags::Shared_Status_Blocking);
 	bool bIsBlockValid = false;
 
 	if (bIsPlayerBlocking)
