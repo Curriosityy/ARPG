@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
-#include "GameFramework/GameplayMessageSubsystem.h"
 #include "Types/ARPGMessagesStruct.h"
 #include "Widget/ARPGWidgetBase.h"
 #include "StatusBarWidget.generated.h"

@@ -13,7 +13,7 @@ struct FDeath;
  */
 class IUIComponentInterface;
 //TODO: Move SubscribeToMessage UnsubscribeFromMessage to child? not every ARPG widget will subscribe to messages?
-UCLASS()
+UCLASS(Abstract)
 class ARPG_API UARPGWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()

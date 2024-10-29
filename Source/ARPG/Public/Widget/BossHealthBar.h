@@ -11,7 +11,7 @@ class UStatusBarWidget;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class ARPG_API UBossHealthBar : public UARPGWidgetBase
 {
 	GENERATED_BODY()

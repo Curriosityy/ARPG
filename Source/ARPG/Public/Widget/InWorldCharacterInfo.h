@@ -10,7 +10,7 @@ class UStatusBarWidget;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class ARPG_API UInWorldCharacterInfo : public UARPGWidgetBase
 {
 	GENERATED_BODY()

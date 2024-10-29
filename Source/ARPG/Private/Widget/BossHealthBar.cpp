@@ -10,5 +10,6 @@ void UBossHealthBar::SetOwningActor(AActor* InUIOwner)
 {
 	Super::SetOwningActor(InUIOwner);
 	BossHealthBar->SetOwningActor(InUIOwner);
-	EnemyName->SetText(FText::FromString(InUIOwner->GetDefaultActorLabel()));
+	//TODO: Refactor, get more specific name (mb translated)
+	EnemyName->SetText(FText::FromString(InUIOwner->GetActorLabel()));
 }

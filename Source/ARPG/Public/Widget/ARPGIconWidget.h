@@ -12,7 +12,7 @@ struct FGameplayTag;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class ARPG_API UARPGIconWidget : public UARPGWidgetBase
 {
 	GENERATED_BODY()
