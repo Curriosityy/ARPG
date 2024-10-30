@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ARPGWeaponBase.generated.h"
 
+class UMeshComponent;
 class UBoxComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHit, AActor*, ActorHitted, AActor*, HittedBy);
@@ -20,6 +21,11 @@ class ARPG_API AARPGWeaponBase : public AActor
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons", meta=(AllowPrivateAccess))
 	TObjectPtr<UBoxComponent> WeaponCollider = {};
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapons", meta=(AllowPrivateAccess))
+	FName HandSocketToAttachTo{};
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapons", meta=(AllowPrivateAccess))
+	FName BackSocketToAttachTo{};
 
 	void SendHitEventToOwner(AActor* OtherActor) const;
 
@@ -52,5 +58,11 @@ public:
 	 *we want once left fist collision,once right weapon collision*/
 	virtual void ToggleCollider(bool Toggle, int32 Type);
 
+	UBoxComponent* GetWeaponCollider() { return WeaponCollider; }
+
+	UFUNCTION(BlueprintCallable, Category = "Weapons")
+	virtual void Equip(UMeshComponent* Mesh);
+	UFUNCTION(BlueprintCallable, Category = "Weapons")
+	virtual void UnEquip(UMeshComponent* Mesh);
 	// Sets default values for this actor's properties
 };

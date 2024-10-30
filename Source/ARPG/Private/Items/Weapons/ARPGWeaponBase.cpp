@@ -136,3 +136,13 @@ void AARPGWeaponBase::ToggleCollider(bool Toggle, int32 Type = -1)
 {
 	WeaponCollider->SetCollisionEnabled(Toggle ? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
 }
+
+void AARPGWeaponBase::Equip(UMeshComponent* Mesh)
+{
+	AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, HandSocketToAttachTo);
+}
+
+void AARPGWeaponBase::UnEquip(UMeshComponent* Mesh)
+{
+	AttachToComponent(Mesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, BackSocketToAttachTo);
+}
