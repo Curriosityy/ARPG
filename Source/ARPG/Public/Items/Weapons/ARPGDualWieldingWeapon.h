@@ -33,4 +33,6 @@ public:
 
 	virtual void Equip(UMeshComponent* Mesh) override;
 	virtual void UnEquip(UMeshComponent* Mesh) override;
+
+	virtual void ToggleCollider(bool Toggle, int32 Type) override;
 };

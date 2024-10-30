@@ -55,3 +55,21 @@ void AARPGDualWieldingWeapon::UnEquip(UMeshComponent* Mesh)
 		SecondWeapon->UnEquip(Mesh);
 	}
 }
+
+void AARPGDualWieldingWeapon::ToggleCollider(bool Toggle, int32 Type)
+{
+	//Right
+	if (bIsSubWeapon)
+	{
+		Super::ToggleCollider(Toggle, Type);
+		return;
+	}
+
+	if (Type == 1)
+	{
+		SecondWeapon->ToggleCollider(Toggle, Type);
+		return;
+	}
+
+	Super::ToggleCollider(Toggle, Type);
+}
