@@ -22,6 +22,7 @@ class ARPG_API AARPGWeaponBase : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons", meta=(AllowPrivateAccess))
 	TObjectPtr<UBoxComponent> WeaponCollider = {};
 
+protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapons", meta=(AllowPrivateAccess))
 	FName HandSocketToAttachTo{};
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapons", meta=(AllowPrivateAccess))
@@ -29,7 +30,6 @@ class ARPG_API AARPGWeaponBase : public AActor
 
 	void SendHitEventToOwner(AActor* OtherActor) const;
 
-protected:
 	UFUNCTION()
 	virtual void OnWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	                             UPrimitiveComponent* OtherComp, int OtherBodyIndex, bool bFromSweep,
