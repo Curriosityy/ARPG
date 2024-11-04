@@ -50,11 +50,15 @@ namespace ARPGGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Melee, "Enemy.Ability.Melee");
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_Ranged, "Enemy.Ability.Ranged");
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Ability_SpawnAdds, "Enemy.Ability.SpawnAdds");
 
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_SetByCaller_AttackType_Melee, "Enemy.SetByCaller.AttackType.Melee")
 
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_Strafe, "Enemy.Status.Strafe");
 	UE_DEFINE_GAMEPLAY_TAG(Enemy_Status_UnderAttack, "Enemy.Status.UnderAttack");
+
+	UE_DEFINE_GAMEPLAY_TAG(Enemy_Event_Spawn, "Enemy.Event.Spawn");
+
 	/*Shared Tags */
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_MeleeHit, "Shared.Event.MeleeHit");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Event_HitReact, "Shared.Event.HitReact");
@@ -66,7 +70,7 @@ namespace ARPGGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_HitReact, "Shared.Ability.HitReact");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Ability_Death, "Shared.Ability.Death");
-	;
+
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Death, "Shared.Status.Death");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Blocking, "Shared.Status.Blocking")
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Unblockable, "Shared.Status.Unblockable")
