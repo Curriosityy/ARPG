@@ -43,9 +43,7 @@ void UGameplayAbility_SpawnAdds::ActivateAbility(const FGameplayAbilitySpecHandl
 		EnemyToSpawn,
 		HowManyToSpawn,
 		GetOwningActorFromActorInfo()->GetActorLocation(),
-		SpawnDistance,
-		GetOwningActorFromActorInfo()->GetActorRotation()
-	);
+		SpawnDistance);
 
 	Task->ActorSpawned.AddDynamic(this, &UGameplayAbility_SpawnAdds::OnActorSpawned);
 	Task->ActorNotSpawned.AddDynamic(this, &UGameplayAbility_SpawnAdds::OnActorNotSpawned);

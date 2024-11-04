@@ -37,7 +37,7 @@ void UAbilityTask_WaitSpawnEnemies::OnSpawnEvent(const FGameplayEventData* Gamep
 			{
 				FTransform spawnTransform = FTransform::Identity;
 				spawnTransform.SetLocation(GeneratedPoint);
-				spawnTransform.SetRotation(CachedSpawnRotation.Quaternion());
+				spawnTransform.SetRotation(AbilitySystemComponent->GetAvatarActor()->GetActorRotation().Quaternion());
 				AARPGEnemyCharacter* actor = GetWorld()->SpawnActorDeferred<AARPGEnemyCharacter>(
 					EnemyAsset,
 					spawnTransform,
@@ -68,6 +68,7 @@ void UAbilityTask_WaitSpawnEnemies::Failed()
 void UAbilityTask_WaitSpawnEnemies::GeneratePoints(TArray<FVector>& PointsToGenerate)
 {
 	//TODO SOME SMARTER WAY TO GENRATE POINTS
+
 	for (int i = 0; i < CachedHowMany; i++)
 	{
 		FVector Point;
@@ -94,8 +95,7 @@ UAbilityTask_WaitSpawnEnemies* UAbilityTask_WaitSpawnEnemies::WaitSpawnEnemies(U
                                                                                EnemyToSpawn,
                                                                                int HowMany,
                                                                                FVector SpawnOrigin,
-                                                                               float MaxSpawnDistanceFromOrigin,
-                                                                               FRotator SpawnRotation)
+                                                                               float MaxSpawnDistanceFromOrigin)
 {
 	UAbilityTask_WaitSpawnEnemies* Task = NewAbilityTask<UAbilityTask_WaitSpawnEnemies>(Owner);
 
@@ -104,7 +104,6 @@ UAbilityTask_WaitSpawnEnemies* UAbilityTask_WaitSpawnEnemies::WaitSpawnEnemies(U
 	Task->CachedHowMany = HowMany;
 	Task->CachedSpawnOrigin = SpawnOrigin;
 	Task->CachedMaxSpawnDistanceFromOrigin = MaxSpawnDistanceFromOrigin;
-	Task->CachedSpawnRotation = SpawnRotation;
 
 
 	return Task;

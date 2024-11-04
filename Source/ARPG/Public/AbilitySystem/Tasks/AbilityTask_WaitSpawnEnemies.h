@@ -44,8 +44,7 @@ public:
 		TSoftClassPtr<AARPGEnemyCharacter> EnemyToSpawn,
 		int HowMany,
 		FVector SpawnOrigin,
-		float MaxSpawnDistanceFromOrigin,
-		FRotator SpawnRotation);
+		float MaxSpawnDistanceFromOrigin);
 
 	virtual void OnDestroy(bool bInOwnerFinished) override;
 
