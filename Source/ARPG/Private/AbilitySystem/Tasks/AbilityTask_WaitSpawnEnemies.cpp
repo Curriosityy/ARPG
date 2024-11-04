@@ -16,12 +16,13 @@ void UAbilityTask_WaitSpawnEnemies::OnSpawnEvent(const FGameplayEventData* Gamep
 		Failed();
 		return;
 	}
-	TArray<AActor*> SpawnedActors{};
+
 
 	UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
-		CachedEnemyToSpawn.ToSoftObjectPath()
-		, [&]()
+		CachedEnemyToSpawn.ToSoftObjectPath(),
+		[&]()
 		{
+			TArray<AActor*> SpawnedActors{};
 			UClass* EnemyAsset = CachedEnemyToSpawn.Get();
 
 			if (!EnemyAsset)
@@ -54,9 +55,9 @@ void UAbilityTask_WaitSpawnEnemies::OnSpawnEvent(const FGameplayEventData* Gamep
 			{
 				actor->FinishSpawning(actor->GetTransform());
 			}
-		});
 
-	ActorSpawned.Broadcast(SpawnedActors);
+			ActorSpawned.Broadcast(SpawnedActors);
+		});
 }
 
 void UAbilityTask_WaitSpawnEnemies::Failed()

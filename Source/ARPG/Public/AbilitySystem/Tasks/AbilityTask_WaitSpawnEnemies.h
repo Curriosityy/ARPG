@@ -25,7 +25,6 @@ protected:
 	int CachedHowMany;
 	FVector CachedSpawnOrigin;
 	float CachedMaxSpawnDistanceFromOrigin;
-	FRotator CachedSpawnRotation;
 	FDelegateHandle DelegateHandle;
 
 	void OnSpawnEvent(const FGameplayEventData* GameplayEventData);
