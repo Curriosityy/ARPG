@@ -28,6 +28,7 @@ namespace ARPGGameplayTags
 
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Toggle)
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Toggle_TargetLock);
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_Toggle_Rage);
 	/*Player Tags*/
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Equip_Axe);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Unequip_Axe);
@@ -37,6 +38,7 @@ namespace ARPGGameplayTags
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Roll);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Block);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_TargetLock);
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Ability_Rage);
 
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Weapon_Axe);
 
@@ -51,6 +53,7 @@ namespace ARPGGameplayTags
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_Finisher);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_Rolling);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_TargetLocking);
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_Status_Rage);
 
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_SetByCaller_AttackType_Light);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Player_SetByCaller_AttackType_Heavy);
@@ -82,6 +85,7 @@ namespace ARPGGameplayTags
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Death);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Blocking);
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Unblockable);
+	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Uninteruptable);
 
 	/*Message Tags*/
 	ARPG_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_OnHealthChanged);

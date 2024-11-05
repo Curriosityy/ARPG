@@ -19,8 +19,10 @@ namespace ARPGGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_MustBeHeld, "InputTag.MustBeHeld")
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_MustBeHeld_Block, "InputTag.MustBeHeld.Block")
+
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggle, "InputTag.Toggle")
 	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggle_TargetLock, "InputTag.Toggle.TargetLock")
+	UE_DEFINE_GAMEPLAY_TAG(InputTag_Toggle_Rage, "InputTag.Toggle.Rage");
 	/*Player Tags*/
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Equip_Axe, "Player.Ability.Equip.Axe")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Unequip_Axe, "Player.Ability.Unequip.Axe")
@@ -30,6 +32,7 @@ namespace ARPGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Roll, "Player.Ability.Roll")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Block, "Player.Ability.Block")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_TargetLock, "Player.Ability.TargetLock")
+	UE_DEFINE_GAMEPLAY_TAG(Player_Ability_Rage, "Player.Ability.Rage");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_Weapon_Axe, "Player.Weapon.Axe")
 
@@ -42,6 +45,7 @@ namespace ARPGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Finisher, "Player.Status.Finisher")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Rolling, "Player.Status.Rolling")
 	UE_DEFINE_GAMEPLAY_TAG(Player_Status_TargetLocking, "Player.Status.TargetLocking")
+	UE_DEFINE_GAMEPLAY_TAG(Player_Status_Rage, "Player.Status.Rage");
 
 	UE_DEFINE_GAMEPLAY_TAG(Player_SetByCaller_AttackType_Light, "Player.SetByCaller.AttackType.Light")
 	UE_DEFINE_GAMEPLAY_TAG(Player_SetByCaller_AttackType_Heavy, "Player.SetByCaller.AttackType.Heavy")
@@ -74,6 +78,8 @@ namespace ARPGGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Death, "Shared.Status.Death");
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Blocking, "Shared.Status.Blocking")
 	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Unblockable, "Shared.Status.Unblockable")
+	UE_DEFINE_GAMEPLAY_TAG(Shared_Status_Uninteruptable, "Shared.Status.Uninteruptable")
+
 	/*Message Tags*/
 	UE_DEFINE_GAMEPLAY_TAG(Message_OnHealthChanged, "Message.OnHealthChanged");
 	UE_DEFINE_GAMEPLAY_TAG(Message_OnMaxHealthChanged, "Message.OnMaxHealthChanged");

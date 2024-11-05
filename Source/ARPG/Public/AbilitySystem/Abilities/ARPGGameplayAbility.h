@@ -31,6 +31,7 @@ protected:
 	EARPGAbilityActivationPolicy Policy = EARPGAbilityActivationPolicy::OnTrigger;
 
 public:
+	UARPGGameplayAbility();
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle,

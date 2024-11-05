@@ -12,6 +12,11 @@
 #include "Interfaces/CombatComponentInterface.h"
 #include "Types/ARPGEnumTypes.h"
 
+UARPGGameplayAbility::UARPGGameplayAbility()
+{
+	ActivationBlockedTags.AddTag(ARPGGameplayTags::Shared_Status_Uninteruptable);
+}
+
 void UARPGGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	Super::OnGiveAbility(ActorInfo, Spec);
